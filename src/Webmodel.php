@@ -267,13 +267,24 @@ class Webmodel {
 			
 			$func_load=$model.'Load';
 			
-			return $func_load();
+			if(!function_exists($func_load))
+			{
+			
+				throw new \Exception('Error: function '.$func_load.' not found in '.Webmodel::$model_path.'/'.$model.'.php');
+			
+			}
+			else
+			{
+			
+				return $func_load();
+				
+			}
 		
 		}
 		else
 		{
 		
-			throw new \Exception('Error: model not found');
+			throw new \Exception('Error: model not found in '.Webmodel::$model_path.'/'.$model.'.php');
 		
 		}
 	
