@@ -1168,7 +1168,7 @@ class Webmodel {
 			
 				//Create form from model's components
 
-				$this->forms[$component_name]=new ModelForm($this->name, $component_name, $component->form, set_name_default($component_name), $component, $component->required, '');
+				$this->forms[$component_name]=new ModelForm($this->name, $component_name, $component->form, Webmodel::set_name_default($component_name), $component, $component->required, '');
 				
 				$this->forms[$component_name]->set_all_parameters_form($component->get_parameters_default());
 				
@@ -1336,10 +1336,10 @@ class Webmodel {
 	public function set_component($name, $type, $arguments, $required=0)
 	{
 	
-		$rc=new ReflectionClass($type);
+		$rc=new \ReflectionClass($type);
 		$this->components[$name]=$rc->newInstanceArgs($arguments);
 		//Set first label...
-		$this->components[$name]->label=set_name_default($name);
+		$this->components[$name]->label=Webmodel::set_name_default($name);
 		$this->components[$name]->name_model=$this->name;
 		$this->components[$name]->name_component=$name;
 		$this->components[$name]->required=$required;
@@ -1395,6 +1395,20 @@ class Webmodel {
 	
 		return $this->components[$name_component]->check($value);
 	
+	}
+	
+	/**
+	* A internal helper function 
+	*
+	* @param string $name Name for process
+	*
+	*/
+
+	static public function set_name_default($name)
+	{
+
+		return ucfirst(str_replace('_', ' ', $name));
+
 	}
 
 }
