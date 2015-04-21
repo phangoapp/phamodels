@@ -14,17 +14,12 @@ use PhangoApp\PhaModels\CoreFields;
 
 class Webmodel {
 
-	/**
-	* Model path search
-	*/
-	
-	static public $root_model='';
 	
 	/**
 	* folder containing the models
 	*/
 	
-	static public $model_path='models';
+	static public $model_path='app/models';
 
 	/**
 	* Database hosts array.
@@ -228,7 +223,7 @@ class Webmodel {
 	public function __construct($name_model)
 	{
 	
-		Webmodel::$root_model='app/'.$name_model.'/'.Webmodel::$model_path;
+		//Webmodel::$root_model='app/'.$name_model.'/'.Webmodel::$model_path;
 
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
@@ -242,6 +237,46 @@ class Webmodel {
 		
 		}
 
+	}
+	
+	/**
+	* Method for load config from a project.
+	*/
+	
+	static public function load_config()
+	{
+	
+		//if(is_file($this->path_mo
+	
+	}
+	
+	/**
+	* Method for load models from a project.
+	*
+	* @param string $model Model name. The model is search in Webmodel::$model_path and the name is $model.php
+	*
+	*/
+	
+	static public function load_model($model)
+	{
+	
+		if(is_file(Webmodel::$model_path.'/'.$model.'.php'))
+		{
+		
+			include(Webmodel::$model_path.'/'.$model.'.php');
+			
+			$func_load=$model.'Load';
+			
+			return $func_load();
+		
+		}
+		else
+		{
+		
+			throw new \Exception('Error: model not found');
+		
+		}
+	
 	}
 	
 	/**
