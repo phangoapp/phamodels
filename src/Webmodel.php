@@ -310,10 +310,12 @@ class Webmodel {
 
 			//$text_error='<p>Output: '.$output.'</p>';
 
-			$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
-			$arr_error_sql[1]='<p>Error: Cannot connect to MySQL db, '.$output.'</p>';
+			/*$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
+			$arr_error_sql[1]='<p>Error: Cannot connect to MySQL db, '.$output.'</p>';*/
 		
-			show_error($arr_error_sql[0], $arr_error_sql[1]);
+			//show_error($arr_error_sql[0], $arr_error_sql[1]);
+			
+			throw new \Exception('Error: cannot connect to database');
 		
 		}
 
@@ -334,10 +336,12 @@ class Webmodel {
 
 			//$text_error='<p>Output: '.$output.'</p>';
 
-			$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
+			/*$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
 			$arr_error_sql[1]='<p>Error: Cannot connect to MySQL db, '.$output.'</p>';
 		
-			show_error($arr_error_sql[0], $arr_error_sql[1]);
+			show_error($arr_error_sql[0], $arr_error_sql[1]);*/
+			
+			throw new \Exception('Error: cannot connect to database');
 		
 		}
 		
@@ -386,7 +390,9 @@ class Webmodel {
 		if(count($this->components)>1)
 		{
 
-			show_error('<p>Error in a model for use ids.</p>', '<p>Error in model '.$this->name.' for use change_id_default. This method must be used before any component.</p>');
+			//show_error('<p>Error in a model for use ids.</p>', '<p>Error in model '.$this->name.' for use change_id_default. This method must be used before any component.</p>');
+			
+			throw new \Exception('Error in model '.$this->name.' for use change_id_default. This method must be used before any component');
 
 		}
 		
