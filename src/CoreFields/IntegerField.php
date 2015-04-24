@@ -6,6 +6,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaUtils\Utils;
 
 class IntegerField extends PhangoField {
 
@@ -31,7 +32,7 @@ class IntegerField extends PhangoField {
 	function check($value)
 	{
 
-		$this->value=form_text($value);
+		$this->value=Utils::form_text($value);
 		
 		settype($value, "integer");
 		

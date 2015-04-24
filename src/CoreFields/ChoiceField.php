@@ -69,7 +69,7 @@ class ChoiceField extends PhangoField {
 
 			case 'string':
 
-				$value=form_text($value);
+				$value=Utils::form_text($value);
 
 			break;
 

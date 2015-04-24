@@ -1,6 +1,7 @@
 <?php
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaUtils\Utils;
 
 /**
 * PrimaryField is used for primary keys for models
@@ -43,7 +44,7 @@ class PrimaryField extends PhangoField {
 	public function check($value)
 	{
 
-		$this->value=form_text($value);
+		$this->value=Utils::form_text($value);
 		settype($value, "integer");
 		return $value;
 

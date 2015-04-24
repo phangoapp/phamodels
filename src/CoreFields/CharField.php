@@ -7,6 +7,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaUtils\Utils;
 
 class CharField extends PhangoField {
 
@@ -53,7 +54,7 @@ class CharField extends PhangoField {
 	{
 
 		//Delete Javascript tags and simple quotes.
-		$this->value=form_text($value);
+		$this->value=Utils::form_text($value);
 		return form_text($value);
 
 	}

@@ -37,6 +37,8 @@ class Webmodel {
 	
 	static public $pass_db=array();
 	
+	static public $type_db='mysql';
+	
 	/**
 	* Connection to db.
 	*/
@@ -145,7 +147,7 @@ class Webmodel {
 	public $related_models=array();
 	
 	/**
-	* An array where the model save the name of the related models via ForeignKeyField. You need use $this->set_component method for fill this array.
+	* An array where the model save the name of the related models via ForeignKeyField. You need use $this->register method for fill this array.
 	*/
 	
 	public $related_models_delete=array();
@@ -298,8 +300,8 @@ class Webmodel {
 	public function connect_to_db()
 	{
 		
-		include(__DIR__.'/database/'.TYPE_DB.'.php');
-		//load_libraries(array('database/'.TYPE_DB), Webmodel::$base_path);
+		include(__DIR__.'/database/'.Webmodel::$type_db.'.php');
+		//load_libraries(array('database/'.Webmodel::$type_db), Webmodel::$base_path);
 	
 		if(!webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
 		{
@@ -892,7 +894,7 @@ class Webmodel {
 	/**
 	* This method delete rows for the sql condition
 	*
-	* This method is used for delete rows based in a sql conditions. If you use $this->set_component method for create new fields for model, $this->delete will delete all rows from model with foreignkeys related with this model. This thing is necessary because foreignkeys need to be deleted if you deleted its related model.
+	* This method is used for delete rows based in a sql conditions. If you use $this->register method for create new fields for model, $this->delete will delete all rows from model with foreignkeys related with this model. This thing is necessary because foreignkeys need to be deleted if you deleted its related model.
 	*
 	* @param string $conditions Conditions have same sintax that $conditions from $this->select method
 	*/
@@ -1165,7 +1167,7 @@ class Webmodel {
 	* @param array $arr_components Array with fields names that you want delete from model.
 	*/
 
-	public function unset_components($arr_components=array())
+	public function unregisters($arr_components=array())
 	{
 
 		foreach($arr_components as $value)
@@ -1385,7 +1387,7 @@ class Webmodel {
 	* @param string $arguments Array with arguments for construct the new field
 	* @param boolean $required A boolean used for set the default required value
 	*/
-	public function set_component($name, $type, $arguments, $required=0)
+	public function register($name, $type, $arguments, $required=0)
 	{
 	
 		$rc=new \ReflectionClass($type);

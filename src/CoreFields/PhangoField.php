@@ -14,6 +14,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaUtils\Utils;
 
 class PhangoField {
 
@@ -101,7 +102,7 @@ class PhangoField {
 	function search_field($value)
 	{
 	
-		return form_text($value);
+		return Utils::form_text($value);
 	
 	}
 	

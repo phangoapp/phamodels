@@ -1,7 +1,6 @@
 <?php
 
 namespace PhangoApp\PhaModels\CoreFields;
-use PhangoApp\PhaI18n\I18n;
 
 /**
 * ForeignKeyfield is a relantioship between two models...

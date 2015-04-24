@@ -2,8 +2,7 @@
     "name": "phangoapp/phamodel",
     "description": "A simple class for create models",
     "require-dev": {
-        "phpunit/phpunit": "~4.8@dev",
-	"phautils/utils": "dev-master"
+        "phpunit/phpunit": "~4.8@dev"
     },
     "license": "GPL",
     "authors": [
@@ -12,8 +11,9 @@
             "email": "webmaster@web-t-sys.com"
         }
     ],
-    "minimum-stability": "dev-master",
-    "require": {},
+    "minimum-stability": "dev",
+    "require": {
+	},
     "autoload": {
         "psr-4": {
             "PhangoApp\\PhaRouter\\": "src"

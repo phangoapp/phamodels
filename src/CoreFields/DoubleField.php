@@ -5,6 +5,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaUtils\Utils;
 
 class DoubleField extends PhangoField {
 
@@ -28,7 +29,7 @@ class DoubleField extends PhangoField {
 	function check($value)
 	{
 
-		$this->value=form_text($value);
+		$this->value=Utils::form_text($value);
 		settype($value, "double");
 		return $value;
 
