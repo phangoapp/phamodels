@@ -37,7 +37,7 @@ class Webmodel {
 	
 	static public $pass_db=array();
 	
-	static public $type_db='mysql';
+	static public $type_db='MySQLClass';
 	
 	/**
 	* Connection to db.
@@ -300,10 +300,10 @@ class Webmodel {
 	public function connect_to_db()
 	{
 		
-		include(__DIR__.'/database/'.Webmodel::$type_db.'.php');
+		include(__DIR__.'/Databases/'.Webmodel::$type_db.'.php');
 		//load_libraries(array('database/'.Webmodel::$type_db), Webmodel::$base_path);
 	
-		if(!webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
+		if(!MySQLClass::webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
 		{
 		
 			$output=ob_get_contents();
@@ -321,7 +321,7 @@ class Webmodel {
 		
 		}
 
-		Webmodel::$select_db[$this->db_selected]=webtsys_select_db( Webmodel::$db[$this->db_selected] , $this->db_selected);
+		Webmodel::$select_db[$this->db_selected]=MySQLClass::webtsys_select_db( Webmodel::$db[$this->db_selected] , $this->db_selected);
 		
 		if(Webmodel::$select_db[$this->db_selected]!=false && Webmodel::$connection[$this->db_selected]!=false)
 		{
@@ -488,7 +488,7 @@ class Webmodel {
 		if( $fields=$this->check_all($post) )
 		{	
 		
-			if( !( $query=webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
+			if( !( $query=MySQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
 			{
 			
 				$this->std_error.=Webmodel::$l_['error_model']->lang('cant_insert', 'Can\'t insert').' ';
@@ -604,7 +604,7 @@ class Webmodel {
 
 			//Create the query..
 		
-			if(!($query=webtsys_query('update '.$this->name.' set '.implode(', ' , $arr_fields).' '.$conditions, $this->db_selected) ) )
+			if(!($query=MySQLClass::webtsys_query('update '.$this->name.' set '.implode(', ' , $arr_fields).' '.$conditions, $this->db_selected) ) )
 			{
 				
 				$this->std_error.=Webmodel::$l_['error_model']->lang('cant_update', 'Can\'t update').' ';
@@ -631,7 +631,7 @@ class Webmodel {
 	}
 
 	//This method select a row in database using model data
-	//You have use webtsys_fetch_row or alternatives for obtain data
+	//You have use MySQLClass::webtsys_fetch_row or alternatives for obtain data
 	//Conditions are sql lang, more simple, more kiss
 	
 	/**
@@ -788,7 +788,7 @@ class Webmodel {
 		$arr_distinct[0]='';
 		$arr_distinct[1]=' DISTINCT ';
 		
-		$query=webtsys_query('select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions, $this->db_selected);
+		$query=MySQLClass::webtsys_query('select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions, $this->db_selected);
 		
 		$this->distinct=0;
 		
@@ -883,9 +883,9 @@ class Webmodel {
 
 		}
 		
-		$query=webtsys_query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
+		$query=MySQLClass::webtsys_query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
 		
-		list($count_field)= webtsys_fetch_row($query);
+		list($count_field)= MySQLClass::webtsys_fetch_row($query);
 
 		return $count_field;
 
@@ -942,7 +942,7 @@ class Webmodel {
 			
 		}
 
- 		return webtsys_query('delete from '.$this->name.' '.$conditions, $this->db_selected);
+ 		return MySQLClass::webtsys_query('delete from '.$this->name.' '.$conditions, $this->db_selected);
 		
 	}
 	
@@ -957,7 +957,7 @@ class Webmodel {
 	
 		$this->set_phango_connection();
 	
-		return webtsys_fetch_row($query);
+		return MySQLClass::webtsys_fetch_row($query);
 	
 	}
 	
@@ -972,7 +972,7 @@ class Webmodel {
 	
 		$this->set_phango_connection();
 	
-		return webtsys_fetch_array($query);
+		return MySQLClass::webtsys_fetch_array($query);
 	
 	}
 	
@@ -987,7 +987,7 @@ class Webmodel {
 		
 		$this->set_phango_connection();
 		
-		return webtsys_insert_id();
+		return MySQLClass::webtsys_insert_id();
 	
 	}
 
