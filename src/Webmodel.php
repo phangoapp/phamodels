@@ -16,10 +16,16 @@ class Webmodel {
 
 	
 	/**
-	* folder containing the models
+	* folder containing the base models folder
 	*/
 	
-	static public $model_path='app/models';
+	static public $model_path='./';
+	
+	/**
+	* folder containing the models in $model_path
+	*/
+	
+	static public $model_folder='models';
 
 	/**
 	* Database hosts array.
@@ -261,31 +267,33 @@ class Webmodel {
 	
 	static public function load_model($model)
 	{
-	
+		
 		$app_model=$model;
-	
-		if(strpos('/', $model))
+		
+		if(strpos($model, '/'))
 		{
-		
+			
 			$arr_model=explode('/', $model);
-		
-			$app_model=$model[0];
+			
+			$app_model=$arr_model[0];
+			
+			$model=$arr_model[1];
 		
 		}
+		
+		$path_model=Webmodel::$model_path.$app_model.'/'.Webmodel::$model_folder.'/models_'.$model.'.php';
 	
-		$path_model=$app_model.'/models_'.$model.'.php';
-	
-		if(is_file(Webmodel::$model_path.'/models_'.$model.'.php'))
+		if(is_file($path_model))
 		{
 		
-			include(Webmodel::$model_path.'/'.$model.'.php');
+			include($path_model);
 			
-			$func_load=$model.'Load';
+			$func_load=$model.'ModelLoad';
 			
 			if(!function_exists($func_load))
 			{
 			
-				throw new \Exception('Error: function '.$func_load.' not found in '.Webmodel::$model_path.'/'.$model.'.php');
+				throw new \Exception('Error: function '.$func_load.' not found in '.$path_model);
 			
 			}
 			else
@@ -299,7 +307,7 @@ class Webmodel {
 		else
 		{
 		
-			throw new \Exception('Error: model not found in '.Webmodel::$model_path.'/'.$model.'.php');
+			throw new \Exception('Error: model not found in '.$path_model);
 		
 		}
 	
