@@ -262,7 +262,20 @@ class Webmodel {
 	static public function load_model($model)
 	{
 	
-		if(is_file(Webmodel::$model_path.'/'.$model.'.php'))
+		$app_model=$model;
+	
+		if(strpos('/', $model))
+		{
+		
+			$arr_model=explode('/', $model);
+		
+			$app_model=$model[0];
+		
+		}
+	
+		$path_model=$app_model.'/models_'.$model.'.php';
+	
+		if(is_file(Webmodel::$model_path.'/models_'.$model.'.php'))
 		{
 		
 			include(Webmodel::$model_path.'/'.$model.'.php');
