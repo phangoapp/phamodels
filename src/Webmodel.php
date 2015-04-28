@@ -3,6 +3,7 @@
 namespace PhangoApp\PhaModels;
 
 use PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaI18n\I18n;
 
 /**
 * The most important class for the framework
@@ -512,7 +513,7 @@ class Webmodel {
 			if( !( $query=MySQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
 			{
 			
-				$this->std_error.=Webmodel::$l_['error_model']->lang('cant_insert', 'Can\'t insert').' ';
+				$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 				return 0;
 			
 			}
@@ -526,7 +527,7 @@ class Webmodel {
 		else
 		{	
 			
-			$this->std_error.=Webmodel::$l_['error_model']->lang('cant_insert', 'Can\'t insert').' ';
+			$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 
 			return 0;
 
@@ -613,7 +614,7 @@ class Webmodel {
 					if(!$this->components[$name_field]->process_update_field($this, $name_field, $conditions, $fields[$name_field]))
 					{
 						
-						$this->std_error.=Webmodel::$l_['error_model']->lang('cant_update', 'Can\'t update').' ';
+						$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
 
 						return 0;
 					
@@ -628,7 +629,7 @@ class Webmodel {
 			if(!($query=MySQLClass::webtsys_query('update '.$this->name.' set '.implode(', ' , $arr_fields).' '.$conditions, $this->db_selected) ) )
 			{
 				
-				$this->std_error.=Webmodel::$l_['error_model']->lang('cant_update', 'Can\'t update').' ';
+				$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
 				return 0;
 			
 			}
@@ -643,7 +644,7 @@ class Webmodel {
 		{
 			//Validation of $post fail, add error to $model->std_error
 			
-			$this->std_error.=Webmodel::$l_['error_model']->lang('cant_update', 'Can\'t update').' ';
+			$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
 
 			return 0;
 
@@ -1088,7 +1089,7 @@ class Webmodel {
 	public function check_all($post)
 	{
 		
-		load_lang('error_model');
+		I18n::loadLang('error_model');
 	
 		//array where sanitized values are stored...
 		
@@ -1131,11 +1132,11 @@ class Webmodel {
 					if($this->components[$key]->std_error=='')
 					{
 
-						$this->components[$key]->std_error=Webmodel::$l_['common']->lang('field_required', 'Field required');
+						$this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
 
 					}
 
-					$arr_std_error[]=Webmodel::$l_['error_model']->lang('check_error_field', 'Error in field').' '.$key.' -> '.$this->components[$key]->std_error. ' ';
+					$arr_std_error[]=I18n::lang('error_model', 'check_error_field', 'Error in field').' '.$key.' -> '.$this->components[$key]->std_error. ' ';
 					$set_error++;
 	
 				}
@@ -1146,12 +1147,12 @@ class Webmodel {
 	
 				//If isn't set the value and this value is required set std_error.
 
-				$arr_std_error[]=Webmodel::$l_['error_model']->lang('check_error_field_required', 'Error: Field required').' '.$key.' ';
+				$arr_std_error[]=I18n::lang('error_model', 'check_error_field_required', 'Error: Field required').' '.$key.' ';
 	
 				if($this->components[$key]->std_error=='')
 				{
 
-					$this->components[$key]->std_error=Webmodel::$l_['common']->lang('field_required', 'Field required');
+					$this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
 
 				}
 	
@@ -1204,7 +1205,7 @@ class Webmodel {
 	public function unset_no_required($post)
 	{
 	
-		return filter_fields_array($this->arr_fields_updated, $post);
+		return Webmodel::filter_fields_array($this->arr_fields_updated, $post);
 	
 	}
 
@@ -1485,6 +1486,40 @@ class Webmodel {
 		return ucfirst(str_replace('_', ' ', $name));
 
 	}
+	
+	/**
+	* Internal function for set array values without keys inside $array_strip
+	* 
+	* @param array $array_strip The array with key values for set
+	* @param array $array_source The array that i want fill with default values 
+	*
+	*/
+
+	static public function filter_fields_array($array_strip, $array_source)
+	{
+
+		$array_final=array();
+		
+		if(count($array_strip)>0)
+		{
+			foreach($array_strip as $field_strip)
+			{
+
+				$array_final[$field_strip]=@$array_source[$field_strip];
+
+			}
+
+			return $array_final;
+
+		}
+		else
+		{
+		
+			return $array_source;
+		
+		}
+	}
+
 
 }
 ?>
