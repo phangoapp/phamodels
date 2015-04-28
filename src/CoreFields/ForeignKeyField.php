@@ -30,7 +30,7 @@ class ForeignKeyField extends IntegerField{
 		$this->size=$size;
 		$this->form='SelectForm';
 		$this->related_model=&$related_model;
-		$this->container_model=$this->related_model->name_model;
+		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...
 		$this->fields_related_model=array();
 		//Representative field for related model...

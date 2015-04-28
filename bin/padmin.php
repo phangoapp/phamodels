@@ -185,9 +185,9 @@ function update_table($model)
 					
 					$arr_sql_index[$key][$field]='CREATE INDEX `index_'.$key.'_'.$field.'` ON '.$key.'(`'.$field.'`);';
 					
-					$table_related=$model[$key]->components[$field]->related_model;
+					$table_related=$model[$key]->components[$field]->related_model->name;
 					
-					$id_table_related=load_id_model_related($model[$key]->components[$field]);
+					$id_table_related=load_id_model_related($model[$key]->components[$field], $model);
 
 					//'Id'.ucfirst($model[$key]->components[$field]->related_model);				
 					
@@ -371,7 +371,7 @@ function update_table($model)
 					
 					$table_related=$model[$key]->components[$new_field]->related_model;
 					
-					$id_table_related=load_id_model_related($model[$key]->components[$new_field]);
+					$id_table_related=load_id_model_related($model[$key]->components[$new_field], $model);
 					
 					$arr_sql_set_index[$key][$new_field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$new_field.'_'.$key.'IDX` FOREIGN KEY ( `'.$new_field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
 
@@ -462,6 +462,57 @@ function update_table($model)
 		}
 	
 	}*/
+
+}
+
+function load_id_model_related($foreignkeyfield, $model)
+{
+
+	//global $model;
+	
+	$table_related=$foreignkeyfield->related_model->name;
+	
+	$id_table_related='';
+					
+	if(!isset($model[ $table_related ]->idmodel))
+	{
+		
+		//$id_table_related='Id'.ucfirst(PhangoVar::$model[$key]->components[$new_field]->related_model);
+		//Need load the model
+		
+		if(isset($foreignkeyfield->params_loading_mod['module']) && isset($foreignkeyfield->params_loading_mod['model']))
+		{
+		
+			$model=load_model($foreignkeyfield->params_loading_mod);
+			
+			//obtain id
+			
+			$id_table_related=$model[ $foreignkeyfield->params_loading_mod['model'] ]->idmodel;
+			
+			/*unset(PhangoVar::$model[ $foreignkeyfield->params_loading_mod['model'] ]);
+			
+			unset($cache_model);*/
+			
+		}
+	
+	}
+	else
+	{
+	
+		$id_table_related=$model[ $table_related ]->idmodel;
+	
+	}
+	
+	if($id_table_related=='')
+	{
+	
+		//Set standard...
+	
+		$id_table_related='Id'.ucfirst($table_related);
+	
+	}
+	
+	return $id_table_related;
 
 }
 
