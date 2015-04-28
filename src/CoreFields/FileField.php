@@ -73,7 +73,7 @@ class FileField extends PhangoField {
 				else
 				{
 
-					$this->std_error=PhangoVar::$l_['common']->lang('error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
+					$this->std_error=I18n::lang('common', 'error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
 
 					return '';
 
@@ -92,7 +92,7 @@ class FileField extends PhangoField {
 		else
 		{
 		
-			$this->std_error=PhangoVar::$l_['error_model']->lang('check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
+			$this->std_error=I18n::lang('error_model', 'check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
 		
 			return '';
 		
@@ -149,7 +149,7 @@ class FileField extends PhangoField {
 			if(!unlink($this->path.'/'.$file_name))
 			{
 			
-				$this->std_error=PhangoVar::$l_['common']->lang('cannot_delete_file', 'Cannot delete the file');
+				$this->std_error=I18n::lang('common', 'cannot_delete_file', 'Cannot delete the file');
 			
 			}
 		

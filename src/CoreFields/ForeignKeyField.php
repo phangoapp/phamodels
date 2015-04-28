@@ -1,6 +1,7 @@
 <?php
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaI18n\I18n;
 
 /**
 * ForeignKeyfield is a relantioship between two models...
@@ -170,7 +171,7 @@ class ForeignKeyField extends IntegerField{
 		else
 		{
 		
-			$arr_values=array('', PhangoVar::$l_['common']->lang('any_option_chosen', 'Any option chosen'), '');
+			$arr_values=array('', I18n::lang('common', 'any_option_chosen', 'Any option chosen'), '');
 			
 			return array($this->name_component, '', $arr_values);
 			

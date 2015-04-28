@@ -6,6 +6,8 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 
+use PhangoApp\PhaI18n\I18n;
+
 class BooleanField extends PhangoField {
 
 	public $size=1;
@@ -63,13 +65,13 @@ class BooleanField extends PhangoField {
 		{
 			default:
 
-				return PhangoVar::$l_['common']->lang('no', 'No');
+				return I18n::lang('common', 'no', 'No');
 
 			break;
 
 			case 1:
 
-				return PhangoVar::$l_['common']->lang('yes', 'Yes');
+				return I18n::lang('common', 'yes', 'Yes');
 
 			break;
 
@@ -81,7 +83,7 @@ class BooleanField extends PhangoField {
 	function get_parameters_default()
 	{
 	
-		$arr_values=array($this->default_value, PhangoVar::$l_['common']->lang('no', 'No'), 0, PhangoVar::$l_['common']->lang('yes', 'Yes'), 1);;
+		$arr_values=array($this->default_value, I18n::lang('common', 'no', 'No'), 0, I18n::lang('common', 'yes', 'Yes'), 1);;
 
 		return array($this->name_component, '', $arr_values);
 

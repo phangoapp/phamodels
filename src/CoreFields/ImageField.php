@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaI18n\I18n;
 
 /**
 * Imagefield is a field for upload images
@@ -112,7 +113,7 @@ class ImageField extends PhangoField {
 					if($arr_image[0]<$this->min_size[0] || $arr_image[1]<$this->min_size[1])
 					{
 					
-						$this->std_error=PhangoVar::$l_['common']->lang('image_size_is_not_correct', 'Image size is wrong').'<br />'.PhangoVar::$l_['common']->lang('min_size', 'Minimal size').': '.$this->min_size[0].'x'.$this->min_size[1];
+						$this->std_error=I18n::lang('common', 'image_size_is_not_correct', 'Image size is wrong').'<br />'.I18n::lang('common', 'min_size', 'Minimal size').': '.$this->min_size[0].'x'.$this->min_size[1];
 						
 						$this->value='';
 						return '';
@@ -121,17 +122,6 @@ class ImageField extends PhangoField {
 					}
 				
 				}
-				
-				/*//Check if exists a image with same name.
-				
-				if(file_exists($this->path.'/'.$_FILES[$file]['name']))
-				{
-				
-					$this->std_error=PhangoVar::$l_['common']->lang('a_image_with_same_name_exists', 'There is an image with the same name');
-					
-					return $image;
-				
-				}*/
 				
 				//Delete other image if exists..
 				
@@ -310,7 +300,7 @@ class ImageField extends PhangoField {
 					else
 					{
 
-						$this->std_error=PhangoVar::$l_['common']->lang('error_cannot_upload_this_image_to_the_server', 'Error: Cannot upload this image to the server');
+						$this->std_error=I18n::lang('common', 'error_cannot_upload_this_image_to_the_server', 'Error: Cannot upload this image to the server');
 						
 						if(DEBUG==1)
 						{
@@ -328,7 +318,7 @@ class ImageField extends PhangoField {
 				else
 				{
 
-					$this->std_error.=PhangoVar::$l_['error_model']->lang('img_format_error', 'Img format error, only accept gif, jpg and png formats');
+					$this->std_error.=I18n::lang('error_model', 'img_format_error', 'Img format error, only accept gif, jpg and png formats');
 
 				}
 
@@ -356,7 +346,7 @@ class ImageField extends PhangoField {
 			else
 			{
 			
-				$this->std_error=PhangoVar::$l_['error_model']->lang('check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
+				$this->std_error=I18n::lang('error_model', 'check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
 				return '';
 			
 			}
@@ -367,7 +357,7 @@ class ImageField extends PhangoField {
 		else
 		{
 		
-			$this->std_error=PhangoVar::$l_['error_model']->lang('check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
+			$this->std_error=I18n::lang('error_model', 'check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
 		
 		}
 
@@ -418,19 +408,19 @@ class ImageField extends PhangoField {
 						if(!unlink($this->path.'/'.$key.'_'.$image_name))
 						{
 							
-							$this->std_error.=PhangoVar::$l_['common']->lang('cannot_delete_image', 'Cannot delete the image').': '.$key.'_'.$image_name;
+							$this->std_error.=I18n::lang('common', 'cannot_delete_image', 'Cannot delete the image').': '.$key.'_'.$image_name;
 						
 						}
 					
 					}
 				
-					$this->std_error.=PhangoVar::$l_['common']->lang('cannot_delete_image', 'Cannot delete the image').': '.$image_name;
+					$this->std_error.=I18n::lang('common', 'cannot_delete_image', 'Cannot delete the image').': '.$image_name;
 				
 				}
 				else
 				{
 				
-					$this->std_error.=PhangoVar::$l_['common']->lang('cannot_delete_image', 'Cannot delete the image').': '.$image_name;
+					$this->std_error.=I18n::lang('common', 'cannot_delete_image', 'Cannot delete the image').': '.$image_name;
 				
 				}
 				
@@ -438,7 +428,7 @@ class ImageField extends PhangoField {
 			else
 			{
 			
-				$this->std_error.=PhangoVar::$l_['common']->lang('cannot_delete_image', 'Cannot delete the image').': '.$image_name;
+				$this->std_error.=I18n::lang('common', 'cannot_delete_image', 'Cannot delete the image').': '.$image_name;
 			
 			}
 		
