@@ -327,9 +327,9 @@ class Webmodel {
 		if(!MySQLClass::webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
 		{
 		
-			$output=ob_get_contents();
+			/*$output=ob_get_contents();
 			
-			ob_clean();
+			ob_clean();*/
 
 			//$text_error='<p>Output: '.$output.'</p>';
 
@@ -341,7 +341,7 @@ class Webmodel {
 			throw new \Exception('Error: cannot connect to database');
 		
 		}
-
+		
 		Webmodel::$select_db[$this->db_selected]=MySQLClass::webtsys_select_db( Webmodel::$db[$this->db_selected] , $this->db_selected);
 		
 		if(Webmodel::$select_db[$this->db_selected]!=false && Webmodel::$connection[$this->db_selected]!=false)

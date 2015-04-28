@@ -3,6 +3,7 @@
 include(__DIR__.'/../../../../autoload.php');
 
 use PhangoApp\PhaModels\Webmodel;
+use PhangoApp\PhaModels\MySQLClass;
 
 $options = getopt("m:");
 
@@ -19,7 +20,25 @@ include(__DIR__.'/../../../../config.php');
 
 Webmodel::$model_path=__DIR__.'/../../../../';
 
-$model=WebModel::load_model('app/page');
+$model=WebModel::load_model($options['m']);
+
+try {
+
+	$first_item=current($model);
+	
+	$first_item->connect_to_db();
+	
+} catch(Exception $e)
+{
+
+	echo $e->getMessage()."\n";
+	die;
+
+}
+
+//print_r(get_declared_classes());
+
+
 
 update_table($model);
 
@@ -31,6 +50,7 @@ update_table($model);
 
 function update_table($model)
 {
+	//include(__DIR__.'/../src/Databases/'.Webmodel::$type_db.'.php');
 	
 	$arr_sql_index=array();
 	$arr_sql_set_index=array();
@@ -308,8 +328,13 @@ function update_table($model)
 					//Drop foreignkeyfield
 					
 				//Bug, need fixed.
+				if($keys[$new_field]!='')
+				{
+				
+					$query=MySQLClass::webtsys_query('ALTER TABLE `'.$key.'` DROP FOREIGN KEY '.$new_field.'_'.$key.'IDX');
 					
-				$query=MySQLClass::webtsys_query('ALTER TABLE `'.$key.'` DROP FOREIGN KEY '.$new_field.'_'.$key.'IDX');
+				}
+					
 				
 				//}
 
