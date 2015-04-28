@@ -1372,6 +1372,7 @@ class Webmodel {
 	{
 	
 		//load_libraries(array('classes_extensions/'.$name_method));
+		include(__DIR__.'/../extensions/'.$name_method.'.php');
 	
 		array_unshift($arguments, $this);
 	
