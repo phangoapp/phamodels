@@ -13,12 +13,34 @@ if(!isset($options['m']))
 	die("Use: php padmin.php -m app/model\n");
 
 }
+else
+if(strpos($options['m'], '/')===false)
+{
+
+	die("Use: php padmin.php -m app/model\n");
+
+}
+
+$arr_option=explode('/', $options['m']);
+
+settype($arr_option[0], 'string');
+settype($arr_option[1], 'string');
 
 //Load the config.
 
 include(__DIR__.'/../../../../config.php');
 
 Webmodel::$model_path=__DIR__.'/../../../../';
+
+$model_file=Webmodel::$model_path.$arr_option[0].'/models/models_'.$arr_option[1].'.php';
+
+if(!is_file($model_file))
+{
+
+	die("Error: cannot find the model file in ".$arr_option[0]."/models/models_".$arr_option[1].".php\n");
+
+}
+
 
 $model=WebModel::load_model($options['m']);
 
@@ -41,6 +63,45 @@ try {
 
 
 update_table($model);
+
+$post_install_script=Webmodel::$model_path.$arr_option[0].'/install/post_install.php';
+
+$post_install_lock=Webmodel::$model_path.$arr_option[0].'/install/lock';
+
+if(file_exists($post_install_script) && !file_exists($post_install_lock))
+{
+
+	echo "Executing post_install script...\n";
+
+	include($post_install_script);
+
+	if(post_install())
+	{
+	
+		if(!file_put_contents($post_install_lock, 'installed'))
+		{
+		
+			echo "Done, but cannot create this file: ".$arr_option[0].'/install/lock'.". Check your permissions and create the file if the script executed satisfally \n";
+		
+		}
+		else
+		{
+		
+			echo "Done\n";
+		
+		}
+	
+	}
+	else
+	{
+	
+		echo "Error, please, check ${post_install_script} file and execute padmin.php again\n";
+	
+	}
+
+}
+
+echo "All things done\n";
 
 /**
 * This Function is used for padmin.php for create new tables and fields based in Webmodel class.
