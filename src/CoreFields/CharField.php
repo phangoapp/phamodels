@@ -55,7 +55,7 @@ class CharField extends PhangoField {
 
 		//Delete Javascript tags and simple quotes.
 		$this->value=Utils::form_text($value);
-		return form_text($value);
+		return Utils::form_text($value);
 
 	}
 
