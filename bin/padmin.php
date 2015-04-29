@@ -30,7 +30,7 @@ settype($arr_option[1], 'string');
 
 include(__DIR__.'/../../../../config.php');
 
-Webmodel::$model_path=__DIR__.'/../../../../';
+Webmodel::$model_path=__DIR__.'/../../../../modules/';
 
 $model_file=Webmodel::$model_path.$arr_option[0].'/models/models_'.$arr_option[1].'.php';
 
