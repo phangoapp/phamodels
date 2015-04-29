@@ -1,6 +1,9 @@
 <?php
 
 namespace PhangoApp\PhaModels;
+use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaI18n\I18n;
 
 //Class ModelForm is the base class for create forms...
 
@@ -93,6 +96,18 @@ class ModelForm {
 	public $error_flag=0;
 	
 	/**
+	* Array for save the fields for external checkings.
+	*/
+	
+	static public $arr_form_public=array();
+	
+	/**
+	* Boolean property that set DEBUG mode
+	*/
+	
+	static public $debug=1;
+	
+	/**
 	* Constructor for create a new ModelForm. ModelForm are used for create forms easily.
 	* 
 	* @param string $name_form  The name of the form where is inserted this form element
@@ -114,17 +129,17 @@ class ModelForm {
 		$this->type = $type;
 		$this->label = $label;
 		$this->std_error = '';
-		$this->txt_error = PhangoVar::$l_['common']->lang('error_in_field', 'Error in field');
+		$this->txt_error = I18n::lang('common', 'error_in_field', 'Error in field');
 		$this->required = $required;
 
 		$this->html_field_name=$name_field;
 
-		switch(DEBUG)
+		switch(ModelForm::$debug)
 		{
 
 			default:
 				
-				$prefix_uniqid=generate_random_password();
+				$prefix_uniqid=Utils::generate_random_password();
 								
 				if(!isset($_SESSION['fields_check'][$name_field]))
 				{
@@ -169,7 +184,7 @@ class ModelForm {
 		
 		//$this->html_field_name=$name_field; slugify($this->label, $respect_upper=0, $replace_space='-', $replace_dot=1, $replace_barr=1);
 
-		PhangoVar::$arr_form_public[$this->html_field_name]=$name_field;
+		ModelForm::$arr_form_public[$this->html_field_name]=$name_field;
 
 		$this->parameters = array($this->html_field_name, $class='', $parameters);
 

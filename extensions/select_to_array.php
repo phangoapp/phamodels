@@ -45,7 +45,7 @@ function select_to_array_method_class($class, $where="", $arr_select=array(), $r
 	
 	$query=$class->select($where, $arr_select, $raw_query);
 	
-	while($arr_row=webtsys_fetch_array($query))
+	while($arr_row=$class->fetch_array($query))
 	{
 	
 		

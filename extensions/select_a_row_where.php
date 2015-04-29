@@ -30,7 +30,7 @@ function select_a_row_where_method_class($class, $where, $arr_select=array(), $r
 	
 	$query=$class->select($where, $arr_select, $raw_query);
 	
-	return webtsys_fetch_array($query, $assoc);
+	return $class->fetch_array($query, $assoc);
 
 }
 

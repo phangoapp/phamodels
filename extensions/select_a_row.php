@@ -29,7 +29,7 @@ function select_a_row_method_class($class, $idrow, $arr_select=array(), $raw_que
 	
 	$query=$class->select('where '.$class->name.'.`'.$class->idmodel.'`=\''.$idrow.'\'', $arr_select, $raw_query);
 	
-	return webtsys_fetch_array($query, $assoc);
+	return $class->fetch_array($query, $assoc);
 
 }
 
