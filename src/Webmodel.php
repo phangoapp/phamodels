@@ -323,7 +323,6 @@ class Webmodel {
 	{
 		
 		include(__DIR__.'/Databases/'.Webmodel::$type_db.'.php');
-		//load_libraries(array('database/'.Webmodel::$type_db), Webmodel::$base_path);
 	
 		if(!MySQLClass::webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
 		{
@@ -1371,7 +1370,6 @@ class Webmodel {
 	public function __call($name_method, $arguments)
 	{
 	
-		//load_libraries(array('classes_extensions/'.$name_method));
 		include(__DIR__.'/../extensions/'.$name_method.'.php');
 	
 		array_unshift($arguments, $this);
