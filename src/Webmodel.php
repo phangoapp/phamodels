@@ -217,6 +217,13 @@ class Webmodel {
 	
 	public $modify_id=0;
 	
+	/**
+	* An array used for save the models.
+	*
+	*/
+	
+	static public $model=array();
+	
 	//Construct the model
 
 	/**
@@ -289,7 +296,7 @@ class Webmodel {
 		
 			include($path_model);
 			
-			$func_load=$model.'ModelLoad';
+			/*$func_load=$model.'ModelLoad';
 			
 			if(!function_exists($func_load))
 			{
@@ -302,7 +309,7 @@ class Webmodel {
 			
 				return $func_load();
 				
-			}
+			}*/
 		
 		}
 		else
