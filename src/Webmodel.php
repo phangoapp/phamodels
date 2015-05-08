@@ -2,7 +2,6 @@
 
 namespace PhangoApp\PhaModels;
 
-use PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaI18n\I18n;
 
 /**
@@ -243,7 +242,7 @@ class Webmodel {
 
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
-		$this->components[$this->idmodel]=new CoreFields\PrimaryField();
+		$this->components[$this->idmodel]=new \PrimaryField();
 		$this->label=$this->name;
 		
 		if(!isset(Webmodel::$connection_func[$this->db_selected]))

@@ -42,7 +42,7 @@ if(!is_file($model_file))
 }
 
 
-$model=WebModel::load_model($options['m']);
+WebModel::load_model($options['m']);
 
 try {
 
@@ -62,7 +62,7 @@ try {
 
 
 
-update_table($model);
+update_table(Webmodel::$model);
 
 $post_install_script=Webmodel::$model_path.$arr_option[0].'/install/post_install.php';
 
