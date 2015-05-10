@@ -77,6 +77,12 @@ class Webmodel {
 	static public $prefix_db='';
 
 	/**
+	* Array for check if a model was loaded.
+	*/
+	
+	static public $cache_model=array();
+	
+	/**
 	*
 	* With this property, you can define what is the server connection that you have to use for read the source data.
 	* If you create a phango loader that balancer where you read the data, you can obtain many flexibility.
@@ -255,17 +261,6 @@ class Webmodel {
 	}
 	
 	/**
-	* Method for load config from a project.
-	*/
-	
-	static public function load_config()
-	{
-	
-		//if(is_file($this->path_mo
-	
-	}
-	
-	/**
 	* Method for load models from a project.
 	*
 	* @param string $model Model name. The model is search in Webmodel::$model_path and the name is $model.php
@@ -290,32 +285,24 @@ class Webmodel {
 		
 		$path_model=Webmodel::$model_path.$app_model.'/'.Webmodel::$model_folder.'/models_'.$model.'.php';
 	
-		if(is_file($path_model))
+		if(!isset(Webmodel::$cache_model[$app_model.'/'.$model]))
 		{
-		
-			include($path_model);
-			
-			/*$func_load=$model.'ModelLoad';
-			
-			if(!function_exists($func_load))
+	
+			if(is_file($path_model))
 			{
 			
-				throw new \Exception('Error: function '.$func_load.' not found in '.$path_model);
+				include($path_model);
+				
+				Webmodel::$cache_model[$app_model.'/'.$model]=1;
 			
 			}
 			else
 			{
 			
-				return $func_load();
-				
-			}*/
-		
-		}
-		else
-		{
-		
-			throw new \Exception('Error: model not found in '.$path_model);
-		
+				throw new \Exception('Error: model not found in '.$path_model);
+			
+			}
+			
 		}
 	
 	}
