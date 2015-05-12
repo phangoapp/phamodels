@@ -993,7 +993,6 @@ class Webmodel {
 	/**
 	* A helper function for obtain the last insert id.
 	*
-	* @param mixed $query The last insert id.
 	*/
 	
 	public function insert_id()
@@ -1002,6 +1001,19 @@ class Webmodel {
 		$this->set_phango_connection();
 		
 		return MySQLClass::webtsys_insert_id();
+	
+	}
+	
+	/**
+	* A helper function for escape query strings
+	*
+	* @param string $value The query string to escape.
+	*/
+	
+	static public function escape_string($value)
+	{
+		
+		return MySQLClass::webtsys_escape_string($value);
 	
 	}
 
