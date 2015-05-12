@@ -2,8 +2,25 @@
 
 include(__DIR__.'/../../../../autoload.php');
 
+use PhangoApp\PhaRouter\Routes;
+use PhangoApp\PhaRouter\Controller;
 use PhangoApp\PhaModels\Webmodel;
+use PhangoApp\PhaModels\ModelForm;
+use PhangoApp\PhaView\View;
+use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaUtils\Utils;
 use PhangoApp\PhaModels\MySQLClass;
+
+class_alias('PhangoApp\PhaRouter\Controller', 'ControllerSwitchClass');
+class_alias('PhangoApp\PhaRouter\Routes', 'Routes');
+class_alias('PhangoApp\PhaModels\Webmodel', 'Webmodel');
+class_alias('PhangoApp\PhaModels\ModelForm', 'ModelForm');
+class_alias('PhangoApp\PhaModels\MySQLClass', 'MySQLClass');
+class_alias('PhangoApp\PhaView\View', 'View');
+class_alias('PhangoApp\PhaUtils\Utils', 'Utils');
+class_alias('PhangoApp\PhaI18n\I18n', 'I18n');
+
+include(__DIR__.'/../../../../libraries/phangovar.php');
 
 $options = getopt("m:");
 
