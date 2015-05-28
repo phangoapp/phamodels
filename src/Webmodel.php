@@ -83,6 +83,12 @@ class Webmodel {
 	static public $cache_model=array();
 	
 	/**
+	* Array for check if a extension was loaded.
+	*/
+	
+	static public $cache_extension=array();
+	
+	/**
 	*
 	* With this property, you can define what is the server connection that you have to use for read the source data.
 	* If you create a phango loader that balancer where you read the data, you can obtain many flexibility.
@@ -1375,7 +1381,13 @@ class Webmodel {
 	public function __call($name_method, $arguments)
 	{
 	
-		include(__DIR__.'/../extensions/'.$name_method.'.php');
+		if(!isset(Webmodel::$cache_extension[$name_method]))
+		{
+	
+			include(__DIR__.'/../extensions/'.$name_method.'.php');
+			
+			Webmodel::$cache_extension[$name_method]=1;
+		}
 	
 		array_unshift($arguments, $this);
 	
