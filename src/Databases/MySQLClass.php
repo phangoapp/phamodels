@@ -9,7 +9,7 @@ if(!function_exists('mysql_query'))
 
 }
 
-class MySQLClass {
+class SQLClass {
 
 	static public $debug=true;
 
@@ -18,7 +18,7 @@ class MySQLClass {
 
 		$error=mysqli_error(Webmodel::$connection[$server_data]);
 
-		if($error!='' && MySQLClass::$debug==true)
+		if($error!='' && SQLClass::$debug==true)
 		{
 			//echo '<p>Error: '.$sql_fail.' -> '.$error.'</p>';
 			throw new \Exception('Error: '.$sql_fail.' -> '.$error);
@@ -33,7 +33,7 @@ class MySQLClass {
 		
 		$query = mysqli_query(Webmodel::$connection[$server_data], $sql_string );
 		
-		MySQLClass::print_sql_fail($sql_string, $server_data);
+		SQLClass::print_sql_fail($sql_string, $server_data);
 
 		Webmodel::$save_query++;
 		
