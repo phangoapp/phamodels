@@ -420,7 +420,8 @@ class Webmodel {
 		
 		unset($this->components[$this->idmodel]);
 		$this->idmodel=$name_id;
-		$this->components[$this->idmodel]=new PrimaryField();
+		//$this->components[$this->idmodel]=new PrimaryField();
+		$this->register($this->idmodel, 'PrimaryField', array());
 
 	}
 	
@@ -720,8 +721,8 @@ class Webmodel {
 			
 			foreach($arr_extra_model as $key => $my_field)
 			{
-			
-				$model_name_related=$this->components[$my_field]->related_model;
+				
+				$model_name_related=$this->components[$my_field]->related_model->name;
 				
 				//Set the value for the component foreignkeyfield if name_field_to_field is set.
 			
