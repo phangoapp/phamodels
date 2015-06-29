@@ -219,7 +219,7 @@ class Webmodel {
 	*
 	*/
 	
-	public $type_cache='';
+	public $type_cache='fileCache';
 
 	/**
 	* Property that define if id is modified.
@@ -247,7 +247,7 @@ class Webmodel {
 	* 
 	*/
 	
-	public function __construct($name_model)
+	public function __construct($name_model, $cache=0, $type_cache='fileCache')
 	{
 	
 		//Webmodel::$root_model='app/'.$name_model.'/'.Webmodel::$model_path;
@@ -263,8 +263,18 @@ class Webmodel {
 			Webmodel::$connection_func[$this->db_selected]='connect_to_db';
 		
 		}
+		
+		$this->cache=$cache;
+		$this->type_cache=$type_cache;
+		
+		
 
 	}
+	
+	/**
+	* 
+	*
+	*/
 	
 	/**
 	* Method for load models from a project.
@@ -465,6 +475,19 @@ class Webmodel {
 			
 		return 'insert into '.$this->name.' (`'.implode("`, `", array_keys($fields)).'`) VALUES ('.implode(", ",$arr_fields).') ';
 	
+	}
+	
+	/**
+	* This method is used for make raw string queries.
+	*
+	*/
+	
+	public function query($sql_query)
+	{
+	
+		$this->set_phango_connection();
+		
+		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
 	}
 	
 	/**
@@ -798,7 +821,18 @@ class Webmodel {
 		$arr_distinct[0]='';
 		$arr_distinct[1]=' DISTINCT ';
 		
-		$query=SQLClass::webtsys_query('select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions, $this->db_selected);
+		if($this->cache==0)
+		{
+		
+			$query=SQLClass::webtsys_query('select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions, $this->db_selected);
+			
+		}
+		else
+		{
+		
+		
+		
+		}
 		
 		$this->distinct=0;
 		
