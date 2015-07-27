@@ -235,6 +235,17 @@ class Webmodel {
 	
 	static public $model=array();
 	
+	/**
+	* Internal arrays for create new indexes in the tables
+	*
+	*/
+	
+	static public $arr_sql_index=array();
+	static public $arr_sql_set_index=array();
+	
+	static public $arr_sql_unique=array();
+	static public $arr_sql_set_unique=array();
+	
 	//Construct the model
 
 	/**
@@ -1031,6 +1042,134 @@ class Webmodel {
 		$this->set_phango_connection();
 		
 		return SQLClass::webtsys_insert_id();
+	
+	}
+	
+	/**
+	* Method for create a new table based on a model
+	* 
+	*/
+	
+	public function create_table()
+	{
+	
+		$this->set_phango_connection();
+	
+		foreach($this->components as $field => $data)
+		{
+		
+			$arr_table[]='`'.$field.'` '.$this->components[$field]->get_type_sql();
+
+			//Check if indexed
+			
+			if($this->components[$field]->indexed==true)
+			{
+			
+				Webmodel::$arr_sql_index[$this->name][$field]='CREATE INDEX `index_'.$this->name.'_'.$field.'` ON '.$this->name.'(`'.$field.'`);';
+				Webmodel::$arr_sql_set_index[$this->name][$field]='';
+			
+			}
+			
+			//Check if unique
+			
+			if($this->components[$field]->unique==true)
+			{
+			
+				Webmodel::$arr_sql_unique[$this->name][$field]=' ALTER TABLE `'.$this->name.'` ADD UNIQUE (`'.$field.'`)';
+				Webmodel::$arr_sql_set_unique[$this->name][$field]='';
+			
+			}
+			
+			//Check if foreignkeyfield...
+			if(isset($this->components[$field]->related_model))
+			{
+
+				//Create indexes...
+				
+				Webmodel::$arr_sql_index[$this->name][$field]='CREATE INDEX `index_'.$this->name.'_'.$field.'` ON '.$this->name.'(`'.$field.'`);';
+				
+				$table_related=$this->components[$field]->related_model->name;
+				
+				$id_table_related=Webmodel::load_id_model_related($this->components[$field], Webmodel::$model);
+
+				//'Id'.ucfirst($this->components[$field]->related_model);				
+				
+				Webmodel::$arr_sql_set_index[$this->name][$field]='ALTER TABLE `'.$this->name.'` ADD CONSTRAINT `'.$field.'_'.$this->name.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
+
+			}
+		}
+		
+		$sql_query="create table `$this->name` (\n".implode(",\n", $arr_table)."\n) DEFAULT CHARSET=utf8;\n";
+		
+		return SQLClass::webtsys_query($sql_query);
+	
+	}
+	
+	/**
+	* Method used in internal tasks related in creation and modification of db tables based in models
+	* 
+	*/
+	
+	static public function load_id_model_related($foreignkeyfield)
+	{
+
+		//global $model;
+		
+		$table_related=$foreignkeyfield->related_model->name;
+		
+		$id_table_related='';
+						
+		if(!isset(Webmodel::$model[ $table_related ]->idmodel))
+		{
+			
+			//$id_table_related='Id'.ucfirst(PhangoVar::$model[$key]->components[$new_field]->related_model);
+			//Need load the model
+			
+			if(isset($foreignkeyfield->params_loading_mod['module']) && isset($foreignkeyfield->params_loading_mod['model']))
+			{
+			
+				$model=Webmodel::load_model($foreignkeyfield->params_loading_mod);
+				
+				//obtain id
+				
+				$id_table_related=Webmodel::$model[ $foreignkeyfield->params_loading_mod['model'] ]->idmodel;
+				
+				/*unset(PhangoVar::$model[ $foreignkeyfield->params_loading_mod['model'] ]);
+				
+				unset($cache_model);*/
+				
+			}
+		
+		}
+		else
+		{
+		
+			$id_table_related=Webmodel::$model[ $table_related ]->idmodel;
+		
+		}
+		
+		if($id_table_related=='')
+		{
+		
+			//Set standard...
+		
+			$id_table_related='Id'.ucfirst($table_related);
+		
+		}
+		
+		return $id_table_related;
+
+	}
+	
+	/**
+	* Simple metod for drop a db table based in a model
+	*
+	*/
+	
+	static public function drop_table($table)
+	{
+	
+		return SQLClass::webtsys_query('drop table '.$table);
 	
 	}
 	
