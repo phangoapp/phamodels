@@ -294,11 +294,11 @@ class Webmodel {
 	*
 	*/
 	
-	static public function load_model($model)
+	static public function load_model($model_path)
 	{
 		
-		$app_model=$model;
-		
+		//$app_model=$model;
+		/*
 		if(strpos($model, '/'))
 		{
 			
@@ -309,10 +309,11 @@ class Webmodel {
 			$model=$arr_model[1];
 		
 		}
+		*/
 		
-		$path_model=Webmodel::$model_path.$app_model.'/'.Webmodel::$model_folder.'/models_'.$model.'.php';
+		$path_model=$model_path.'.php';
 	
-		if(!isset(Webmodel::$cache_model[$app_model.'/'.$model]))
+		if(!isset(Webmodel::$cache_model[$path_model]))
 		{
 	
 			if(is_file($path_model))
@@ -320,7 +321,7 @@ class Webmodel {
 			
 				include($path_model);
 				
-				Webmodel::$cache_model[$app_model.'/'.$model]=1;
+				Webmodel::$cache_model[$path_model]=1;
 			
 			}
 			else
@@ -365,13 +366,6 @@ class Webmodel {
 			$output=ob_get_contents();
 			
 			ob_clean();
-
-			//$text_error='<p>Output: '.$output.'</p>';
-
-			/*$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
-			$arr_error_sql[1]='<p>Error: Cannot connect to MySQL db, '.$output.'</p>';
-		
-			show_error($arr_error_sql[0], $arr_error_sql[1]);*/
 			
 			throw new \Exception('Error: cannot connect to database');
 		
