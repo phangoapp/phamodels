@@ -14,7 +14,10 @@ else
 
 use PhangoApp\PhaModels\SQLClass;
 use PhangoApp\PhaModels\Webmodel;
+use PhangoApp\PhaUtils\Utils;
 use League\CLImate\CLImate;
+
+Utils::load_config('config');
 
 $options=getopt('', array('model:'));
 
@@ -32,9 +35,9 @@ function padminConsole($options)
 	
 		//echo "Use: php console.php -m=padmin -c=padmin --model=module/model\n";
 		
-		$climate->white()->backgroundBlack()->out("Use: padmin --model=module/model");
+		$climate->white()->backgroundBlack()->out("Use: padmin --model=path/to/model");
 		
-		die;
+		exit(0);
 	
 	}
 	
@@ -43,16 +46,16 @@ function padminConsole($options)
 	settype($arr_option[0], 'string');
 	settype($arr_option[1], 'string');
 	
-	Webmodel::$model_path='./modules/';
+	#Webmodel::$model_path='./modules/';
 	
-	$model_file=Webmodel::$model_path.$arr_option[0].'/models/models_'.$arr_option[1].'.php';
+	$model_file=$options['model'].'.php';
 	
 	if(!is_file($model_file))
 	{
 
 		$climate->white()->backgroundRed()->out("Error: cannot find the model file in ".$arr_option[0]."/models/models_".$arr_option[1].".php");
 	
-		die();
+		exit(1);
 
 	}
 
@@ -68,8 +71,7 @@ function padminConsole($options)
 	} catch(Exception $e)
 	{
 		$climate->white()->backgroundRed()->out($e->getMessage());
-		//echo $e->getMessage()."\n";
-		die;
+		exit(1);
 
 	}
 

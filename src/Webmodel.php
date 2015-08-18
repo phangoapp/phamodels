@@ -3,6 +3,7 @@
 namespace PhangoApp\PhaModels;
 
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaModels\CoreFields\PrimaryField;
 
 /**
 * The most important class for the framework
@@ -265,7 +266,7 @@ class Webmodel {
 
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
-		$this->components[$this->idmodel]=new \PrimaryField();
+		$this->components[$this->idmodel]=new PrimaryField();
 		$this->label=$this->name;
 		
 		if(!isset(Webmodel::$connection_func[$this->db_selected]))
@@ -277,8 +278,6 @@ class Webmodel {
 		
 		$this->cache=$cache;
 		$this->type_cache=$type_cache;
-		
-		
 
 	}
 	
@@ -1100,6 +1099,17 @@ class Webmodel {
 	}
 	
 	/**
+	* Method used for update tables
+	*/
+	
+	public function update_table()
+	{
+	
+		
+	
+	}
+	
+	/**
 	* Method used in internal tasks related in creation and modification of db tables based in models
 	* 
 	*/
@@ -1582,11 +1592,14 @@ class Webmodel {
 	* @param string $arguments Array with arguments for construct the new field
 	* @param boolean $required A boolean used for set the default required value
 	*/
-	public function register($name, $type, $arguments, $required=0)
+	public function register($name, $type_class, $required=0)
 	{
 	
-		$rc=new \ReflectionClass($type);
-		$this->components[$name]=$rc->newInstanceArgs($arguments);
+		/*$rc=new \ReflectionClass($type);
+		$this->components[$name]=$rc->newInstanceArgs($arguments);*/
+		
+		$this->components[$name]=&$type_class;
+		
 		//Set first label...
 		$this->components[$name]->label=Webmodel::set_name_default($name);
 		$this->components[$name]->name_model=$this->name;
