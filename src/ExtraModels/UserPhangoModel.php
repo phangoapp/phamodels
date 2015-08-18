@@ -9,7 +9,7 @@
 *
 */
 
-namespace PhangoApp\PhaModels\ExtraModels\UserPhangoModel;
+namespace PhangoApp\PhaModels\ExtraModels;
 
 use PhangoApp\Phai18n\I18n;
 use PhangoApp\PhaModels\Webmodel;
