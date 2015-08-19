@@ -22,7 +22,7 @@ class IntegerField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::TextForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::TextForm';
 		$this->only_positive=$only_positive;
 		$this->min_num=$min_num;
 		$this->max_num=$max_num;

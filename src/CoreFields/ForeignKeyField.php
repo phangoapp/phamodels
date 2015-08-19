@@ -29,7 +29,7 @@ class ForeignKeyField extends IntegerField{
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::SelectForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::SelectForm';
 		$this->related_model=&$related_model;
 		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...

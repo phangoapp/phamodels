@@ -15,7 +15,7 @@ class ImageField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form="CoreForms::ImageForm";
+	public $form="PhangoApp\PhaModels\CoreForms::ImageForm";
 	public $name_file="";
 	public $path="";
 	public $url_path="";

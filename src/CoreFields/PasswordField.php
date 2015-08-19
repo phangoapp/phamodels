@@ -18,7 +18,7 @@ class PasswordField extends CharField {
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::PasswordForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::PasswordForm';
 
 	}
 

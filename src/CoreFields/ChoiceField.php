@@ -29,7 +29,7 @@ class ChoiceField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::SelectForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::SelectForm';
 		$this->type=$type;
 		$this->arr_values=$arr_values;
 		$this->default_value=$default_value;

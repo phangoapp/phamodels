@@ -22,7 +22,7 @@ class DoubleField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::TextForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::TextForm';
 
 	}
 

@@ -23,7 +23,7 @@ class DateField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='CoreForms::DateForm';
+		$this->form='PhangoApp\PhaModels\CoreForms::DateForm';
 
 	}
 
