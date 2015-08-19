@@ -24,7 +24,7 @@ class BooleanField extends PhangoField {
 	{
 
 		$this->size=1;
-		$this->form='SelectForm';
+		$this->form='CoreForms::SelectForm';
 
 	}
 

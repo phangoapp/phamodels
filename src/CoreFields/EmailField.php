@@ -12,7 +12,7 @@ class EmailField extends PhangoField {
 	public $size=200;
 	public $value="";
 	public $label="";
-	public $form="TextForm";
+	public $form="CoreForms::TextForm";
 	public $class="";
 	public $required=0;
 	public $quot_open='\'';

@@ -87,7 +87,7 @@ class PhangoField {
 	* Form define the function for use in forms...
 	*/
 	
-	public $form="";
+	public $form="CoreForms::TextForm";
 	
 	/**
 	* Array for create initial parameters for form..

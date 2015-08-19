@@ -25,7 +25,7 @@ class TextHTMLField extends PhangoField {
 	function __construct($multilang=0)
 	{
 
-		$this->form='TextAreaForm';
+		$this->form='CoreForms::TextAreaForm';
 		$this->multilang=$multilang;
 		$this->set_safe_html_tags();
 

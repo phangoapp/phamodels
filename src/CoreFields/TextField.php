@@ -22,7 +22,7 @@ class TextField extends PhangoField {
 	function __construct($multilang=0)
 	{
 
-		$this->form='TextAreaForm';
+		$this->form='CoreForms::TextAreaForm';
 		$this->multilang=$multilang;
 
 	}

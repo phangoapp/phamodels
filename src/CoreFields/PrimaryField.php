@@ -33,7 +33,7 @@ class PrimaryField extends PhangoField {
 	* By default, the form used for this field is HiddenForm.
 	*/
 	
-	public $form="HiddenForm";
+	public $form="CoreForms::HiddenForm";
 
 	/**
 	* Check function that convert the value on a PrimaryField value.

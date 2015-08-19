@@ -17,7 +17,7 @@ class ParentField extends IntegerField{
 
 		$this->parent_model=&$parent_model;
 		$this->size=$size;
-		$this->form='SelectForm';
+		$this->form='CoreForms::SelectForm';
 
 	}
 

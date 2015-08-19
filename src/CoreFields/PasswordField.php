@@ -18,7 +18,7 @@ class PasswordField extends CharField {
 	{
 
 		$this->size=$size;
-		$this->form='PasswordForm';
+		$this->form='CoreForms::PasswordForm';
 
 	}
 

@@ -22,7 +22,7 @@ class DoubleField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='TextForm';
+		$this->form='CoreForms::TextForm';
 
 	}
 
