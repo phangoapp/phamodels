@@ -1,6 +1,6 @@
 <?php
 /**
-* Base file include where basic static public  and methods for create MVC applications
+* Base file include where basic static public function and methods for create MVC applications
 *
 * This file contains principal static public s and methods for create models, text formatting, forms creation, definition of basic variables, basic ORM that use on 90% of db searchs, etc...
 *
@@ -27,7 +27,7 @@ class CoreForms {
 	* @param string $value Initial value for the form
 	*/
 
-	static public  TextForm($name="", $class='', $value='')
+	static public function TextForm($name="", $class='', $value='')
 	{
 
 		return '<input type="text" name="'.$name.'" id="'.$name.'_field_form" class="'.$class.'" value="'.$value.'" />';
@@ -36,7 +36,7 @@ class CoreForms {
 
 	//Prepare a value for input text
 
-	static public  TextFormSet($post, $value)
+	static public function TextFormSet($post, $value)
 	{
 
 		$value = Utils::replace_quote_text( $value );
@@ -46,7 +46,7 @@ class CoreForms {
 
 	//Create a input password
 
-	static public  PasswordForm($name="", $class='', $value='')
+	static public function PasswordForm($name="", $class='', $value='')
 	{
 
 		$value = Utils::replace_quote_text( $value );
@@ -57,7 +57,7 @@ class CoreForms {
 
 	//Prepare a value for input password
 
-	static public  PasswordFormSet($post, $value)
+	static public function PasswordFormSet($post, $value)
 	{
 
 		$value = ''; //Utils::replace_quote_text( $value );
@@ -68,7 +68,7 @@ class CoreForms {
 
 	//Create a input file
 
-	static public  FileForm($name="", $class='', $value='', $delete_inline=0, $path_file='')
+	static public function FileForm($name="", $class='', $value='', $delete_inline=0, $path_file='')
 	{
 		
 		
@@ -97,7 +97,7 @@ class CoreForms {
 
 	//Prepare a value for input password
 
-	static public  FileFormSet($post, $value)
+	static public function FileFormSet($post, $value)
 	{
 		
 		$value = Utils::replace_quote_text( $value );
@@ -109,7 +109,7 @@ class CoreForms {
 
 	//Create a special form for a image
 
-	static public  ImageForm($name="", $class='', $value='', $delete_inline=0, $path_image='')
+	static public function ImageForm($name="", $class='', $value='', $delete_inline=0, $path_image='')
 	{
 
 		$image_url=$path_image.'/'.$value;
@@ -136,7 +136,7 @@ class CoreForms {
 
 	//Prepare a value for input password
 
-	static public  ImageFormSet($post, $value)
+	static public function ImageFormSet($post, $value)
 	{
 		
 		$value = Utils::replace_quote_text( $value );
@@ -147,7 +147,7 @@ class CoreForms {
 
 	//Create a textarea 
 
-	static public  TextAreaForm($name="", $class='', $value='')
+	static public function TextAreaForm($name="", $class='', $value='')
 	{
 
 		return '<textarea name="'.$name.'" class="'.$class.'" id="'.$name.'_field_form">'.$value.'</textarea>';
@@ -156,7 +156,7 @@ class CoreForms {
 
 	//Prepare the value for the textarea
 
-	static public  TextAreaFormSet($post, $value)
+	static public function TextAreaFormSet($post, $value)
 	{
 
 		$value = Utils::replace_quote_text( $value );
@@ -167,7 +167,7 @@ class CoreForms {
 
 	//Create a input hidden
 
-	static public  HiddenForm($name="", $class='', $value='')
+	static public function HiddenForm($name="", $class='', $value='')
 	{
 
 		return '<input type="hidden" name="'.$name.'" value="'.$value.'" id="'.$name.'_field_form"/>';
@@ -176,7 +176,7 @@ class CoreForms {
 
 	//Prepare the value for a input hidden
 
-	static public  HiddenFormSet($post, $value)
+	static public function HiddenFormSet($post, $value)
 	{
 
 		$value = Utils::replace_quote_text( $value );
@@ -187,7 +187,7 @@ class CoreForms {
 
 	//Create a input checkbox
 
-	static public  CheckBoxForm($name="", $class='', $value='')
+	static public function CheckBoxForm($name="", $class='', $value='')
 	{
 		
 		$arr_checked[$value]='';
@@ -201,7 +201,7 @@ class CoreForms {
 
 	//Prepare the value for the checkbox
 
-	static public  CheckBoxFormSet($post, $value)
+	static public function CheckBoxFormSet($post, $value)
 	{
 
 		settype($value, 'integer');
@@ -212,7 +212,7 @@ class CoreForms {
 
 	//Create a select
 
-	static public  SelectForm($name="", $class='', $value='', $more_options='')
+	static public function SelectForm($name="", $class='', $value='', $more_options='')
 	{
 		
 		$select='<select name="'.$name.'" id="'.$name.'_field_form" class="'.$class.'" '.$more_options.'>'."\n";
@@ -262,7 +262,7 @@ class CoreForms {
 
 	//Prepare the value for the select
 
-	static public  SelectFormSet($post, $value)
+	static public function SelectFormSet($post, $value)
 	{
 		
 		$value = preg_replace('/<(.*?)\/(.*?)option(.*?)>/', '', $value);
@@ -275,7 +275,7 @@ class CoreForms {
 
 	//Crate a multiple select
 
-	static public  SelectManyForm($name="", $class='', $value='', $more_options='' )
+	static public function SelectManyForm($name="", $class='', $value='', $more_options='' )
 	{
 		
 		$select='<select name="'.$name.'[]" id="'.$name.'_field_form" class="'.$class.'" '.$more_options.' multiple>'."\n";
@@ -330,7 +330,7 @@ class CoreForms {
 
 	//Prepare the value for the multiple select
 
-	static public  SelectManyFormSet($post, $value)
+	static public function SelectManyFormSet($post, $value)
 	{
 		
 		if(gettype($value)!='array')
@@ -354,7 +354,7 @@ class CoreForms {
 
 	//A special form for dates in format day/month/year
 
-	static public  DateForm($field, $class='', $value='', $set_time=1, $see_title=1)
+	static public function DateForm($field, $class='', $value='', $set_time=1, $see_title=1)
 	{
 		
 		if($value==0)
@@ -422,7 +422,7 @@ class CoreForms {
 
 	//Prepare value form dateform
 
-	static public  DateFormSet($post, $value)
+	static public function DateFormSet($post, $value)
 	{
 
 		if(gettype($value)=='array')
@@ -455,7 +455,7 @@ class CoreForms {
 
 	}
 
-	static public  RadioIntForm($name="", $class='', $value=array(), $more_options='')
+	static public function RadioIntForm($name="", $class='', $value=array(), $more_options='')
 	{
 		$select='';
 
@@ -486,7 +486,7 @@ class CoreForms {
 
 	//Prepare the value for the select
 
-	static public  RadioIntFormSet($post, $value)
+	static public function RadioIntFormSet($post, $value)
 	{
 		
 		settype($value, 'integer');
