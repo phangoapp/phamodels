@@ -22,7 +22,7 @@
 *
 */
 
-function select_to_array_method_class($class, $where="", $arr_select=array(), $raw_query=0, $index_id='')
+function select_to_array_method_class($class, $arr_select=array(), $raw_query=0, $index_id='')
 {
 
 	$arr_return=array();
@@ -43,7 +43,7 @@ function select_to_array_method_class($class, $where="", $arr_select=array(), $r
 	
 	}
 	
-	$query=$class->select($where, $arr_select, $raw_query);
+	$query=$class->select($arr_select, $raw_query);
 	
 	while($arr_row=$class->fetch_array($query))
 	{

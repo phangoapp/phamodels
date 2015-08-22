@@ -237,6 +237,34 @@ class Webmodel {
 	static public $model=array();
 	
 	/**
+	* A string where is saved the conditions used for create queries
+	*
+	*/
+	
+	protected $conditions='WHERE 1=1';
+	
+	/**
+    * A string where is set the order of query
+    *
+    */
+    
+    protected $order_by='';
+    
+    /**
+    * A string where is saved the limit of rows in query
+    *
+    */
+    
+    protected $limit='';
+    
+    /**
+    * A string where is saved the limit of rows in query
+    *
+    */
+    
+    protected $reset_conditions=true;
+	
+	/**
 	* Internal arrays for create new indexes in the tables
 	*
 	*/
@@ -494,6 +522,53 @@ class Webmodel {
 		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
 	}
 	
+	public function set_conditions($conditions, $order_by='', $limit='')
+	{
+	
+        $conditions=trim($conditions);
+	
+        if($conditions=='')
+        {
+        
+            $this->conditions="WHERE 1=1";
+        
+        }
+        else
+        {
+        
+            $this->conditions=$conditions;
+        
+        }
+        
+        $this->order_by=$order_by;
+	
+	}
+	
+	public function set_order($order_by)
+	{
+	
+        $this->order_by=$order_by;
+	
+	}
+	
+	public function set_limit($limit)
+    {
+    
+        $this->limit=$limit;
+    
+    }
+	
+	public function reset_conditions()
+	{
+	
+        $this->conditions='WHERE 1=1';
+        
+        $this->order_by='order by '.$this->idmodel.' ASC';
+        
+        $this->limit='';
+	
+	}
+	
 	/**
 	* This method insert a row in database using model how mirage of table.
 	* 
@@ -563,10 +638,19 @@ class Webmodel {
 	* @param $conditions is a string containing a sql string beginning by "where". Example: where id=1.
 	*/
 	
-	public function update($post, $conditions="")
+	public function update($post)
 	{
 	
 		$this->set_phango_connection();
+		
+		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
+		
+		if($this->reset_conditions()==true)
+		{
+		
+            $this->reset_conditions();
+        
+        }
 		
 		//Make conversion from post
 
@@ -683,7 +767,7 @@ class Webmodel {
 	* @param $raw_query If set to 0, you obtain fields from table related if you selected a foreignkey field, if set to 1, you obtain an array without any join.
 	*/
 
-	public function select($conditions="", $arr_select=array(), $raw_query=0)
+	public function select($arr_select=array(), $raw_query=0)
 	{
 		//Check conditions.., script must check, i can't make all things!, i am not a machine!
 
@@ -801,7 +885,7 @@ class Webmodel {
 
 		//$conditions is a variable where store the result from $arr_select and $arr_extra_select
 		
-		if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
+		/*if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
 		{
 			
 			$conditions=str_replace('where', '', $conditions);
@@ -815,7 +899,23 @@ class Webmodel {
 			
 			$conditions='WHERE '.$where.' '.$conditions;
 
+		}*/
+		
+		if($where!='')
+		{
+		
+            $where=' and '.$where;
+		
 		}
+		
+		$conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+        
+        if($this->reset_conditions()==true)
+        {
+        
+            $this->reset_conditions();
+        
+        }
 
 		//$this->create_extra_fields();
 		
@@ -856,7 +956,7 @@ class Webmodel {
 	* @param string $fields_for_count Array for fields used for simple counts based on foreignkeyfields.
 	*/
 
-	public function select_count($conditions, $field='', $fields_for_count=array())
+	public function select_count($field='', $fields_for_count=array())
 	{
 	
 		$this->set_phango_connection();
@@ -915,6 +1015,23 @@ class Webmodel {
 		
 		$where=implode(" and ", $arr_where);
 		
+		if($where!='')
+        {
+        
+            $where=' and '.$where;
+        
+        }
+        
+        $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+        
+        if($this->reset_conditions()==true)
+        {
+        
+            $this->reset_conditions();
+        
+        }
+		
+		/*
 		if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
 		{
 			
@@ -929,7 +1046,7 @@ class Webmodel {
 			
 			$conditions='WHERE '.$where.' '.$conditions;
 
-		}
+		}*/
 		
 		$query=SQLClass::webtsys_query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
 		
@@ -947,10 +1064,19 @@ class Webmodel {
 	* @param string $conditions Conditions have same sintax that $conditions from $this->select method
 	*/
 
-	public function delete($conditions="")
+	public function delete()
 	{
 	
 		$this->set_phango_connection();
+		
+		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
+        
+        if($this->reset_conditions()==true)
+        {
+        
+            $this->reset_conditions();
+        
+        }
 	
 		foreach($this->components as $name_field => $component)
 		{

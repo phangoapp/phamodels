@@ -221,7 +221,8 @@ class ModelForm {
 		
 		$func_setvalue=$this->form.'Set';
 		
-		$this->parameters[2]=$func_setvalue($this->parameters[2], $value, $form_type_set);
+		//$this->parameters[2]=$func_setvalue($this->parameters[2], $value, $form_type_set);
+		$this->parameters[2]=call_user_func_array($func_setvalue, array($this->parameters[2], $value, $form_type_set));
 		
 	}
 	

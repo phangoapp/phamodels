@@ -19,12 +19,12 @@
 * @param string $field The field where search.
 */
 
-function select_a_field_method_class($class, $where, $field)
+function select_a_field_method_class($class, $field)
 {
 	
 	$arr_field=array();
 	
-	$query=$class->select($where, array($field), $raw_query=1);
+	$query=$class->select(array($field), $raw_query=1);
 	
 	while(list($field_choose)=$class->fetch_row($query))
 	{
