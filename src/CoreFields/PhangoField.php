@@ -96,6 +96,12 @@ class PhangoField {
 	public $parameters=array();
 	
 	/**
+	* A method used for set if this field can be update or insert by everyone. 
+	*/
+	
+	public $protected=false;
+	
+	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
 	*/
 	

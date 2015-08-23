@@ -262,7 +262,7 @@ class Webmodel {
     *
     */
     
-    protected $reset_conditions=true;
+    public $reset_conditions=true;
 	
 	/**
 	* Internal arrays for create new indexes in the tables
