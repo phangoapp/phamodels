@@ -14,7 +14,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
-namespace PhangoApp\PhaModels\Forms\BaseForm;
+namespace PhangoApp\PhaModels\Forms;
 use PhangoApp\PhaUtils\Utils;
 
 class PhangoField {
