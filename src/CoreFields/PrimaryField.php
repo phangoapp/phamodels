@@ -36,6 +36,12 @@ class PrimaryField extends PhangoField {
 	public $form="PhangoApp\PhaModels\CoreForms::HiddenForm";
 
 	/**
+	* By default this field is protected.
+    */
+	
+	public $protected=true;
+	
+	/**
 	* Check function that convert the value on a PrimaryField value.
 	*
 	* @param string $value The value to convert on a PrimaryField value.

@@ -4,6 +4,7 @@ namespace PhangoApp\PhaModels;
 
 use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\CoreFields\PrimaryField;
+use PhangoApp\PhaModels\Forms\BaseForm;
 
 /**
 * The most important class for the framework
@@ -173,7 +174,7 @@ class Webmodel {
 	
 	/**
 	*
-	* If you checked the values that you going to save on your model, please, put this value to 1 or true.
+	* If you checked the values that you going to save on your model, please, put this value to 1 or 1.
 	*
 	*/
 	
@@ -262,7 +263,7 @@ class Webmodel {
     *
     */
     
-    public $reset_conditions=true;
+    public $reset_conditions=1;
 	
 	/**
 	* Internal arrays for create new indexes in the tables
@@ -577,7 +578,7 @@ class Webmodel {
 	* @param array $post Is an array with data to insert. You have a key that represent the name of field to fill with data, and the value that is the data for fill.
 	*/
 
-	public function insert($post)
+	public function insert($post, $safe_query=0)
 	{
 	
 		$this->set_phango_connection();
@@ -587,17 +588,18 @@ class Webmodel {
 		$post=$this->unset_no_required($post);
 		
 		//Check if minimal fields are fill and if fields exists in components.Check field's values.
-		
+		/*
 		if(!$this->modify_id)
 		{
 		
 			unset($post[$this->idmodel]);
 			
 		}
+		*/
 		
 		$arr_fields=array();
 		
-		if( $fields=$this->check_all($post) )
+		if( $fields=$this->check_all($post, $safe_query) )
 		{	
 		
 			if( !( $query=SQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
@@ -638,14 +640,14 @@ class Webmodel {
 	* @param $conditions is a string containing a sql string beginning by "where". Example: where id=1.
 	*/
 	
-	public function update($post)
+	public function update($post, $safe_query=0)
 	{
 	
 		$this->set_phango_connection();
 		
 		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
 		
-		if($this->reset_conditions()==true)
+		if($this->reset_conditions==1)
 		{
 		
             $this->reset_conditions();
@@ -671,7 +673,7 @@ class Webmodel {
 		
 		//Checking and sanitizing data from $post array for use in the query
 		
-		if( $fields=$this->check_all($post) )
+		if( $fields=$this->check_all($post, $safe_query) )
 		{
 			
 			//Foreach for create the query that comes from the $post array
@@ -684,6 +686,7 @@ class Webmodel {
 					$quot_open=$component->quot_open;
 					$quot_close=$component->quot_close;
 				
+                    /*
 					if(get_class($component)=='ForeignKeyField' && $fields[$key]==NULL)
 					{
 					
@@ -691,7 +694,7 @@ class Webmodel {
 						$quot_close='';
 						$fields[$key]='NULL';
 					
-					}
+					}*/
 				
 					$arr_fields[]='`'.$key.'`='.$quot_open.$fields[$key].$quot_close;
 					
@@ -910,7 +913,7 @@ class Webmodel {
 		
 		$conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
         
-        if($this->reset_conditions()==true)
+        if($this->reset_conditions==1)
         {
         
             $this->reset_conditions();
@@ -1024,7 +1027,7 @@ class Webmodel {
         
         $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
         
-        if($this->reset_conditions()==true)
+        if($this->reset_conditions==1)
         {
         
             $this->reset_conditions();
@@ -1071,7 +1074,7 @@ class Webmodel {
 		
 		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
         
-        if($this->reset_conditions()==true)
+        if($this->reset_conditions==1)
         {
         
             $this->reset_conditions();
@@ -1181,7 +1184,7 @@ class Webmodel {
 
 			//Check if indexed
 			
-			if($this->components[$field]->indexed==true)
+			if($this->components[$field]->indexed==1)
 			{
 			
 				Webmodel::$arr_sql_index[$this->name][$field]='CREATE INDEX `index_'.$this->name.'_'.$field.'` ON '.$this->name.'(`'.$field.'`);';
@@ -1191,7 +1194,7 @@ class Webmodel {
 			
 			//Check if unique
 			
-			if($this->components[$field]->unique==true)
+			if($this->components[$field]->unique==1)
 			{
 			
 				Webmodel::$arr_sql_unique[$this->name][$field]=' ALTER TABLE `'.$this->name.'` ADD UNIQUE (`'.$field.'`)';
@@ -1389,7 +1392,7 @@ class Webmodel {
 	* @param array $post Is an array with data to update. You have a key that represent the name of field to fill with data, and the value that is the data for fill.
 	*/
 
-	public function check_all($post)
+	public function check_all($post, $safe_query=0)
 	{
 		
 		I18n::load_lang('error_model');
@@ -1413,12 +1416,12 @@ class Webmodel {
 
 		//Make a foreach inside components, fields that are not found in components, are ignored
 		
-		foreach($this->components as $key => $value)
+		foreach($this->components as $key => $field)
 		{
 			
 			//If is set the variable for this component make checking
 
-			if(isset($post[$key]))
+			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1))
 			{
 
 				//Check if the value is valid..
@@ -1469,7 +1472,7 @@ class Webmodel {
 
 		$this->std_error=implode(', ', $arr_std_error);
 
-		//If error return false
+		//If error return 0
 
 		if($set_error>0)
 		{
@@ -1520,7 +1523,7 @@ class Webmodel {
 	* @param array $fields_form The values of this array are used for obtain ModelForms from the fields with the same key that array values.
 	*/
 	
-	public function create_form($fields_form=array())
+	public function create_forms($fields_form=array())
 	{
 
 		//With function for create form, we use an array for specific order, after i can insert more fields in the form.
@@ -1543,38 +1546,16 @@ class Webmodel {
 			if(isset($this->components[$component_name]))
 			{
 			
-				$component=&$this->components[$component_name];
+                if($this->components[$component_name]->label=='')
+                {
+                
+                    $this->components[$component_name]->label=ucfirst($component_name);
+                
+                }
 			
-				//Create form from model's components
-
-				$this->forms[$component_name]=new ModelForm($this->name, $component_name, $component->form, Webmodel::set_name_default($component_name), $component, $component->required, '');
+                $this->forms[$component_name]=$this->components[$component_name]->create_form();
 				
-				$this->forms[$component_name]->set_all_parameters_form($component->get_parameters_default());
-				
-				if($this->components[$component_name]->label=='')
-				{
-				
-					$this->components[$component_name]->label=ucfirst($component_name);
-				
-				}
-				
-				$this->forms[$component_name]->label=$this->components[$component_name]->label;
 
-				//Set parameters to default
-				//$parameters_value=$this->components[$component_name]->parameters;
-
-				/*if($this->forms[$component_name]->parameters[2]==0)
-				{*/
-	
-				//$this->forms[$component_name]->parameters=$this->components[$component_name]->parameters;
-					
-
-				//}
-
-				//Use method from ModelForm for set initial parameters...
-
-				//$this->forms[$component_name]->set_parameter_value($parameters_initial_value);
-				
 			}
 
 		}

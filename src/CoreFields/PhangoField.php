@@ -102,6 +102,12 @@ class PhangoField {
 	public $protected=false;
 	
 	/**
+	* A property that set the default value
+	*/
+	
+	public $default_value='';
+	
+	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
 	*/
 	
@@ -155,6 +161,22 @@ class PhangoField {
 	{
 	
 		return $this->check($value);
+	
+	}
+	
+	/**
+	* Method for create a form, you only need subclass the field if you want another form different to default
+	*/
+	
+	public function create_form()
+	{
+	
+        $form=new BaseForm($this->name, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        
+        return $form;
 	
 	}
 	
