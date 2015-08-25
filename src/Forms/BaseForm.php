@@ -2,6 +2,8 @@
 
 namespace PhangoApp\PhaModels\Forms;
 
+use PhangoApp\PhaModels\CoreFields\CharField;
+
 /**
 * Basic class for create forms
 */
@@ -14,29 +16,32 @@ class BaseForm {
     * @param string $name Field class instance used for check files
     */
     
-    public function __construct($name, $value, $field)
+    public function __construct($name, $value)
     {
-        $this->label=name;
-        $this->name=name;
-        $this->default_value=value;
+        $this->label=$name;
+        $this->name=$name;
+        $this->default_value=$value;
         $this->css='';
         $this->type='text';
         $this->required=0;
+        $this->field=new CharField();
     }
         
     public function form()
     {
         
-        return '<input type="'.$this->type.'" class="'.$this->css.'" name="'.$this->setform($this->default_value).'">';
+        return '<input type="'.$this->type.'" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'">';
     
     }
     
-    #Method for escape value for html input
+    /**
+    * Method for escape value for html input
+    */
     
-    public function setform(value)
+    public function setform($value)
     {
     
-        return value.replace('"', '&quot;')
+        return str_replace('"', '&quot;', $value);
         
     }
 }

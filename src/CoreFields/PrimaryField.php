@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaModels\Forms\BaseForm;
 
 /**
 * PrimaryField is used for primary keys for models
@@ -77,6 +78,23 @@ class PrimaryField extends PhangoField {
 		return $value;
 
 	}
+	
+	/**
+	* By default primaryfield use a hidden form
+	*/
+	
+	public function create_form()
+    {
+    
+        $form=new BaseForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        $form->type='hidden';
+        
+        return $form;
+    
+    }
 
 }
 

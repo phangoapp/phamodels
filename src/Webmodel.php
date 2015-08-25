@@ -296,6 +296,8 @@ class Webmodel {
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
 		$this->components[$this->idmodel]=new PrimaryField();
+		$this->components[$this->idmodel]->name_model=$name_model;
+		$this->components[$this->idmodel]->name_component=$this->idmodel;
 		$this->label=$this->name;
 		
 		if(!isset(Webmodel::$connection_func[$this->db_selected]))
@@ -1331,7 +1333,7 @@ class Webmodel {
 		if(count($this->forms)==0)
 		{
 		
-			$this->create_form();
+			$this->create_forms();
 		
 		}
 	
@@ -1539,7 +1541,6 @@ class Webmodel {
 			
 		}
 		
-		//foreach($this->components as $component_name => $component)
 		foreach($fields_form as $component_name)
 		{
 		
@@ -1553,13 +1554,24 @@ class Webmodel {
                 
                 }
 			
-                $this->forms[$component_name]=$this->components[$component_name]->create_form();
-				
+                $this->create_form($component_name);
 
 			}
 
 		}
 
+	}
+	
+	/**
+	* Method for create a simple form from a field
+	* @param string $component_name The name of the component that is used for create the form
+	*/
+	
+	public function create_form($component_name)
+	{
+	
+        $this->forms[$component_name]=$this->components[$component_name]->create_form();
+	
 	}
 
 	/**

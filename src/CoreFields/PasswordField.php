@@ -9,6 +9,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaModels\Forms\BaseForm;
 use PhangoApp\PhaUtils\Utils;
 
 class PasswordField extends CharField {
@@ -63,6 +64,24 @@ class PasswordField extends CharField {
 		return false;
 	
 	}
+	
+	/**
+    * By default primaryfield use a hidden form
+    */
+    
+    public function create_form()
+    {
+    
+        $form=new BaseForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        $form->type='password';
+        
+        return $form;
+    
+    }
+
 
 }
 

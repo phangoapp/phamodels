@@ -172,7 +172,7 @@ class PhangoField {
 	public function create_form()
 	{
 	
-        $form=new BaseForm($this->name, $this->value);
+        $form=new BaseForm($this->name_component, $this->value);
         $form->default_value=$this->default_value;
         $form->required=$this->required;
         $form->label=$this->label;
