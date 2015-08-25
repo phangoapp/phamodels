@@ -29,9 +29,9 @@ class UserPhangoModel extends Webmodel {
 	public $password='password';
 	public $repeat_password='repeat_password';
 
-	public function insert($post)
+	public function insert($post, $safe_query=0)
 	{
-	
+        
 		if($this->check_user_exists($post[$this->username], $post[$this->email]))
 		{
 		
@@ -40,13 +40,13 @@ class UserPhangoModel extends Webmodel {
 			
 				//$this->components['password']->required=0;
 				
-				$this->components[$this->password]->std_error=I18n::lang('users', 'pasword_not_equal_repeat_password', 'Passwords are not equal');
+				$this->forms[$this->password]->std_error=I18n::lang('users', 'pasword_not_equal_repeat_password', 'Passwords are not equal');
 				
 				return false;
 			
 			}
 		
-			return parent::insert($post);
+			return parent::insert($post, $safe_query);
 		
 		}
 		else
@@ -60,7 +60,7 @@ class UserPhangoModel extends Webmodel {
 	
 	}
 	
-	public function update($post, $where_sql='')
+	public function update($post, $safe_query=0)
 	{
 	
 		if(isset($post[$this->username]) && $post[$this->email])
@@ -74,7 +74,7 @@ class UserPhangoModel extends Webmodel {
 				
 					//$this->components['password']->required=0;
 					
-					$this->components[$this->password]->std_error=I18n::lang('users', 'pasword_not_equal_repeat_password', 'Passwords are not equal');
+					$this->forms[$this->password]->std_error=I18n::lang('users', 'pasword_not_equal_repeat_password', 'Passwords are not equal');
 					
 					return false;
 				
@@ -88,7 +88,7 @@ class UserPhangoModel extends Webmodel {
 				
 				}
 			
-				return parent::update($post, $where_sql);
+				return parent::update($post, $safe_query);
 			
 			}
 			else
@@ -104,7 +104,7 @@ class UserPhangoModel extends Webmodel {
 		else
 		{
 		
-			return parent::update($post, $where_sql);
+			return parent::update($post, $safe_query);
 		
 		}
 	
@@ -144,7 +144,9 @@ class UserPhangoModel extends Webmodel {
 		
 		}
 		
-		$c=$this->select_count($where_sql);
+		$this->set_conditions($where_sql);
+		
+		$c=$this->select_count();
 		
 		if($c==0)
 		{

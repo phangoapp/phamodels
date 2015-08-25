@@ -76,6 +76,27 @@ class EmailField extends PhangoField {
 		return $value;
 
 	}
+	
+	/**
+    * By default primaryfield use a hidden form
+    */
+    
+    public function create_form()
+    {
+    
+        /*$form=new PasswordForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        $form->type='password';*/
+        
+        $form=parent::create_form();
+        
+        $form->field=new EmailField();
+        
+        return $form;
+    
+    }
 
 
 }

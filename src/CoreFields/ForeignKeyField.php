@@ -35,7 +35,6 @@ class ForeignKeyField extends IntegerField{
 		$this->fields_related_model=array();
 		//Representative field for related model...
 		$this->name_field_to_field='';
-		$this->null_relation=$null_relation;
 		$this->default_id=$default;
 		$this->quot_open='';
 		$this->quot_close='';

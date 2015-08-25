@@ -318,21 +318,21 @@ class ModelForm {
 			
 				$form=$arr_form[$key_form];
 			
-				$post[$key_form]=$form->type->check($post[$key_form]);
+				$post[$key_form]=$form->field->check($post[$key_form]);
 				
 				if($post[$key_form]=='' && $form->required==1)
 				{
 					
-					if($form->type->std_error!='')
+					if($form->field->std_error!='')
 					{
 
-						$form->std_error=$form->type->std_error;
+						$form->std_error=$form->field->std_error;
 
 					}
 					else
 					{
 
-						$form->std_error=$form->txt_error;
+						$form->std_error=I18n::lang('common', 'field_required', 'Field is required');
 
 					}
 					
@@ -390,7 +390,7 @@ class ModelForm {
 				if(isset($arr_form[$name_field]))
 				{	
 					
-					if($arr_form[$name_field]->type->std_error!='' && $show_error==1)
+					if($arr_form[$name_field]->field->std_error!='' && $show_error==1)
 					{
 						
 						/*if($arr_form[$name_field]->std_error!='')
@@ -412,7 +412,7 @@ class ModelForm {
 
 					//Set value for ModelForm to $value
 					
-					$arr_form[$name_field]->set_param_value_form($value);
+					$arr_form[$name_field]->default_value=$value;
 			
 				}
 				else

@@ -3,6 +3,7 @@
 namespace PhangoApp\PhaModels\Forms;
 
 use PhangoApp\PhaModels\CoreFields\CharField;
+use PhangoApp\PhaI18n\I18n;
 
 /**
 * Basic class for create forms
@@ -16,6 +17,8 @@ class BaseForm {
     * @param string $name Field class instance used for check files
     */
     
+    public $std_error='';
+    
     public function __construct($name, $value)
     {
         $this->label=$name;
@@ -25,6 +28,7 @@ class BaseForm {
         $this->type='text';
         $this->required=0;
         $this->field=new CharField();
+        $this->txt_error = I18n::lang('common', 'error_in_field', 'Error in field');
     }
         
     public function form()
