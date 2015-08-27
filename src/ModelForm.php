@@ -393,18 +393,18 @@ class ModelForm {
 					if($arr_form[$name_field]->field->std_error!='' && $show_error==1)
 					{
 						
-						/*if($arr_form[$name_field]->std_error!='')
+						if($arr_form[$name_field]->std_error!='')
 						{
 							
 							$arr_form[$name_field]->std_error=$arr_form[$name_field]->txt_error;
 							
 
 						}
-						else*/
+						else
 						if($arr_form[$name_field]->std_error=='')
 						{
 							
-							$arr_form[$name_field]->std_error=$arr_form[$name_field]->type->std_error;
+							$arr_form[$name_field]->std_error=$arr_form[$name_field]->field->std_error;
 
 						}
 
@@ -413,6 +413,7 @@ class ModelForm {
 					//Set value for ModelForm to $value
 					
 					$arr_form[$name_field]->default_value=$value;
+					
 			
 				}
 				else
@@ -425,6 +426,24 @@ class ModelForm {
 			}
 
 		}
+	}
+	
+	static public function pass_errors_to_form($model)
+	{
+	
+        foreach(array_keys($model->components) as $key)
+        {
+        
+            if(isset($model->forms[$key]))
+            {
+                
+                
+                $model->forms[$key]->field->std_error=$model->components[$key]->std_error;
+            
+            }
+        
+        }
+	
 	}
 		
 }
