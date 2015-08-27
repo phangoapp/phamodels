@@ -22,7 +22,7 @@ class PrimaryField extends PhangoField {
 	* Initial label for the field. The label is used for create forms from a PhangoField.
 	*/
 	
-	public $label="";
+	public $label="#ID";
 	
 	/**
 	* Boolean value that is used for check if the field is required for fill a row in the db model.

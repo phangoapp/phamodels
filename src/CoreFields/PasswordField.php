@@ -35,9 +35,13 @@ class PasswordField extends CharField {
 		
 		}
 
+		/*
 		$token_pass=Utils::generate_random_password();
 		
 		$hash_password=$token_pass.'_'.sha1($token_pass.'_'.$value);
+		*/
+		
+		$hash_password=password_hash($value, PASSWORD_DEFAULT);
 		
 		return $hash_password;
 
@@ -50,14 +54,21 @@ class PasswordField extends CharField {
 	
 		//If pass have _ check if work fine...
 	
-		$token_pass=preg_replace('/(.*)[_].*/', '$1', $hash_password_check);
-		
+		//$token_pass=preg_replace('/(.*)[_].*/', '$1', $hash_password_check);
+		/*
 		$hash_password=$token_pass.'_'.sha1($token_pass.'_'.$value);
 		
 		if($hash_password==$hash_password_check)
 		{
 		
 			return true;
+		
+		}*/
+		
+		if(password_verify($value, $hash_password_check))
+		{
+		
+            return true;
 		
 		}
 		

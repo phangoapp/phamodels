@@ -50,7 +50,7 @@ class EmailField extends PhangoField {
 		else
 		{
 			
-			$this->std_error.='Email format error';
+			$this->std_error='Email format error';
 			
 			return '';
 

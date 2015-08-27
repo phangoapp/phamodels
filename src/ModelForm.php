@@ -327,7 +327,7 @@ class ModelForm {
 					{
 
 						$form->std_error=$form->field->std_error;
-
+                        
 					}
 					else
 					{
@@ -390,9 +390,9 @@ class ModelForm {
 				if(isset($arr_form[$name_field]))
 				{	
 					
-					if($arr_form[$name_field]->field->std_error!='' && $show_error==1)
+					if($show_error==1)
 					{
-						
+						/*
 						if($arr_form[$name_field]->std_error!='')
 						{
 							
@@ -406,7 +406,20 @@ class ModelForm {
 							
 							$arr_form[$name_field]->std_error=$arr_form[$name_field]->field->std_error;
 
+						}*/
+						
+						if($arr_form[$name_field]->field->std_error!='')
+						{
+						
+                            $arr_form[$name_field]->std_error=$arr_form[$name_field]->field->std_error;
+						
 						}
+						/*else
+						{
+						
+                            
+						
+						}*/
 
 					}
 

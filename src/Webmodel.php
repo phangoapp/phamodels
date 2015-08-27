@@ -608,6 +608,7 @@ class Webmodel {
 			{
 			
 				$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
+				ModelForm::pass_errors_to_form($this);
 				return 0;
 			
 			}
@@ -621,6 +622,7 @@ class Webmodel {
 		else
 		{	
 			
+			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 
 			return 0;
@@ -734,6 +736,7 @@ class Webmodel {
 			{
 				
 				$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
+				ModelForm::pass_errors_to_form($this);
 				return 0;
 			
 			}
@@ -747,7 +750,7 @@ class Webmodel {
 		else
 		{
 			//Validation of $post fail, add error to $model->std_error
-			
+			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
 
 			return 0;
