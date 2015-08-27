@@ -375,7 +375,7 @@ class ModelForm {
 	* @param array $show_error An option for choose if in the form is showed 
 	*/
 
-	static public function set_values_form($post, $arr_form, $show_error=1)
+	static public function set_values_form($arr_form, $post, $show_error=1)
 	{
 		
 		//Foreach to $post values
