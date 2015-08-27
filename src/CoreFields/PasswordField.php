@@ -11,13 +11,14 @@
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaModels\Forms\PasswordForm;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaI18n\I18n;
 
 class PasswordField extends CharField {
 
 	
 	function __construct($size=255)
 	{
-
+        $this->min_length=5;
 		$this->size=$size;
 		$this->form='PhangoApp\PhaModels\CoreForms::PasswordForm';
 
@@ -40,6 +41,15 @@ class PasswordField extends CharField {
 		
 		$hash_password=$token_pass.'_'.sha1($token_pass.'_'.$value);
 		*/
+		
+		if(strlen($value)<$this->min_length)
+		{
+		
+            $this->std_error=I18n::lang('common', 'password_min_length', 'Minimal password length:').' '.$this->min_length;
+            
+            return '';
+		
+		}
 		
 		$hash_password=password_hash($value, PASSWORD_DEFAULT);
 		
