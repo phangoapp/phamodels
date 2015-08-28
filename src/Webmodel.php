@@ -1086,13 +1086,6 @@ class Webmodel {
 		
 		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
         
-        if($this->reset_conditions==1)
-        {
-        
-            $this->reset_conditions();
-        
-        }
-	
 		foreach($this->components as $name_field => $component)
 		{
 		
@@ -1108,10 +1101,14 @@ class Webmodel {
 		//Delete rows on models with foreignkeyfields to this model...
 		//You need load all models with relationship if you want delete related rows...
 		
+		$this->set_conditions($this->conditions);
+		
+		$this->set_limit($this->limit);
+		
 		if(count($this->related_models_delete)>0)
 		{
 			
-			$arr_deleted=$this->select_to_array($conditions, array($this->idmodel), 1);
+			$arr_deleted=$this->select_to_array(array($this->idmodel), 1);
 			
 			$arr_id=array_keys($arr_deleted);
 			
@@ -1122,15 +1119,23 @@ class Webmodel {
 				
 				if( isset( Webmodel::$model[ $arr_set_model['model'] ]->components[ $arr_set_model['related_field'] ] ) )
 				{
+                    $this->set_conditions('where '.$arr_set_model['related_field'].' IN ('.implode(', ', $arr_id).')');
 					
-					Webmodel::$model[ $arr_set_model['model'] ]->delete('where '.$arr_set_model['related_field'].' IN ('.implode(', ', $arr_id).')');
+					Webmodel::$model[ $arr_set_model['model'] ]->delete();
 				
 				}
 			
 			}
 			
 		}
-
+		
+		if($this->reset_conditions==1)
+        {
+        
+            $this->reset_conditions();
+        
+        }
+        
  		return SQLClass::webtsys_query('delete from '.$this->name.' '.$conditions, $this->db_selected);
 		
 	}
