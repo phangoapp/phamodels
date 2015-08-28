@@ -31,7 +31,7 @@ class CharField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='PhangoApp\PhaModels\CoreForms::TextForm';
+		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
 
 	}
 	

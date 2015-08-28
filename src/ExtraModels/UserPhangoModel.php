@@ -66,6 +66,15 @@ class UserPhangoModel extends Webmodel {
 		if(isset($post[$this->username]) && $post[$this->email])
 		{
 	
+            if(!isset($post['IdUser_admin']))
+            {
+            
+                settype($_GET['IdUser_admin'], 'integer');
+            
+                $post['IdUser_admin']=$_GET['IdUser_admin'];
+            
+            }
+	
 			if($this->check_user_exists($post[$this->username], $post[$this->email], $post['IdUser_admin']))
 			{
 			
@@ -87,7 +96,7 @@ class UserPhangoModel extends Webmodel {
 					unset($post[$this->password]);
 				
 				}
-			
+                
 				return parent::update($post, $safe_query);
 			
 			}

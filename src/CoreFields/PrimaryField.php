@@ -34,7 +34,7 @@ class PrimaryField extends PhangoField {
 	* By default, the form used for this field is HiddenForm.
 	*/
 	
-	public $form="PhangoApp\PhaModels\CoreForms::HiddenForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 
 	/**
 	* By default this field is protected.
@@ -82,7 +82,7 @@ class PrimaryField extends PhangoField {
 	/**
 	* By default primaryfield use a hidden form
 	*/
-	
+	/*
 	public function create_form()
     {
     
@@ -94,7 +94,7 @@ class PrimaryField extends PhangoField {
         
         return $form;
     
-    }
+    }*/
 
 }
 

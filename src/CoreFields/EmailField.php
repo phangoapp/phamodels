@@ -12,7 +12,7 @@ class EmailField extends PhangoField {
 	public $size=200;
 	public $value="";
 	public $label="";
-	public $form="PhangoApp\PhaModels\CoreForms::TextForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	public $class="";
 	public $required=0;
 	public $quot_open='\'';

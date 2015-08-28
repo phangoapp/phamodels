@@ -242,21 +242,21 @@ class Webmodel {
 	*
 	*/
 	
-	protected $conditions='WHERE 1=1';
+	public $conditions='WHERE 1=1';
 	
 	/**
     * A string where is set the order of query
     *
     */
     
-    protected $order_by='';
+    public $order_by='';
     
     /**
     * A string where is saved the limit of rows in query
     *
     */
     
-    protected $limit='';
+    public $limit='';
     
     /**
     * A string where is saved the limit of rows in query
@@ -572,6 +572,13 @@ class Webmodel {
 	
 	}
 	
+	public function show_conditions()
+    {
+    
+        return $this->conditions;
+    
+    }
+	
 	/**
 	* This method insert a row in database using model how mirage of table.
 	* 
@@ -742,7 +749,7 @@ class Webmodel {
 			}
 			else
 			{
-			
+                
 				return 1;
 			
 			}
@@ -1573,7 +1580,15 @@ class Webmodel {
 	public function create_form($component_name)
 	{
 	
-        $this->forms[$component_name]=$this->components[$component_name]->create_form();
+        $component=$this->components[$component_name];
+        
+        $form_class=$component->form;
+        
+        $this->forms[$component_name]=new $form_class($component_name, $component->value);
+        
+        $this->forms[$component_name]->default_value=$component->default_value;
+        $this->forms[$component_name]->required=$component->required;
+        $this->forms[$component_name]->label=$component->label;
 	
 	}
 

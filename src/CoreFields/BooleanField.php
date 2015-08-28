@@ -24,7 +24,7 @@ class BooleanField extends PhangoField {
 	{
 
 		$this->size=1;
-		$this->form='PhangoApp\PhaModels\CoreForms::SelectForm';
+		$this->form=public $form='PhangoApp\PhaModels\Forms\SelectForm';
 
 	}
 

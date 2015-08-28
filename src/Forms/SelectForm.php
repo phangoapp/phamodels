@@ -26,7 +26,7 @@ class SelectForm extends BaseForm{
             
             foreach($this->arr_select as $value => $select)
             {
-            
+                
                 settype($arr_selected[$value], 'string');
             
                 ?>

@@ -88,7 +88,7 @@ class PhangoField {
 	* Form define the function for use in forms...
 	*/
 	
-	public $form="PhangoApp\PhaModels\CoreForms::TextForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	
 	/**
 	* Array for create initial parameters for form..
@@ -107,6 +107,7 @@ class PhangoField {
 	*/
 	
 	public $default_value='';
+	
 	
 	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
@@ -168,7 +169,7 @@ class PhangoField {
 	/**
 	* Method for create a form, you only need subclass the field if you want another form different to default
 	*/
-	
+	/*
 	public function create_form()
 	{
 	
@@ -179,7 +180,7 @@ class PhangoField {
         
         return $form;
 	
-	}
+	}*/
 	
 	
 }

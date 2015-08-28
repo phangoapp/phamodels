@@ -12,7 +12,7 @@ class SerializeField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form="TextForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	public $quot_open='\'';
 	public $quot_close='\'';
 	public $std_error='';

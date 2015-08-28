@@ -12,7 +12,7 @@ class FileField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form="PhangoApp\PhaModels\CoreForms::FileForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	public $name_file="";
 	public $path="";
 	public $url_path="";

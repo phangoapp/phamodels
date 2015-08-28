@@ -28,7 +28,7 @@ class ForeignKeyField extends IntegerField{
 	{
 
 		$this->size=$size;
-		$this->form='PhangoApp\PhaModels\CoreForms::SelectForm';
+		$this->form='PhangoApp\PhaModels\Forms\SelectForm';
 		$this->related_model=&$related_model;
 		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...
@@ -76,7 +76,9 @@ class ForeignKeyField extends IntegerField{
 
 		//Need checking if the value exists with a select_count
 		
-		$num_rows=$this->related_model->select_count('where '.$this->related_model.'.'.$this->related_model->idmodel.'='.$value, $this->related_model->idmodel);
+		$this->related_model->set_conditions('where '.$this->related_model->name.'.'.$this->related_model->idmodel.'='.$value);
+		
+		$num_rows=$this->related_model->select_count();
 		
 		if($num_rows>0)
 		{
