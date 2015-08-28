@@ -43,7 +43,7 @@ class KeyField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'INT('.$this->size.') NOT NULL';
+		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 	

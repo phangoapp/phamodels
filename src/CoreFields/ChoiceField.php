@@ -99,13 +99,13 @@ class ChoiceField extends PhangoField {
 		
 			case 'integer':
 
-			return 'INT('.$this->size.') NOT NULL';
+			return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
 			
 			break;
 
 			case 'string':
 
-			return 'VARCHAR('.$this->size.') NOT NULL';
+			return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 
 			break;
 

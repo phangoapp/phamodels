@@ -64,9 +64,20 @@ function padminConsole($options)
 
 	try {
 
-		$first_item=current(Webmodel::$model);
-		
-		$first_item->connect_to_db();
+        if(count(Webmodel::$model)>0)
+        {
+	
+            $first_item=current(Webmodel::$model);
+            
+            $first_item->connect_to_db();
+            
+        }
+        else
+        {
+            $climate->white()->backgroundRed()->out('Error: file don\'t have models');
+            exit(1);
+        
+        }
 		
 	} catch(Exception $e)
 	{
@@ -164,6 +175,7 @@ function update_table()
 		$allfields=array();
 		$fields=array();
 		$types=array();
+        $defaults=array();
 	
 		$field="";
 		$type=""; 
@@ -204,13 +216,14 @@ function update_table()
 			$query=SQLClass::webtsys_query("describe `".$key."`");
 			
 			list($key_field_old, $type, $null, $key_db, $default, $extra)=SQLClass::webtsys_fetch_row($query);
-		
+            
 			while(list($field, $type, $null, $key_db, $default, $extra)=SQLClass::webtsys_fetch_row($query))
 			{
-		
+                
 				$fields[]=$field;
 				$types[$field]=$type;
 				$keys[$field]=$key_db;
+				$defaults[$field]=$default;
 				
 				$null_set[$field]=$arr_null[$null];
 				
@@ -226,7 +239,7 @@ function update_table()
 					
 					unset($allfields[$field]);
 					
-					if(Webmodel::$model[$key]->components[$field]->get_type_sql()!=($type.' '.$null_set[$field]))
+					if(Webmodel::$model[$key]->components[$field]->get_type_sql()!=($type.' '.$null_set[$field].' DEFAULT "'.$defaults[$field].'"'))
 					{
 						
 						$query=SQLClass::webtsys_query('alter table `'.$key.'` modify `'.$field.'` '.Webmodel::$model[$key]->components[$field]->get_type_sql());
@@ -266,7 +279,7 @@ function update_table()
 					
 						$table_related=Webmodel::$model[$key]->components[$field]->related_model->name;
 						
-						$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$field], $model);
+						$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$field], Webmodel::$model);
 						
 						Webmodel::$arr_sql_set_index[$key][$field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$field.'_'.$key.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
 						
@@ -351,11 +364,6 @@ function update_table()
 			else
 		
 			{
-			
-				/*if(isset(Webmodel::$model[$key]->components[$new_field]->related_model) )
-				{*/
-				
-					//Drop foreignkeyfield
 					
 				//Bug, need fixed.
 				if($keys[$new_field]!='')
@@ -444,9 +452,6 @@ function load_id_model_related($foreignkeyfield)
 			
 			$id_table_related=Webmodel::$model[ $foreignkeyfield->params_loading_mod['model'] ]->idmodel;
 			
-			/*unset(PhangoVar::Webmodel::$model[ $foreignkeyfield->params_loading_mod['model'] ]);
-			
-			unset($cache_model);*/
 			
 		}
 	

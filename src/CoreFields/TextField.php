@@ -41,7 +41,7 @@ class TextField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'TEXT NOT NULL';
+		return 'TEXT NOT NULL DEFAULT ""';
 		
 
 	}

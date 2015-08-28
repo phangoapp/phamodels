@@ -31,6 +31,7 @@ class ImageField extends PhangoField {
 	public $img_minimal_height=array();
 	public $func_token='Utils::get_token';
 	public $move_file_func='move_uploaded_file';
+	public $size=255;
 
 	function __construct($name_file, $path, $url_path, $type, $thumb=0, $img_width=array('mini' => 150), $quality_jpeg=85)
 	{
@@ -371,7 +372,7 @@ class ImageField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'VARCHAR(255) NOT NULL';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 
 	}
 	

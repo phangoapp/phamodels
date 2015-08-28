@@ -109,7 +109,7 @@ class FileField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'VARCHAR(255) NOT NULL';
+		return 'VARCHAR(255) NOT NULL DEFAULT ""';
 
 	}
 	

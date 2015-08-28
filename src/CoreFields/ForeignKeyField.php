@@ -38,6 +38,7 @@ class ForeignKeyField extends IntegerField{
 		$this->default_id=$default;
 		$this->quot_open='';
 		$this->quot_close='';
+		$this->protected=1;
 
 	}
 	

@@ -276,6 +276,8 @@ class Webmodel {
 	static public $arr_sql_unique=array();
 	static public $arr_sql_set_unique=array();
 	
+	static public $m;
+	
 	//Construct the model
 
 	/**
@@ -310,6 +312,12 @@ class Webmodel {
 		$this->cache=$cache;
 		$this->type_cache=$type_cache;
 
+		//Global access to models
+		
+		Webmodel::$model[$name_model]=&$this;
+		
+		Webmodel::$m->$name_model=&Webmodel::$model[$name_model];
+		
 	}
 	
 	/**
@@ -455,7 +463,7 @@ class Webmodel {
 		unset($this->components[$this->idmodel]);
 		$this->idmodel=$name_id;
 		//$this->components[$this->idmodel]=new PrimaryField();
-		$this->register($this->idmodel, 'PrimaryField', array());
+		$this->register($this->idmodel, new PrimaryField($this->idmodel));
 
 	}
 	
@@ -1594,6 +1602,10 @@ class Webmodel {
         $this->forms[$component_name]->default_value=$component->default_value;
         $this->forms[$component_name]->required=$component->required;
         $this->forms[$component_name]->label=$component->label;
+        
+        $this->components[$component_name]->form_loaded=&$this->forms[$component_name];
+        
+        $this->components[$component_name]->get_parameters_default();
 	
 	}
 
@@ -1850,4 +1862,15 @@ class Webmodel {
 
 
 }
+
+//A simple shortcut for access to models
+
+class SuperModel {
+
+
+
+}
+
+Webmodel::$m=new SuperModel();
+
 ?>

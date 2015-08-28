@@ -62,7 +62,7 @@ class EmailField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'VARCHAR('.$this->size.') NOT NULL';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 
 	}
 

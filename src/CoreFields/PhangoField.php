@@ -91,6 +91,12 @@ class PhangoField {
 	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	
 	/**
+	* Variable where save a copy of form created from this Field 
+	*/
+	
+	public $form_loaded;
+	
+	/**
 	* Array for create initial parameters for form..
 	*/
 	
@@ -107,6 +113,7 @@ class PhangoField {
 	*/
 	
 	public $default_value='';
+	
 	
 	
 	/**
@@ -140,7 +147,7 @@ class PhangoField {
 	public function get_type_sql()
 	{
 
-		return 'VARCHAR('.$this->size.') NOT NULL';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 	
@@ -151,7 +158,7 @@ class PhangoField {
 	public function get_parameters_default()
 	{
 
-		return array($this->name_component, '', '');
+		
 
 	}
 	

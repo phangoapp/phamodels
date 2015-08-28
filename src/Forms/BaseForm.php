@@ -39,6 +39,33 @@ class BaseForm {
     }
     
     /**
+    * Static method where is registered the js necessary for a field
+    */
+    
+    static public function js()
+    {
+    
+    }
+    
+    /**
+    * Static method where is registered the js necessary for a field
+    */
+    
+    static public function css()
+    {
+    
+    }
+    
+    /**
+    * Static method where is registered the js necessary for a field
+    */
+    
+    static public function header()
+    {
+    
+    }
+    
+    /**
     * Method for escape value for html input
     */
     
