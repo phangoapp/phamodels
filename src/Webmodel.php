@@ -276,7 +276,23 @@ class Webmodel {
 	static public $arr_sql_unique=array();
 	static public $arr_sql_set_unique=array();
 	
+	/**
+	* Simple property for save models in object mode
+	*/
+	
 	static public $m;
+	
+	/**
+	*  A simple array for load js, header and css from forms objects only one time
+	*/
+	
+	static public $form_type=array();
+	
+	/**
+    *  A simple array for control if was loaded contents from a form
+    */
+	
+	static public $form_type_checked=array();
 	
 	//Construct the model
 
@@ -1552,36 +1568,49 @@ class Webmodel {
 	{
 
 		//With function for create form, we use an array for specific order, after i can insert more fields in the form.
-
-		$this->forms=array();
 		
-		$arr_form=array();
-		
-		if(count($fields_form)==0)
-		{
-		
-			$fields_form=array_keys($this->components);
-			
-		}
-		
-		foreach($fields_form as $component_name)
-		{
-		
-			if(isset($this->components[$component_name]))
-			{
-			
+        $this->forms=array();
+        
+        $arr_form=array();
+        
+        if(count($fields_form)==0)
+        {
+        
+            $fields_form=array_keys($this->components);
+            
+        }
+        
+        foreach($fields_form as $component_name)
+        {
+        
+            if(isset($this->components[$component_name]))
+            {
+            
                 if($this->components[$component_name]->label=='')
                 {
                 
                     $this->components[$component_name]->label=ucfirst($component_name);
                 
                 }
-			
+            
                 $this->create_form($component_name);
 
-			}
+            }
 
-		}
+        }
+        
+        
+        foreach(array_keys(Webmodel::$form_type) as $type)
+        {
+            $type::js();
+            $type::css();
+            $type::header();
+            
+            Webmodel::$form_type_checked[$type]=1;
+        
+        }
+        
+        Webmodel::$form_type=array();
 
 	}
 	
@@ -1598,6 +1627,15 @@ class Webmodel {
         $form_class=$component->form;
         
         $this->forms[$component_name]=new $form_class($component_name, $component->value);
+        
+        $type_class=get_class($this->forms[$component_name]);
+        
+        if(!isset(Webmodel::$form_type_checked[$type_class]))
+        {
+        
+            Webmodel::$form_type[$type_class]=1;
+            
+        }
         
         $this->forms[$component_name]->default_value=$component->default_value;
         $this->forms[$component_name]->required=$component->required;

@@ -2,7 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
-use PhangoApp\PhaModels\Forms\BaseForm;
+use PhangoApp\PhaModels\Forms\HiddenForm;
 
 /**
 * PrimaryField is used for primary keys for models
@@ -34,7 +34,7 @@ class PrimaryField extends PhangoField {
 	* By default, the form used for this field is HiddenForm.
 	*/
 	
-	public $form='PhangoApp\PhaModels\Forms\BaseForm';
+	public $form='PhangoApp\PhaModels\Forms\HiddenForm';
 
 	/**
 	* By default this field is protected.

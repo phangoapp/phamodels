@@ -13,6 +13,7 @@ namespace PhangoApp\PhaModels\CoreFields;
 
 use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\Forms\MultiLangForm;
+use PhangoApp\PhaModels\CoreFields\SlugifyField;
 
 /**
 * Multilanguage fields. 
@@ -46,7 +47,7 @@ class I18nField extends PhangoField {
 	
 		settype($value, 'array');
 		
-		foreach(PhangoVar::$arr_i18n as $lang_item)
+		foreach(I18n::$arr_i18n as $lang_item)
 		{
 
 			settype($value[$lang_item], 'string');
@@ -58,7 +59,7 @@ class I18nField extends PhangoField {
 		if($this->required==1 && $value[I18n::$language]=='')
 		{
 
-			$this->std_error=PhangoVar::$lang['common']['error_you_need_this_language_field'].' '.I18n::$language;
+			$this->std_error=I18n::lang('common', 'error_you_need_this_language_field', 'Error, you need this language field').' '.I18n::$language;
 
 			return '';
 

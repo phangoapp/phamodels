@@ -26,7 +26,7 @@ class TextHTMLField extends PhangoField {
 	{
 
 		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
-		$this->multilang=$multilang;
+		
 		$this->set_safe_html_tags();
 
 	}

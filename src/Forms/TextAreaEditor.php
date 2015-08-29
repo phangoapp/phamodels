@@ -18,8 +18,6 @@ class TextAreaEditor extends BaseForm {
         {
             View::$js[]='jquery.min.js';
             View::$js[]='tinymce/tinymce.min.js';
-
-            $this->name=Utils::slugify($this->name);
             
             ob_start();
             

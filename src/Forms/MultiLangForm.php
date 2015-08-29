@@ -9,22 +9,33 @@ use PhangoApp\PhaView\View;
 
 class MultiLangForm extends BaseForm{
 
-    public $type_form='PhangoApp\PhaModels\Forms\BaseForm';
+    public $type_form;
 
+    public function __construct($name, $value)
+    {
+    
+        $this->type_form=new BaseForm($name, $value);
+    
+        parent::__construct($name, $value);
+    
+    }
+    
     public function form()
     {
+    
         //make a foreach with all langs
         //default, es_ES, en_US, show default if no exists translation for selected language.
+        /*
          foreach(I18n::$arr_i18n as $lang_select)
         {
 
-           /* $arr_selected[Utils::slugify($lang_select)]='hidden_form';
-            $arr_selected[Utils::slugify(I18n::$language)]='no_hidden_form';*/
+            $arr_selected[Utils::slugify($lang_select)]='hidden_form';
+            $arr_selected[Utils::slugify(I18n::$language)]='no_hidden_form';
             
-            /*settype($arr_values[$lang_select], 'string');
+            settype($arr_values[$lang_select], 'string');
             echo '<div class="'.$arr_selected[Utils::slugify($lang_select)].'" id="'.$this->name.'_'.$lang_select.'">';
             echo $this->type_form($this->name.'['.$lang_select.']', '', $arr_values[$lang_select]);
-            echo '</div>';*/
+            echo '</div>';
 
         }
         ?>
@@ -182,28 +193,128 @@ class MultiLangForm extends BaseForm{
 
         return $text_form;
         */
-    }
-    
-    function setform($value)
-    {
         
-        if(!gettype($value)=='array')
+        if(!get_class($this->type_form))
         {
-
-            settype($arr_value, 'array');
-
-            $arr_value = @unserialize( $value );
+        
+            throw new \Exception('Error: need set the $type_form property with a valid class form in '.$this->name);
+        
+        }
+        
+        if(gettype($this->default_value)!='array')
+        {
+        
+            $arr_values=unserialize($this->default_value);
             
-            return $arr_value;
-
         }
         else
         {
+        
+            $arr_values=$this->default_value;
+        
+        }
+        
+        //print_r($this->default_value);
+        
+        foreach(I18n::$arr_i18n as $lang_select)
+        {
+        
+            $slug=Utils::slugify($lang_select);
+            $lang_slug=Utils::slugify(I18n::$language);
+        
+            $arr_selected[$slug]='hidden_form';
+            $arr_selected[$lang_slug]='no_hidden_form';
+            
+            $this->type_form->name=$this->name.'['.$lang_select.']';
+            
+            $this->type_form->default_value=$this->setform($arr_values[$lang_select]);
+            
+            echo '<div class="'.$arr_selected[$slug].' '.$this->name.'_group" id="'.$this->name.'_'.$lang_select.'">';
+            echo $this->type_form->form();
+            echo '</div>';
+        
+        }
+        
+        ?>
+         <div id="languages">
+        <?php
+        
+        $arr_selected=array();
 
-            return $value;
+        $language=Utils::slugify(I18n::$language);
+        
+        foreach(I18n::$arr_i18n as $lang_item)
+        {
+            //set
+            
+            $lang_item_slug=Utils::slugify($lang_item);
+            
+            $arr_selected[$lang_item_slug]='no_choose_flag';
+            $arr_selected[$language]='choose_flag';
+
+            ?>
+            <a class="flag <?php echo $arr_selected[$lang_item_slug]; ?> <?php echo $this->name; ?>_flag" alt="<?php echo $this->name; ?>" id="<?php echo $lang_item; ?>_flag"  href="#"><img src="<?php echo View::get_media_url('images/languages/'.$lang_item.'.png'); ?>" alt="<?php echo $lang_item; ?>"/></a>
+            <?php
 
         }
 
+        ?>
+        </div>
+        <br />
+        <hr />
+        <?php
+        
+    }
+    
+    static public function header()
+    {
+    
+        ob_start();
+    
+        ?>
+        <script language="Javascript">
+        $(document).ready( function () {
+        
+            $('.flag').click( function () {
+                
+                if( $(this).hasClass('no_choose_flag') )
+                {
+                    group=$(this).attr('alt');
+                    
+                    lang=$(this).attr('id').replace('_flag', '');
+                
+                    flag='.'+group+'_flag';
+                    
+                    show_input='#'+group+'_'+lang;
+                    
+                    remove_input='.'+group+'_group'
+                
+                    //Change flags
+                
+                    $(flag).removeClass('choose_flag').addClass('no_choose_flag');
+                    
+                    $(this).removeClass('no_choose_flag').addClass('choose_flag');
+                    
+                    //Change inputs
+                    
+                    $(remove_input).removeClass('no_hidden_form').addClass('hidden_form');
+                    
+                    $(show_input).removeClass('hidden_form').addClass('no_hidden_form');
+                
+                }
+                
+                return false;
+            
+            });
+        
+        });
+        </script>
+        <?php
+        
+        View::$header[]=ob_get_contents();
+        
+        ob_end_clean();
+    
     }
 
 }
