@@ -294,6 +294,12 @@ class Webmodel {
 	
 	static public $form_type_checked=array();
 	
+	/**
+	* A simple switch for know if updated or insert this model
+	*/
+	
+	public $update=0;
+	
 	//Construct the model
 
 	/**
@@ -630,6 +636,8 @@ class Webmodel {
 		}
 		*/
 		
+		$this->update=0;
+		
 		$arr_fields=array();
 		
 		if( $fields=$this->check_all($post, $safe_query) )
@@ -705,6 +713,10 @@ class Webmodel {
 		}
 		
 		$post=$this->unset_no_required($post);
+		
+		//With this property your fields can save if insert or update
+		
+		$this->update=1;
 		
 		//Checking and sanitizing data from $post array for use in the query
 		
@@ -1464,6 +1476,7 @@ class Webmodel {
 
 			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1))
 			{
+                $this->components[$key]->update=$this->update;
 
 				//Check if the value is valid..
 

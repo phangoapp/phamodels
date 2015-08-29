@@ -114,6 +114,11 @@ class PhangoField {
 	
 	public $default_value='';
 	
+	/**
+	* A property for know if updated or insert this field
+	*/
+	
+	public $update=0;
 	
 	
 	/**
