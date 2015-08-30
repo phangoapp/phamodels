@@ -12,7 +12,7 @@ class EmailField extends PhangoField {
 	public $size=200;
 	public $value="";
 	public $label="";
-	public $form="TextForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	public $class="";
 	public $required=0;
 	public $quot_open='\'';
@@ -50,7 +50,7 @@ class EmailField extends PhangoField {
 		else
 		{
 			
-			$this->std_error.='Email format error';
+			$this->std_error='Email format error';
 			
 			return '';
 
@@ -62,7 +62,7 @@ class EmailField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'VARCHAR('.$this->size.') NOT NULL';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 
 	}
 
@@ -76,6 +76,27 @@ class EmailField extends PhangoField {
 		return $value;
 
 	}
+	
+	/**
+    * By default primaryfield use a hidden form
+    */
+    
+    public function create_form()
+    {
+    
+        /*$form=new PasswordForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        $form->type='password';*/
+        
+        $form=parent::create_form();
+        
+        $form->field=new EmailField();
+        
+        return $form;
+    
+    }
 
 
 }

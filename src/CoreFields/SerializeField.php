@@ -12,7 +12,7 @@ class SerializeField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form="TextForm";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 	public $quot_open='\'';
 	public $quot_close='\'';
 	public $std_error='';
@@ -78,7 +78,7 @@ class SerializeField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'TEXT NOT NULL';
+		return 'TEXT NOT NULL DEFAULT ""';
 		
 
 	}

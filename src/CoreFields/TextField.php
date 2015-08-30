@@ -22,7 +22,7 @@ class TextField extends PhangoField {
 	function __construct($multilang=0)
 	{
 
-		$this->form='TextAreaForm';
+		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
 		$this->multilang=$multilang;
 
 	}
@@ -41,7 +41,7 @@ class TextField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'TEXT NOT NULL';
+		return 'TEXT NOT NULL DEFAULT ""';
 		
 
 	}

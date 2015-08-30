@@ -22,7 +22,7 @@ class DoubleField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='TextForm';
+		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
 
 	}
 
@@ -38,7 +38,7 @@ class DoubleField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'DOUBLE NOT NULL';
+		return 'DOUBLE NOT NULL DEFAULT "0"';
 
 	}
 	

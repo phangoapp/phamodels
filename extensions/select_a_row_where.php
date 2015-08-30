@@ -23,12 +23,14 @@
 */
 
 
-function select_a_row_where_method_class($class, $where, $arr_select=array(), $raw_query=0, $assoc=0)
+function select_a_row_where_method_class($class, $arr_select=array(), $raw_query=0, $assoc=0)
 {
 
 	settype($idrow, 'integer');
 	
-	$query=$class->select($where, $arr_select, $raw_query);
+	$query=$class->select($arr_select, $raw_query);
+	
+	$class->set_limit('limit 1');
 	
 	return $class->fetch_array($query, $assoc);
 

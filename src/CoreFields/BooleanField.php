@@ -24,7 +24,7 @@ class BooleanField extends PhangoField {
 	{
 
 		$this->size=1;
-		$this->form='SelectForm';
+		$this->form='PhangoApp\PhaModels\Forms\SelectForm';
 
 	}
 
@@ -50,7 +50,7 @@ class BooleanField extends PhangoField {
 
 		//Int for simple compatibility with sql dbs.
 	
-		return 'INT('.$this->size.') NOT NULL';
+		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 	
@@ -83,9 +83,9 @@ class BooleanField extends PhangoField {
 	function get_parameters_default()
 	{
 	
-		$arr_values=array($this->default_value, I18n::lang('common', 'no', 'No'), 0, I18n::lang('common', 'yes', 'Yes'), 1);;
+		$this->form_loaded->arr_select=array(0 => I18n::lang('common', 'no', 'No'), 1 => I18n::lang('common', 'yes', 'Yes'));
 
-		return array($this->name_component, '', $arr_values);
+		
 
 	}
 

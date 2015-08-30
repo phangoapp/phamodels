@@ -3,6 +3,8 @@
 namespace PhangoApp\PhaModels;
 
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaModels\CoreFields\PrimaryField;
+use PhangoApp\PhaModels\Forms\BaseForm;
 
 /**
 * The most important class for the framework
@@ -172,7 +174,7 @@ class Webmodel {
 	
 	/**
 	*
-	* If you checked the values that you going to save on your model, please, put this value to 1 or true.
+	* If you checked the values that you going to save on your model, please, put this value to 1 or 1.
 	*
 	*/
 	
@@ -236,6 +238,34 @@ class Webmodel {
 	static public $model=array();
 	
 	/**
+	* A string where is saved the conditions used for create queries
+	*
+	*/
+	
+	public $conditions='WHERE 1=1';
+	
+	/**
+    * A string where is set the order of query
+    *
+    */
+    
+    public $order_by='';
+    
+    /**
+    * A string where is saved the limit of rows in query
+    *
+    */
+    
+    public $limit='';
+    
+    /**
+    * A string where is saved the limit of rows in query
+    *
+    */
+    
+    public $reset_conditions=1;
+	
+	/**
 	* Internal arrays for create new indexes in the tables
 	*
 	*/
@@ -245,6 +275,30 @@ class Webmodel {
 	
 	static public $arr_sql_unique=array();
 	static public $arr_sql_set_unique=array();
+	
+	/**
+	* Simple property for save models in object mode
+	*/
+	
+	static public $m;
+	
+	/**
+	*  A simple array for load js, header and css from forms objects only one time
+	*/
+	
+	static public $form_type=array();
+	
+	/**
+    *  A simple array for control if was loaded contents from a form
+    */
+	
+	static public $form_type_checked=array();
+	
+	/**
+	* A simple switch for know if updated or insert this model
+	*/
+	
+	public $update=0;
 	
 	//Construct the model
 
@@ -265,7 +319,9 @@ class Webmodel {
 
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
-		$this->components[$this->idmodel]=new \PrimaryField();
+		$this->components[$this->idmodel]=new PrimaryField();
+		$this->components[$this->idmodel]->name_model=$name_model;
+		$this->components[$this->idmodel]->name_component=$this->idmodel;
 		$this->label=$this->name;
 		
 		if(!isset(Webmodel::$connection_func[$this->db_selected]))
@@ -277,9 +333,13 @@ class Webmodel {
 		
 		$this->cache=$cache;
 		$this->type_cache=$type_cache;
-		
-		
 
+		//Global access to models
+		
+		Webmodel::$model[$name_model]=&$this;
+		
+		Webmodel::$m->$name_model=&Webmodel::$model[$name_model];
+		
 	}
 	
 	/**
@@ -294,11 +354,11 @@ class Webmodel {
 	*
 	*/
 	
-	static public function load_model($model)
+	static public function load_model($model_path)
 	{
 		
-		$app_model=$model;
-		
+		//$app_model=$model;
+		/*
 		if(strpos($model, '/'))
 		{
 			
@@ -309,10 +369,11 @@ class Webmodel {
 			$model=$arr_model[1];
 		
 		}
+		*/
 		
-		$path_model=Webmodel::$model_path.$app_model.'/'.Webmodel::$model_folder.'/models_'.$model.'.php';
+		$path_model=$model_path.'.php';
 	
-		if(!isset(Webmodel::$cache_model[$app_model.'/'.$model]))
+		if(!isset(Webmodel::$cache_model[$path_model]))
 		{
 	
 			if(is_file($path_model))
@@ -320,7 +381,7 @@ class Webmodel {
 			
 				include($path_model);
 				
-				Webmodel::$cache_model[$app_model.'/'.$model]=1;
+				Webmodel::$cache_model[$path_model]=1;
 			
 			}
 			else
@@ -365,13 +426,6 @@ class Webmodel {
 			$output=ob_get_contents();
 			
 			ob_clean();
-
-			//$text_error='<p>Output: '.$output.'</p>';
-
-			/*$arr_error_sql[0]='<p>Error: Cannot connect to MySQL db.</p>';    
-			$arr_error_sql[1]='<p>Error: Cannot connect to MySQL db, '.$output.'</p>';
-		
-			show_error($arr_error_sql[0], $arr_error_sql[1]);*/
 			
 			throw new \Exception('Error: cannot connect to database');
 		
@@ -431,7 +485,7 @@ class Webmodel {
 		unset($this->components[$this->idmodel]);
 		$this->idmodel=$name_id;
 		//$this->components[$this->idmodel]=new PrimaryField();
-		$this->register($this->idmodel, 'PrimaryField', array());
+		$this->register($this->idmodel, new PrimaryField($this->idmodel));
 
 	}
 	
@@ -501,6 +555,60 @@ class Webmodel {
 		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
 	}
 	
+	public function set_conditions($conditions, $order_by='', $limit='')
+	{
+	
+        $conditions=trim($conditions);
+	
+        if($conditions=='')
+        {
+        
+            $this->conditions="WHERE 1=1";
+        
+        }
+        else
+        {
+        
+            $this->conditions=$conditions;
+        
+        }
+        
+        $this->order_by=$order_by;
+	
+	}
+	
+	public function set_order($order_by)
+	{
+	
+        $this->order_by=$order_by;
+	
+	}
+	
+	public function set_limit($limit)
+    {
+    
+        $this->limit=$limit;
+    
+    }
+	
+	public function reset_conditions()
+	{
+	
+        $this->conditions='WHERE 1=1';
+        
+        $this->order_by='order by '.$this->idmodel.' ASC';
+        
+        $this->limit='';
+	
+	}
+	
+	public function show_conditions()
+    {
+    
+        return $this->conditions;
+    
+    }
+	
 	/**
 	* This method insert a row in database using model how mirage of table.
 	* 
@@ -509,7 +617,7 @@ class Webmodel {
 	* @param array $post Is an array with data to insert. You have a key that represent the name of field to fill with data, and the value that is the data for fill.
 	*/
 
-	public function insert($post)
+	public function insert($post, $safe_query=0)
 	{
 	
 		$this->set_phango_connection();
@@ -519,23 +627,27 @@ class Webmodel {
 		$post=$this->unset_no_required($post);
 		
 		//Check if minimal fields are fill and if fields exists in components.Check field's values.
-		
+		/*
 		if(!$this->modify_id)
 		{
 		
 			unset($post[$this->idmodel]);
 			
 		}
+		*/
+		
+		$this->update=0;
 		
 		$arr_fields=array();
 		
-		if( $fields=$this->check_all($post) )
+		if( $fields=$this->check_all($post, $safe_query) )
 		{	
 		
 			if( !( $query=SQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
 			{
 			
 				$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
+				ModelForm::pass_errors_to_form($this);
 				return 0;
 			
 			}
@@ -549,6 +661,7 @@ class Webmodel {
 		else
 		{	
 			
+			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 
 			return 0;
@@ -570,10 +683,19 @@ class Webmodel {
 	* @param $conditions is a string containing a sql string beginning by "where". Example: where id=1.
 	*/
 	
-	public function update($post, $conditions="")
+	public function update($post, $safe_query=0)
 	{
 	
 		$this->set_phango_connection();
+		
+		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
+		
+		if($this->reset_conditions==1)
+		{
+		
+            $this->reset_conditions();
+        
+        }
 		
 		//Make conversion from post
 
@@ -592,9 +714,13 @@ class Webmodel {
 		
 		$post=$this->unset_no_required($post);
 		
+		//With this property your fields can save if insert or update
+		
+		$this->update=1;
+		
 		//Checking and sanitizing data from $post array for use in the query
 		
-		if( $fields=$this->check_all($post) )
+		if( $fields=$this->check_all($post, $safe_query) )
 		{
 			
 			//Foreach for create the query that comes from the $post array
@@ -607,6 +733,7 @@ class Webmodel {
 					$quot_open=$component->quot_open;
 					$quot_close=$component->quot_close;
 				
+                    /*
 					if(get_class($component)=='ForeignKeyField' && $fields[$key]==NULL)
 					{
 					
@@ -614,7 +741,7 @@ class Webmodel {
 						$quot_close='';
 						$fields[$key]='NULL';
 					
-					}
+					}*/
 				
 					$arr_fields[]='`'.$key.'`='.$quot_open.$fields[$key].$quot_close;
 					
@@ -652,12 +779,13 @@ class Webmodel {
 			{
 				
 				$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
+				ModelForm::pass_errors_to_form($this);
 				return 0;
 			
 			}
 			else
 			{
-			
+                
 				return 1;
 			
 			}
@@ -665,7 +793,7 @@ class Webmodel {
 		else
 		{
 			//Validation of $post fail, add error to $model->std_error
-			
+			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_update', 'Can\'t update').' ';
 
 			return 0;
@@ -690,7 +818,7 @@ class Webmodel {
 	* @param $raw_query If set to 0, you obtain fields from table related if you selected a foreignkey field, if set to 1, you obtain an array without any join.
 	*/
 
-	public function select($conditions="", $arr_select=array(), $raw_query=0)
+	public function select($arr_select=array(), $raw_query=0)
 	{
 		//Check conditions.., script must check, i can't make all things!, i am not a machine!
 
@@ -808,7 +936,7 @@ class Webmodel {
 
 		//$conditions is a variable where store the result from $arr_select and $arr_extra_select
 		
-		if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
+		/*if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
 		{
 			
 			$conditions=str_replace('where', '', $conditions);
@@ -822,7 +950,23 @@ class Webmodel {
 			
 			$conditions='WHERE '.$where.' '.$conditions;
 
+		}*/
+		
+		if($where!='')
+		{
+		
+            $where=' and '.$where;
+		
 		}
+		
+		$conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+        
+        if($this->reset_conditions==1)
+        {
+        
+            $this->reset_conditions();
+        
+        }
 
 		//$this->create_extra_fields();
 		
@@ -863,7 +1007,7 @@ class Webmodel {
 	* @param string $fields_for_count Array for fields used for simple counts based on foreignkeyfields.
 	*/
 
-	public function select_count($conditions, $field='', $fields_for_count=array())
+	public function select_count($field='', $fields_for_count=array())
 	{
 	
 		$this->set_phango_connection();
@@ -922,6 +1066,23 @@ class Webmodel {
 		
 		$where=implode(" and ", $arr_where);
 		
+		if($where!='')
+        {
+        
+            $where=' and '.$where;
+        
+        }
+        
+        $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+        
+        if($this->reset_conditions==1)
+        {
+        
+            $this->reset_conditions();
+        
+        }
+		
+		/*
 		if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
 		{
 			
@@ -936,7 +1097,7 @@ class Webmodel {
 			
 			$conditions='WHERE '.$where.' '.$conditions;
 
-		}
+		}*/
 		
 		$query=SQLClass::webtsys_query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
 		
@@ -954,11 +1115,13 @@ class Webmodel {
 	* @param string $conditions Conditions have same sintax that $conditions from $this->select method
 	*/
 
-	public function delete($conditions="")
+	public function delete()
 	{
 	
 		$this->set_phango_connection();
-	
+		
+		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
+        
 		foreach($this->components as $name_field => $component)
 		{
 		
@@ -974,10 +1137,14 @@ class Webmodel {
 		//Delete rows on models with foreignkeyfields to this model...
 		//You need load all models with relationship if you want delete related rows...
 		
+		$this->set_conditions($this->conditions);
+		
+		$this->set_limit($this->limit);
+		
 		if(count($this->related_models_delete)>0)
 		{
 			
-			$arr_deleted=$this->select_to_array($conditions, array($this->idmodel), 1);
+			$arr_deleted=$this->select_to_array(array($this->idmodel), 1);
 			
 			$arr_id=array_keys($arr_deleted);
 			
@@ -988,15 +1155,23 @@ class Webmodel {
 				
 				if( isset( Webmodel::$model[ $arr_set_model['model'] ]->components[ $arr_set_model['related_field'] ] ) )
 				{
+                    $this->set_conditions('where '.$arr_set_model['related_field'].' IN ('.implode(', ', $arr_id).')');
 					
-					Webmodel::$model[ $arr_set_model['model'] ]->delete('where '.$arr_set_model['related_field'].' IN ('.implode(', ', $arr_id).')');
+					Webmodel::$model[ $arr_set_model['model'] ]->delete();
 				
 				}
 			
 			}
 			
 		}
-
+		
+		if($this->reset_conditions==1)
+        {
+        
+            $this->reset_conditions();
+        
+        }
+        
  		return SQLClass::webtsys_query('delete from '.$this->name.' '.$conditions, $this->db_selected);
 		
 	}
@@ -1062,7 +1237,7 @@ class Webmodel {
 
 			//Check if indexed
 			
-			if($this->components[$field]->indexed==true)
+			if($this->components[$field]->indexed==1)
 			{
 			
 				Webmodel::$arr_sql_index[$this->name][$field]='CREATE INDEX `index_'.$this->name.'_'.$field.'` ON '.$this->name.'(`'.$field.'`);';
@@ -1072,7 +1247,7 @@ class Webmodel {
 			
 			//Check if unique
 			
-			if($this->components[$field]->unique==true)
+			if($this->components[$field]->unique==1)
 			{
 			
 				Webmodel::$arr_sql_unique[$this->name][$field]=' ALTER TABLE `'.$this->name.'` ADD UNIQUE (`'.$field.'`)';
@@ -1102,6 +1277,17 @@ class Webmodel {
 		$sql_query="create table `$this->name` (\n".implode(",\n", $arr_table)."\n) DEFAULT CHARSET=utf8;\n";
 		
 		return SQLClass::webtsys_query($sql_query);
+	
+	}
+	
+	/**
+	* Method used for update tables
+	*/
+	
+	public function update_table()
+	{
+	
+		
 	
 	}
 	
@@ -1198,7 +1384,7 @@ class Webmodel {
 		if(count($this->forms)==0)
 		{
 		
-			$this->create_form();
+			$this->create_forms();
 		
 		}
 	
@@ -1259,7 +1445,7 @@ class Webmodel {
 	* @param array $post Is an array with data to update. You have a key that represent the name of field to fill with data, and the value that is the data for fill.
 	*/
 
-	public function check_all($post)
+	public function check_all($post, $safe_query=0)
 	{
 		
 		I18n::load_lang('error_model');
@@ -1283,13 +1469,14 @@ class Webmodel {
 
 		//Make a foreach inside components, fields that are not found in components, are ignored
 		
-		foreach($this->components as $key => $value)
+		foreach($this->components as $key => $field)
 		{
 			
 			//If is set the variable for this component make checking
 
-			if(isset($post[$key]))
+			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1))
 			{
+                $this->components[$key]->update=$this->update;
 
 				//Check if the value is valid..
 
@@ -1339,7 +1526,7 @@ class Webmodel {
 
 		$this->std_error=implode(', ', $arr_std_error);
 
-		//If error return false
+		//If error return 0
 
 		if($set_error>0)
 		{
@@ -1390,65 +1577,87 @@ class Webmodel {
 	* @param array $fields_form The values of this array are used for obtain ModelForms from the fields with the same key that array values.
 	*/
 	
-	public function create_form($fields_form=array())
+	public function create_forms($fields_form=array())
 	{
 
 		//With function for create form, we use an array for specific order, after i can insert more fields in the form.
+		
+        $this->forms=array();
+        
+        $arr_form=array();
+        
+        if(count($fields_form)==0)
+        {
+        
+            $fields_form=array_keys($this->components);
+            
+        }
+        
+        foreach($fields_form as $component_name)
+        {
+        
+            if(isset($this->components[$component_name]))
+            {
+            
+                if($this->components[$component_name]->label=='')
+                {
+                
+                    $this->components[$component_name]->label=ucfirst($component_name);
+                
+                }
+            
+                $this->create_form($component_name);
 
-		$this->forms=array();
-		
-		$arr_form=array();
-		
-		if(count($fields_form)==0)
-		{
-		
-			$fields_form=array_keys($this->components);
-			
-		}
-		
-		//foreach($this->components as $component_name => $component)
-		foreach($fields_form as $component_name)
-		{
-		
-			if(isset($this->components[$component_name]))
-			{
-			
-				$component=&$this->components[$component_name];
-			
-				//Create form from model's components
+            }
 
-				$this->forms[$component_name]=new ModelForm($this->name, $component_name, $component->form, Webmodel::set_name_default($component_name), $component, $component->required, '');
-				
-				$this->forms[$component_name]->set_all_parameters_form($component->get_parameters_default());
-				
-				if($this->components[$component_name]->label=='')
-				{
-				
-					$this->components[$component_name]->label=ucfirst($component_name);
-				
-				}
-				
-				$this->forms[$component_name]->label=$this->components[$component_name]->label;
+        }
+        
+        
+        foreach(array_keys(Webmodel::$form_type) as $type)
+        {
+            $type::js();
+            $type::css();
+            $type::header();
+            
+            Webmodel::$form_type_checked[$type]=1;
+        
+        }
+        
+        Webmodel::$form_type=array();
 
-				//Set parameters to default
-				//$parameters_value=$this->components[$component_name]->parameters;
-
-				/*if($this->forms[$component_name]->parameters[2]==0)
-				{*/
+	}
 	
-				//$this->forms[$component_name]->parameters=$this->components[$component_name]->parameters;
-					
-
-				//}
-
-				//Use method from ModelForm for set initial parameters...
-
-				//$this->forms[$component_name]->set_parameter_value($parameters_initial_value);
-				
-			}
-
-		}
-
+	/**
+	* Method for create a simple form from a field
+	* @param string $component_name The name of the component that is used for create the form
+	*/
+	
+	public function create_form($component_name)
+	{
+	
+        $component=$this->components[$component_name];
+        
+        $form_class=$component->form;
+        
+        $this->forms[$component_name]=new $form_class($component_name, $component->value);
+        
+        $type_class=get_class($this->forms[$component_name]);
+        
+        if(!isset(Webmodel::$form_type_checked[$type_class]))
+        {
+        
+            Webmodel::$form_type[$type_class]=1;
+            
+        }
+        
+        $this->forms[$component_name]->default_value=$component->default_value;
+        $this->forms[$component_name]->required=$component->required;
+        $this->forms[$component_name]->label=$component->label;
+        
+        $this->components[$component_name]->form_loaded=&$this->forms[$component_name];
+        
+        $this->components[$component_name]->get_parameters_default();
+	
 	}
 
 	/**
@@ -1588,11 +1797,14 @@ class Webmodel {
 	* @param string $arguments Array with arguments for construct the new field
 	* @param boolean $required A boolean used for set the default required value
 	*/
-	public function register($name, $type, $arguments, $required=0)
+	public function register($name, $type_class, $required=0)
 	{
 	
-		$rc=new \ReflectionClass($type);
-		$this->components[$name]=$rc->newInstanceArgs($arguments);
+		/*$rc=new \ReflectionClass($type);
+		$this->components[$name]=$rc->newInstanceArgs($arguments);*/
+		
+		$this->components[$name]=&$type_class;
+		
 		//Set first label...
 		$this->components[$name]->label=Webmodel::set_name_default($name);
 		$this->components[$name]->name_model=$this->name;
@@ -1701,4 +1913,15 @@ class Webmodel {
 
 
 }
+
+//A simple shortcut for access to models
+
+class SuperModel {
+
+
+
+}
+
+Webmodel::$m=new SuperModel();
+
 ?>

@@ -14,6 +14,7 @@
 */
 
 namespace PhangoApp\PhaModels\CoreFields;
+use PhangoApp\PhaModels\Forms\BaseForm;
 use PhangoApp\PhaUtils\Utils;
 
 class PhangoField {
@@ -87,13 +88,38 @@ class PhangoField {
 	* Form define the function for use in forms...
 	*/
 	
-	public $form="";
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
+	
+	/**
+	* Variable where save a copy of form created from this Field 
+	*/
+	
+	public $form_loaded;
 	
 	/**
 	* Array for create initial parameters for form..
 	*/
 	
 	public $parameters=array();
+	
+	/**
+	* A method used for set if this field can be update or insert by everyone. 
+	*/
+	
+	public $protected=false;
+	
+	/**
+	* A property that set the default value
+	*/
+	
+	public $default_value='';
+	
+	/**
+	* A property for know if updated or insert this field
+	*/
+	
+	public $update=0;
+	
 	
 	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
@@ -126,7 +152,7 @@ class PhangoField {
 	public function get_type_sql()
 	{
 
-		return 'VARCHAR('.$this->size.') NOT NULL';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 	
@@ -137,7 +163,7 @@ class PhangoField {
 	public function get_parameters_default()
 	{
 
-		return array($this->name_component, '', '');
+		
 
 	}
 	
@@ -151,6 +177,22 @@ class PhangoField {
 		return $this->check($value);
 	
 	}
+	
+	/**
+	* Method for create a form, you only need subclass the field if you want another form different to default
+	*/
+	/*
+	public function create_form()
+	{
+	
+        $form=new BaseForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        
+        return $form;
+	
+	}*/
 	
 	
 }

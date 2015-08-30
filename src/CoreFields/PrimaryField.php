@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaModels\Forms\HiddenForm;
 
 /**
 * PrimaryField is used for primary keys for models
@@ -21,7 +22,7 @@ class PrimaryField extends PhangoField {
 	* Initial label for the field. The label is used for create forms from a PhangoField.
 	*/
 	
-	public $label="";
+	public $label="#ID";
 	
 	/**
 	* Boolean value that is used for check if the field is required for fill a row in the db model.
@@ -33,8 +34,14 @@ class PrimaryField extends PhangoField {
 	* By default, the form used for this field is HiddenForm.
 	*/
 	
-	public $form="HiddenForm";
+	public $form='PhangoApp\PhaModels\Forms\HiddenForm';
 
+	/**
+	* By default this field is protected.
+    */
+	
+	public $protected=true;
+	
 	/**
 	* Check function that convert the value on a PrimaryField value.
 	*
@@ -71,6 +78,23 @@ class PrimaryField extends PhangoField {
 		return $value;
 
 	}
+	
+	/**
+	* By default primaryfield use a hidden form
+	*/
+	/*
+	public function create_form()
+    {
+    
+        $form=new BaseForm($this->name_component, $this->value);
+        $form->default_value=$this->default_value;
+        $form->required=$this->required;
+        $form->label=$this->label;
+        $form->type='hidden';
+        
+        return $form;
+    
+    }*/
 
 }
 

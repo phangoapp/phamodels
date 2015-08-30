@@ -22,7 +22,7 @@ class IntegerField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='TextForm';
+		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
 		$this->only_positive=$only_positive;
 		$this->min_num=$min_num;
 		$this->max_num=$max_num;
@@ -64,7 +64,7 @@ class IntegerField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'INT('.$this->size.') NOT NULL';
+		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 	

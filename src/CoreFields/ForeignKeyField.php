@@ -18,30 +18,27 @@ class ForeignKeyField extends IntegerField{
 	//field related in the model...
 	public $related_model='';
 	public $container_model='';
-	public $null_relation=1;
 	public $params_loading_mod=array();
 	public $default_id=0;
 	public $yes_zero=0;
 	public $fields_related_model;
 	public $name_field_to_field;
 	
-	function __construct($related_model, $size=11, $null_relation=1, $default=0)
+	function __construct($related_model, $size=11, $default=0)
 	{
 
 		$this->size=$size;
-		$this->form='SelectForm';
+		$this->form='PhangoApp\PhaModels\Forms\SelectForm';
 		$this->related_model=&$related_model;
 		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...
 		$this->fields_related_model=array();
 		//Representative field for related model...
 		$this->name_field_to_field='';
-		$this->null_relation=$null_relation;
 		$this->default_id=$default;
-		
-		//PhangoVar::$model[$related_model]->related_models_delete[]=array('model' => $this->name_model, 'related_field' => $this->name_component);
-		
-		//echo get_parent_class();
+		$this->quot_open='';
+		$this->quot_close='';
+		$this->protected=1;
 
 	}
 	
@@ -56,8 +53,6 @@ class ForeignKeyField extends IntegerField{
 		}
 		else
 		{
-		
-			//show_error('You need load model before set relantionship', $this->related_model.' model not exists. You need load model before set relantionship with ForeignKeyField with '.$this->name_model.' model', $output_external='');
 			
 			throw new \Exception($this->related_model.' model not exists. You need load model before set relantionship with ForeignKeyField with '.$this->name_model.' model');
 			
@@ -82,17 +77,12 @@ class ForeignKeyField extends IntegerField{
 
 		//Need checking if the value exists with a select_count
 		
-		$num_rows=$this->related_model->select_count('where '.$this->related_model.'.'.$this->related_model->idmodel.'='.$value, $this->related_model->idmodel);
+		$this->related_model->set_conditions('where '.$this->related_model->name.'.'.$this->related_model->idmodel.'='.$value);
+		
+		$num_rows=$this->related_model->select_count();
 		
 		if($num_rows>0)
 		{
-		
-			if($value==0 && $this->yes_zero==0)
-			{
-				
-				return NULL;
-			
-			}
 			
 			return $value;
 
@@ -100,18 +90,9 @@ class ForeignKeyField extends IntegerField{
 		else
 		{
 		
-			if($this->default_id<=0 && $this->yes_zero==0)
-			{
 			
-				return NULL;
-				
-			}
-			else
-			{
+            return $this->default_id;
 			
-				return $this->default_id;
-			
-			}
 
 		}
 		
@@ -130,11 +111,8 @@ class ForeignKeyField extends IntegerField{
 	
 	function get_type_sql()
 	{
-	
-		$arr_null[0]='NOT NULL';
-		$arr_null[1]='NULL';
 
-		return 'INT('.$this->size.') '.$arr_null[$this->null_relation];
+		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
 
 	}
 

@@ -27,7 +27,11 @@ function select_a_row_method_class($class, $idrow, $arr_select=array(), $raw_que
 
 	settype($idrow, 'integer');
 	
-	$query=$class->select('where '.$class->name.'.`'.$class->idmodel.'`=\''.$idrow.'\'', $arr_select, $raw_query);
+	$class->set_conditions('where '.$class->name.'.`'.$class->idmodel.'`=\''.$idrow.'\'');
+	
+	$class->set_limit('limit 1');
+	
+	$query=$class->select($arr_select, $raw_query);
 	
 	return $class->fetch_array($query, $assoc);
 

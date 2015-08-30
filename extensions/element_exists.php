@@ -30,7 +30,9 @@ function element_exists_method_class($class, $idrow, $field_search='')
 
 	settype($idrow, 'integer');
 	
-	$num_elements=$class->select_count('where '.$field_search.'=\''.$idrow.'\'', $class->idmodel);
+	$class->set_conditions('where '.$field_search.'=\''.$idrow.'\'');
+	
+	$num_elements=$class->select_count($class->idmodel);
 	
 	return $num_elements;
 
