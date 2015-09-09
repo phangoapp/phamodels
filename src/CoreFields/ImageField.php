@@ -3,6 +3,8 @@
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaModels\Webmodel;
+use Intervention\Image\ImageManager;
 
 /**
 * Imagefield is a field for upload images
@@ -15,28 +17,28 @@ class ImageField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form='PhangoApp\PhaModels\Forms\BaseForm';
-	public $name_file="";
+	public $form='PhangoApp\PhaModels\Forms\FileForm';
 	public $path="";
 	public $url_path="";
 	public $type='';
 	public $thumb=0;
-	public $img_width=100;
+	public $img_width=array('mini' => 150);
 	public $quot_open='\'';
 	public $quot_close='\'';
 	public $std_error='';
-	public $quality_jpeg=75;
+	public $quality_jpeg=85;
 	public $min_size=array(0, 0);
 	public $prefix_id=1;
 	public $img_minimal_height=array();
 	public $func_token='Utils::get_token';
 	public $move_file_func='move_uploaded_file';
 	public $size=255;
+	public $driver='gd';
 
-	function __construct($name_file, $path, $url_path, $type, $thumb=0, $img_width=array('mini' => 150), $quality_jpeg=85)
+	function __construct($path, $url_path, $type, $thumb=0, $img_width=array('mini' => 150), $quality_jpeg=85)
 	{
 
-		$this->name_file=$name_file;
+		#$this->name_file=$this->name_component;
 		$this->path=$path;
 		$this->url_path=$url_path;
 		$this->type=$type;
@@ -52,7 +54,105 @@ class ImageField extends PhangoField {
 	{	
 		//Only accept jpeg, gif y png
 		
+		if(isset($_FILES[$this->name_component]['tmp_name']))
+        {
+        
+            $name_image=$_FILES[$this->name_file]['name'];
+        
+            $manager = new ImageManager(array('driver' => $this->driver));
+            
+            if($image=$manager->make($_FILES[$this->name_file]['tmp_name'])!=false)
+            {
+            
+                //$with=
+                
+                //if(make('foo.jpg')->resize(300, 200)->save('bar.jpg');
+                
+                if($this->thumb)
+                {
+                
+                    $base_name_image=basename($name_image);
+                
+                    foreach($this->img_width as $prefix => $width)
+                    {
+                    
+                        $image->reset();
+                    
+                        //In nexts versions, save in tmp and move with ftp copy.
+                    
+                        if(!$image->fit($width)->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$base_name_image.'.jpg'))
+                        {
+                        
+                            $this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images, please, check permissions');
+                        
+                        }
+                    
+                    }
+                
+                }
+                
+            
+                if($this->update)
+                {
+                
+                    //Check the image for delete.
+                    $query=$model[$this->name_model]->select(array($this->name_component), 1);
+                    
+                    while(list($old_image)=$model[$this->name_model]->fetch_row($query))
+                    {
+                    
+                        if(!@unlink($this->path.'/'.$old_image))
+                        {
+                            $this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old images, please, check permissions');
+                        }
+                        
+                        $base_old_image=basename($old_image);
+                        
+                        foreach($this->img_width as $prefix => $width)
+                        {
+                        
+                            if(!@unlink($this->path.'/'.$prefix.'_'.$base_old_image))
+                            {
+                                $this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old thumb images, please, check permissions');
+                            }
+                        
+                        }
+                    
+                    }
+
+                }
+                
+                //Copy the image
+                
+                $image->reset();
+                
+                if($image->save($this->path.'/'.$prefix.'_'.$image_name))
+                {
+
+                    $this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images, please, check permissions');
+                    
+                    return false;
+                    
+                }
+                
+                return $image_name;
+                
+            }
+            else
+            {
+            
+                $this->std_error=I18n::lang('common', 'no_valid_image', 'This image is wrong');
+            
+                return false;
+            
+            }
+            
+        
+        }
+        
+        return false;
 		
+		/*
 		
 		$file=$this->name_file;
 		$image=basename($image);
@@ -190,11 +290,6 @@ class ImageField extends PhangoField {
 						$img = $func_final($this->path.'/'.$_FILES[$file]['name']);
 						
 						//imagejpeg ( $img, $this->path.'/'.$_FILES[$file]['name'], $this->quality_jpeg );
-						
-						/*$mini_photo=$_FILES[$file]['name'];
-				
-						$mini_photo=str_replace('.gif', '.jpg', $mini_photo);
-						$mini_photo=str_replace('.png', '.jpg', $mini_photo);*/
 						
 						//Reduce size for default if $this->img_width['']
 						
@@ -361,7 +456,8 @@ class ImageField extends PhangoField {
 			$this->std_error=I18n::lang('error_model', 'check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
 		
 		}
-
+        */
+        
 		$this->value='';
 		return '';
 
