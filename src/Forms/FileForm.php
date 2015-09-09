@@ -16,6 +16,7 @@ class FileForm extends BaseForm{
         parent::__construct($name, $value);
         
         $this->type='file';
+        $this->enctype=1;
     
     }
         

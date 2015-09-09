@@ -158,6 +158,12 @@ class Webmodel {
 	public $enctype='';
 	
 	/**
+    * Internal variable for check if forms use enctype parameters...
+    */
+    
+    public $check_enctype=0;
+	
+	/**
 	* Array used for inverse foreign keys.
 	*
 	* This array is used when you need access to a model with a foreignkey key related with its. 
@@ -1607,6 +1613,13 @@ class Webmodel {
                 }
             
                 $this->create_form($component_name);
+                
+                if($this->check_enctype>0)
+                {
+                
+                    $this->set_enctype_binary();
+                
+                }
 
             }
 
@@ -1653,6 +1666,8 @@ class Webmodel {
         $this->forms[$component_name]->default_value=$component->default_value;
         $this->forms[$component_name]->required=$component->required;
         $this->forms[$component_name]->label=$component->label;
+        
+        $this->check_enctype+=$this->forms[$component_name]->enctype;
         
         $this->components[$component_name]->form_loaded=&$this->forms[$component_name];
         

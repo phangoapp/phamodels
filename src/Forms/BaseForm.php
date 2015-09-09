@@ -19,6 +19,12 @@ class BaseForm {
     
     public $std_error='';
     
+    /**
+    * A property for add enctype for a form where this field is used
+    */
+    
+    public $enctype=0;
+    
     public function __construct($name, $value)
     {
         $this->label=$name;

@@ -150,6 +150,8 @@ class ImageField extends PhangoField {
         
         }
         
+        $this->std_error=I18n::lang('common', 'no_image_found', 'No image uploaded, check enctype form');
+        
         return false;
 		
 		/*
