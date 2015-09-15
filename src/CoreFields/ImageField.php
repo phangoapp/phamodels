@@ -110,6 +110,23 @@ class ImageField extends PhangoField {
 					
 					//if(make('foo.jpg')->resize(300, 200)->save('bar.jpg');
 					
+					$real_size=$image->width();
+					
+					$max_size=0; 
+					
+					if(isset($this->img_width['']))
+					{
+					
+						if($this->img_width['']<$real_size)
+						{
+					
+							$max_size=$this->img_width[''];
+							
+							unset($this->img_width['']);
+					
+						}
+						
+					}
 					
 					if($this->thumb)
 					{
@@ -141,6 +158,13 @@ class ImageField extends PhangoField {
 					//Copy the image
 					
 					$image->reset();
+					
+					if($max_size>0)
+					{
+					
+						$image->fit($max_size);
+					
+					}
 					
 					if(!$image->save($this->path.'/'.$name_image))
 					{
