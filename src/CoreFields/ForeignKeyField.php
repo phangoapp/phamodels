@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaModels\Webmodel;
 
 /**
 * ForeignKeyfield is a relantioship between two models...
@@ -38,7 +39,7 @@ class ForeignKeyField extends IntegerField{
 		$this->default_id=$default;
 		$this->quot_open='';
 		$this->quot_close='';
-		$this->protected=1;
+		$this->protected=0;
 
 	}
 	
@@ -65,16 +66,16 @@ class ForeignKeyField extends IntegerField{
 	{
 		
 		settype($value, "integer");
-
+        
 		//Reload related model if not exists, if exists, only check cache models...
 
 		if(!isset($this->related_model))
 		{
 
-			load_model($this->container_model);
+			Webmodel::load_model($this->container_model);
 
 		}
-
+        
 		//Need checking if the value exists with a select_count
 		
 		$this->related_model->set_conditions('where '.$this->related_model->name.'.'.$this->related_model->idmodel.'='.$value);
@@ -133,15 +134,15 @@ class ForeignKeyField extends IntegerField{
 	{
 		
 		
-		load_libraries(array('forms/selectmodelform'));
+		//load_libraries(array('forms/selectmodelform'));
 		
 		//SelectModelForm($name, $class, $value, $model_name, $identifier_field, $where='')
 		
 		//Prepare parameters for selectmodelform
 		
-		if(isset($this->name_component) && $this->name_field_to_field!='' && $this->name_model!='' && count(PhangoVar::$model[$this->name_model]->forms)>0)
+		if(isset($this->name_component) && $this->name_field_to_field!='' && $this->name_model!='' && count(Webmodel::$model[$this->name_model]->forms)>0)
 		{
-			PhangoVar::$model[$this->name_model]->forms[$this->name_component]->form='SelectModelForm';
+			Webmodel::$model[$this->name_model]->forms[$this->name_component]->form='PhangoApp\PhaModels\Forms\SelectModelForm';
 			
 			return array($this->name_component, '', '', $this->related_model, $this->name_field_to_field, '');
 			
