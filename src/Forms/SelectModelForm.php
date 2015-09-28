@@ -24,14 +24,14 @@ class SelectModelForm extends SelectForm{
     public function form()
     {
         
-        $model->set_conditions($conditions);
+        $model->set_conditions($this->conditions);
         
-        $query=$model->select(array($field_name, $field_value));
+        $query=$model->select(array($this->field_name, $this->field_value), $this->raw_query);
         
         while($row=$model->fetch_array($query))
         {
         
-            $this->arr_selected[$row[$field_value]]=$field_name;
+            $this->arr_selected[$row[$this->field_value]]=$this->field_name;
         
         }
         
