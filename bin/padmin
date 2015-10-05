@@ -353,7 +353,7 @@ function update_table()
 					
 					$table_related=Webmodel::$model[$key]->components[$new_field]->related_model->name;
 					
-					$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$new_field], $model);
+					$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$new_field], Webmodel::$model);
 					
 					Webmodel::$arr_sql_set_index[$key][$new_field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$new_field.'_'.$key.'IDX` FOREIGN KEY ( `'.$new_field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
 

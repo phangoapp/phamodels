@@ -23,15 +23,24 @@ class SelectModelForm extends SelectForm{
         
     public function form()
     {
-        
-        $model->set_conditions($this->conditions);
-        
-        $query=$model->select(array($this->field_name, $this->field_value), $this->raw_query);
-        
-        while($row=$model->fetch_array($query))
+    
+        if($this->field_value=='' || $this->field_name=='')
         {
         
-            $this->arr_selected[$row[$this->field_value]]=$this->field_name;
+            throw new \Exception('Need field_value and field_name property');
+        
+        }
+    
+        
+        $this->model->set_conditions($this->conditions);
+        
+        $query=$this->model->select(array($this->field_name, $this->field_value), $this->raw_query);
+        
+        while($row=$this->model->fetch_array($query))
+        {
+            
+            $this->arr_select[$row[$this->field_value]]=$row[$this->field_name];
+            
         
         }
         
