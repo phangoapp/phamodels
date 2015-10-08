@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaModels\Webmodel;
 
 /**
 * Serializefield is a field if you need save serialize values
@@ -71,7 +72,7 @@ class SerializeField extends PhangoField {
 
 		$this->value=$value;
 		
-		return webtsys_escape_string(serialize($value));
+		return Webmodel::escape_string(serialize($value));
 
 	}
 

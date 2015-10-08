@@ -651,7 +651,7 @@ class Webmodel {
 		
 			if( !( $query=SQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
 			{
-			
+                
 				$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 				ModelForm::pass_errors_to_form($this);
 				return 0;
@@ -666,6 +666,13 @@ class Webmodel {
 		}
 		else
 		{	
+            
+			if($fields===0)
+			{
+			
+                $this->std_error.=I18n::lang('error_model', 'any_field_found', 'Not valid fields found').' ';
+			
+			}
 			
 			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
@@ -1475,6 +1482,8 @@ class Webmodel {
 
 		//Make a foreach inside components, fields that are not found in components, are ignored
 		
+		$z=0;
+		
 		foreach($this->components as $key => $field)
 		{
 			
@@ -1506,6 +1515,8 @@ class Webmodel {
 					$set_error++;
 	
 				}
+				
+				$z++;
 		
 			}
 			else if($this->components[$key]->required==1)
@@ -1526,6 +1537,14 @@ class Webmodel {
 
 			}
 
+		}
+		
+		if($z==0)
+		{
+		
+            $this->std_error='Error: no fields to check';
+            $set_error++;
+		
 		}
 
 		//Set std_error for the model where is stored all errors in checking...
