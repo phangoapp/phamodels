@@ -48,6 +48,8 @@ function padminConsole($options)
 	
 	#Webmodel::$model_path='./modules/';
 	
+	$options['model']=str_replace('.php', '', $options['model']);
+	
 	$model_file=$options['model'].'.php';
 	
 	if(!is_file($model_file))
