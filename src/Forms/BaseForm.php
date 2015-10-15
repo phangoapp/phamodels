@@ -44,6 +44,18 @@ class BaseForm {
     
     }
     
+    public function set_parameters(array $parameters)
+    {
+    
+        foreach($parameters as $property => $value)
+        {
+        
+            $this->$property=$value;
+        
+        }
+    
+    }
+    
     /**
     * Static method where is registered the js necessary for a field
     */
