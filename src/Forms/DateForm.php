@@ -14,6 +14,8 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
     
         $value=$this->default_value;
 
+        settype($value, 'integer');
+        
         if($value==0)
         {
 
