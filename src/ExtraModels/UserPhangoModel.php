@@ -29,7 +29,7 @@ class UserPhangoModel extends Webmodel {
 	public $password='password';
 	public $repeat_password='repeat_password';
 
-	public function insert($post, $safe_query=0)
+	public function insert($post, $safe_query=0, $cache_name='')
 	{
         
 		if($this->check_user_exists($post[$this->username], $post[$this->email]))
@@ -46,7 +46,7 @@ class UserPhangoModel extends Webmodel {
 			
 			}
 		
-			return parent::insert($post, $safe_query);
+			return parent::insert($post, $safe_query, $cache_name);
 		
 		}
 		else
@@ -60,7 +60,7 @@ class UserPhangoModel extends Webmodel {
 	
 	}
 	
-	public function update($post, $safe_query=0)
+	public function update($post, $safe_query=0, $cache_name='')
 	{
 	
 		if(isset($post[$this->username]) && $post[$this->email])
@@ -97,7 +97,7 @@ class UserPhangoModel extends Webmodel {
 				
 				}
                 
-				return parent::update($post, $safe_query);
+				return parent::update($post, $safe_query, $cache_name);
 			
 			}
 			else

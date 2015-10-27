@@ -5,6 +5,10 @@ namespace PhangoApp\PhaModels;
 use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\CoreFields\PrimaryField;
 use PhangoApp\PhaModels\Forms\BaseForm;
+use PhangoApp\PhaUtils\Utils;
+
+define('ORDER_ASC', 0);
+define('ORDER_DESC', 1);
 
 /**
 * The most important class for the framework
@@ -216,6 +220,48 @@ class Webmodel {
 	public $cache=0;
 	
 	/**
+    * Property that define if the sql queries are cached.
+    *
+    */
+    
+    public $cache_query=0;
+	
+	/**
+    * Property that define the folder where the default caches are saved
+    *
+    */
+    
+    static public $folder_cache='./cache';
+    
+    /**
+    * Property used for define the callback function used for load cache queries.
+    *
+    */
+    
+    static public $type_cache_query='PhangoApp\PhaModels\Cache::file_cache_query';
+	
+	/**
+    * Property used for define the callback function used for save cache queries.
+    *
+    */
+    
+    static public $save_cache_query='PhangoApp\PhaModels\Cache::save_cache_query';
+	
+	/**
+    * Property used for save the queries.
+    *
+    */
+    
+    public $arr_cache_query=array();
+    
+    /**
+    * Property used for count the new queries saved
+    *
+    */
+    
+    public $count_cache_query=0;
+	
+	/**
 	* Property that define if this model was cached before, if not, obtain the query from the sql db.
 	*
 	*/
@@ -227,7 +273,7 @@ class Webmodel {
 	*
 	*/
 	
-	public $type_cache='fileCache';
+	static public $type_cache='PhangoApp\PhaModels\Cache::file_cache';
 
 	/**
 	* Property that define if id is modified.
@@ -324,7 +370,7 @@ class Webmodel {
 	* 
 	*/
 	
-	public function __construct($name_model, $cache=0, $type_cache='fileCache')
+	public function __construct($name_model, $cache=0, $type_cache='PhangoApp\PhaModels\Cache::file_cache')
 	{
 	
 		//Webmodel::$root_model='app/'.$name_model.'/'.Webmodel::$model_path;
@@ -344,7 +390,7 @@ class Webmodel {
 		}
 		
 		$this->cache=$cache;
-		$this->type_cache=$type_cache;
+		Webmodel::$type_cache=$type_cache;
 
 		//Global access to models
 		
@@ -443,7 +489,14 @@ class Webmodel {
 		
 		}
 		
-	
+		//Load file with query cache from this model.
+		
+		if($this->cache_query==true)
+		{
+
+            call_user_func(Webmodel::$type_cache_query, $this->name);
+            
+        }
 	}
 	
 	/**
@@ -557,6 +610,7 @@ class Webmodel {
 	/**
 	* This method is used for make raw string queries.
 	*
+	* TODO: Add an sql builder cache?. I can create a file with all cache queries and load this when i connect to database.
 	*/
 	
 	public function query($sql_query)
@@ -638,16 +692,72 @@ class Webmodel {
 	public function set_order($order_by)
 	{
 	
-        $this->order_by=$order_by;
+        if(gettype($order_by)=='array')
+        {
+        
+            $arr_order=[];
+        
+            foreach($order_by as $key => $order)
+            {
+            
+                settype($order, 'integer');
+                
+                $arr_set_order[$order]='ASC';
+                
+                $arr_set_order=[0 => 'ASC', 1 => 'DESC'];
+            
+                if(isset($this->components[$key]))
+                {
+                    
+                    $arr_order[]=$key.' '.$arr_set_order[$order];
+                
+                }
+            
+            }
+            
+            $this->order_by='order by '.implode(',', $arr_order);
+        
+        }
+        else
+        {
+            $this->order_by=$order_by;
+        }
+	
 	
 	}
 	
 	public function set_limit($limit)
     {
     
-        $this->limit=$limit;
+        if(gettype($limit)=='array')
+        {
     
+            $c=count($limit);
+            
+            settype($limit[0], 'integer');
+            
+            $this->limit='limit '.$limit[0];
+            
+            if($c==2)
+            {
+            
+                
+                $this->limit.=', '.$limit[1];
+                
+            
+            }
+    
+        }
+        else
+        {
+        
+            $this->limit=$limit;
+        }
     }
+    
+    /**
+    * A simple method for reset the conditions properties of Webmodel
+    */
 	
 	public function reset_conditions()
 	{
@@ -660,10 +770,25 @@ class Webmodel {
 	
 	}
 	
+	/**
+	* A simple method for show the conditions in sql format
+	*/
+	
 	public function show_conditions()
     {
     
         return $this->conditions;
+    
+    }
+    
+    /**
+    * Simple method for save cache queries.
+    */
+    
+    static public function save_cache_query()
+    {
+    
+        call_user_func(Webmodel::$save_cache_query);
     
     }
 	
@@ -675,7 +800,7 @@ class Webmodel {
 	* @param array $post Is an array with data to insert. You have a key that represent the name of field to fill with data, and the value that is the data for fill.
 	*/
 
-	public function insert($post, $safe_query=0)
+	public function insert($post, $safe_query=0, $cache_name='')
 	{
 	
 		$this->set_phango_connection();
@@ -748,7 +873,7 @@ class Webmodel {
 	* @param $conditions is a string containing a sql string beginning by "where". Example: where id=1.
 	*/
 	
-	public function update($post, $safe_query=0)
+	public function update($post, $safe_query=0, $cache_name='')
 	{
 	
 		$this->set_phango_connection();
@@ -883,169 +1008,190 @@ class Webmodel {
 	* @param $raw_query If set to 0, you obtain fields from table related if you selected a foreignkey field, if set to 1, you obtain an array without any join.
 	*/
 
-	public function select($arr_select=array(), $raw_query=0)
+	public function select($arr_select=array(), $raw_query=0, $cache_name='')
 	{
 		//Check conditions.., script must check, i can't make all things!, i am not a machine!
 
 		$this->set_phango_connection();
 		
-		if(count($arr_select)==0)
+		if(!isset($this->arr_cache_query[$cache_name]) || $this->cache_query==0)
 		{
 		
-			$arr_select=array_keys($this->components);
-			
+            if(count($arr_select)==0)
+            {
+            
+                $arr_select=array_keys($this->components);
+                
 
+            }
+            else
+            {
+                
+                $arr_select=array_intersect($arr_select, array_keys($this->components));
+
+            }
+
+            //$arr_extra_select is an hash for extra fields from related models
+            $arr_extra_select=array();
+            //$arr_model is an array where are stored the tables used in the query, it is usually only referred to the model table
+            $arr_model=array($this->name);
+            //$arr_where is an array where is stored the relationship between models
+            $arr_where=array('1=1');
+            
+            $arr_extra_model=array();
+
+            foreach($arr_select as $key => $my_field)
+            {
+                //Check if field is a key from a related_model
+
+                $arr_select[$key]=$this->name.'.`'.$my_field.'`';
+
+                //Check if a field link with other field from another table...
+
+                //list($arr_select, $arr_extra_select, $arr_model, $arr_where)=$this->recursive_fields_select($key, $this->name, $my_field, $raw_query, $arr_select, $arr_extra_select, $arr_model, $arr_where);
+                if(get_class($this->components[$my_field])=='ForeignKeyField')
+                {
+                
+                    $arr_extra_model[$key]=$my_field; //$this->components[$my_field]->related_model;
+                
+                }
+                
+            }
+            
+            if($raw_query==0)
+            {
+            
+                //Add fields defined on fields_related_model.
+                
+                foreach($arr_extra_model as $key => $my_field)
+                {
+                    
+                    $model_name_related=$this->components[$my_field]->related_model->name;
+                    
+                    //Set the value for the component foreignkeyfield if name_field_to_field is set.
+                
+                    if($this->components[$my_field]->name_field_to_field!='')
+                    {
+                    
+                        $arr_select[$key]=$model_name_related.'.`'.$this->components[$my_field]->name_field_to_field.'` as `'.$my_field.'`';
+                        
+                    }
+                    
+                    //Set the new fields added for related model...
+                    
+                    foreach($this->components[$my_field]->fields_related_model as $fields_related)
+                    {
+                    
+                        $arr_select[]=$model_name_related.'.`'.$fields_related.'` as `'.$model_name_related.'_'.$fields_related.'`';
+                    
+                    }
+                    
+                    $arr_model[]=$model_name_related;
+                    
+                    //Set the where connection
+                    
+                    $arr_where[]=$this->name.'.`'.$my_field.'`='.$model_name_related.'.`'.Webmodel::$model[$model_name_related]->idmodel.'`';
+                
+                }
+                
+                //Now define inverse relationship...
+                
+                foreach($this->related_models as $model_name_related => $fields_related)
+                {
+                
+                    foreach($fields_related as $field_related)
+                    {
+                    
+                        $arr_select[]=$model_name_related.'.`'.$field_related.'` as `'.$model_name_related.'_'.$field_related.'`';
+                        
+                    }
+                    
+                    $arr_model[]=$model_name_related;
+                    
+                    $arr_where[]=$this->name.'.`'.$this->idmodel.'`='.$model_name_related.'.`'.$fields_related[0].'`';
+                
+                }
+            
+            }
+
+            //Final fields from use in query
+            
+            $fields=implode(", ", $arr_select);
+
+            //The tables used in the query
+            
+            $arr_model=array_unique($arr_model, SORT_STRING);
+
+            $selected_models=implode(", ", $arr_model);
+            
+            //Conditions for the select query for related fields in the model
+            $where=implode(" and ", $arr_where);
+
+            //$conditions is a variable where store the result from $arr_select and $arr_extra_select
+            
+            /*if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
+            {
+                
+                $conditions=str_replace('where', '', $conditions);
+                $conditions=str_replace('WHERE', '', $conditions);
+
+                $conditions='WHERE '.$where.' and '.$conditions;
+
+            }
+            else
+            {
+                
+                $conditions='WHERE '.$where.' '.$conditions;
+
+            }*/
+            
+            if($where!='')
+            {
+            
+                $where=' and '.$where;
+            
+            }
+            
+            $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+            
+            if($this->reset_conditions==1)
+            {
+            
+                $this->reset_conditions();
+            
+            }
+
+            //$this->create_extra_fields();
+            
+            //Make the query...
+            
+            $arr_distinct[$this->distinct]='';
+            $arr_distinct[0]='';
+            $arr_distinct[1]=' DISTINCT ';
+            
+            $sql_query='select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions;
+            
 		}
 		else
 		{
-			
-			$arr_select=array_intersect($arr_select, array_keys($this->components));
-
-		}
-
-		//$arr_extra_select is an hash for extra fields from related models
-		$arr_extra_select=array();
-		//$arr_model is an array where are stored the tables used in the query, it is usually only referred to the model table
-		$arr_model=array($this->name);
-		//$arr_where is an array where is stored the relationship between models
-		$arr_where=array('1=1');
-		
-		$arr_extra_model=array();
-
-		foreach($arr_select as $key => $my_field)
-		{
-			//Check if field is a key from a related_model
-
-			$arr_select[$key]=$this->name.'.`'.$my_field.'`';
-
-			//Check if a field link with other field from another table...
-
-			//list($arr_select, $arr_extra_select, $arr_model, $arr_where)=$this->recursive_fields_select($key, $this->name, $my_field, $raw_query, $arr_select, $arr_extra_select, $arr_model, $arr_where);
-			if(get_class($this->components[$my_field])=='ForeignKeyField')
-			{
-			
-				$arr_extra_model[$key]=$my_field; //$this->components[$my_field]->related_model;
-			
-			}
-			
-		}
-		
-		if($raw_query==0)
-		{
-		
-			//Add fields defined on fields_related_model.
-			
-			foreach($arr_extra_model as $key => $my_field)
-			{
-				
-				$model_name_related=$this->components[$my_field]->related_model->name;
-				
-				//Set the value for the component foreignkeyfield if name_field_to_field is set.
-			
-				if($this->components[$my_field]->name_field_to_field!='')
-				{
-				
-					$arr_select[$key]=$model_name_related.'.`'.$this->components[$my_field]->name_field_to_field.'` as `'.$my_field.'`';
-					
-				}
-				
-				//Set the new fields added for related model...
-				
-				foreach($this->components[$my_field]->fields_related_model as $fields_related)
-				{
-				
-					$arr_select[]=$model_name_related.'.`'.$fields_related.'` as `'.$model_name_related.'_'.$fields_related.'`';
-				
-				}
-				
-				$arr_model[]=$model_name_related;
-				
-				//Set the where connection
-				
-				$arr_where[]=$this->name.'.`'.$my_field.'`='.$model_name_related.'.`'.Webmodel::$model[$model_name_related]->idmodel.'`';
-			
-			}
-			
-			//Now define inverse relationship...
-			
-			foreach($this->related_models as $model_name_related => $fields_related)
-			{
-			
-				foreach($fields_related as $field_related)
-				{
-				
-					$arr_select[]=$model_name_related.'.`'.$field_related.'` as `'.$model_name_related.'_'.$field_related.'`';
-					
-				}
-				
-				$arr_model[]=$model_name_related;
-				
-				$arr_where[]=$this->name.'.`'.$this->idmodel.'`='.$model_name_related.'.`'.$fields_related[0].'`';
-			
-			}
-		
-		}
-
-		//Final fields from use in query
-		
-		$fields=implode(", ", $arr_select);
-
-		//The tables used in the query
-		
-		$arr_model=array_unique($arr_model, SORT_STRING);
-
-		$selected_models=implode(", ", $arr_model);
-		
-		//Conditions for the select query for related fields in the model
-		$where=implode(" and ", $arr_where);
-
-		//$conditions is a variable where store the result from $arr_select and $arr_extra_select
-		
-		/*if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
-		{
-			
-			$conditions=str_replace('where', '', $conditions);
-			$conditions=str_replace('WHERE', '', $conditions);
-
-			$conditions='WHERE '.$where.' and '.$conditions;
-
-		}
-		else
-		{
-			
-			$conditions='WHERE '.$where.' '.$conditions;
-
-		}*/
-		
-		if($where!='')
-		{
-		
-            $where=' and '.$where;
+            
+            $sql_query=$this->arr_cache_query[$cache_name];
 		
 		}
 		
-		$conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
-        
-        if($this->reset_conditions==1)
-        {
-        
-            $this->reset_conditions();
-        
-        }
-
-		//$this->create_extra_fields();
 		
-		//Make the query...
+		if($cache_name!='' && !isset($this->arr_cache_query[$cache_name]))
+		{
 		
-		$arr_distinct[$this->distinct]='';
-		$arr_distinct[0]='';
-		$arr_distinct[1]=' DISTINCT ';
+            $this->count_cache_query++;
+            $this->arr_cache_query[$cache_name]=$sql_query;
+		
+		}
 		
 		if($this->cache==0)
 		{
 		
-			$query=SQLClass::webtsys_query('select '.$arr_distinct[$this->distinct].' '.$fields.' from '.$selected_models.' '.$conditions, $this->db_selected);
-			
+			$query=SQLClass::webtsys_query($sql_query, $this->db_selected);
 		}
 		else
 		{
