@@ -251,6 +251,12 @@ class Webmodel {
 	public $conditions='WHERE 1=1';
 	
 	/**
+	* An Array with the values for conditions
+	*/
+	
+	public $args=[];
+	
+	/**
     * A string where is set the order of query
     *
     */
@@ -561,12 +567,41 @@ class Webmodel {
 		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
 	}
 	
+	/**
+	* Method for add conditions to sql operations in this model
+	*
+	* @param array $conditions An array with two elements. The first element define the where statement where the values are marked with ? symbol. The real values are saved in second element of the array. The behaviour is similar to python sql statements or PDO.
+	* @example ['WHERE name=? and lastname=?', 'Anthony', 'Smith']
+	* @warning Use an string for conditions is deprecated, use the array type.
+	*/
+	
 	public function set_conditions($conditions, $order_by='', $limit='')
 	{
 	
-        $conditions=trim($conditions);
+        $str_conditions=$this->conditions;
+            
+        $args=$this->args;
 	
-        if($conditions=='')
+        if(gettype($conditions)=='array')
+        {
+        
+            $str_conditions=$conditions[0];
+            
+            $args=$conditions[1];
+            
+        }
+        else
+        {
+        
+            $str_conditions=$conditions;
+        
+            $args=[];
+        
+        }
+	
+        $str_conditions=trim($str_conditions);
+	
+        if($str_conditions=='')
         {
         
             $this->conditions="WHERE 1=1";
@@ -575,13 +610,30 @@ class Webmodel {
         else
         {
         
-            $this->conditions=$conditions;
+            //Check execution
+            
+            $z=0;
+            
+            $arr_conditions=explode('?', $str_conditions);
+            
+            foreach($args as $key => $arg)
+            {
+                
+                $arr_conditions[$key]=$arr_conditions[$key].'"'.$this->escape_string($arg).'"';
+            
+            }
         
+            $this->conditions=implode(' ', $arr_conditions);
+            
         }
         
         $this->order_by=$order_by;
 	
 	}
+	
+	/**
+	* Method for set the order in query
+	*/
 	
 	public function set_order($order_by)
 	{
