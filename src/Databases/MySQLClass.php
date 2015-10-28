@@ -12,6 +12,8 @@ if(!function_exists('mysql_query'))
 class SQLClass {
 
 	static public $debug=true;
+	
+	static public $persistent='p:';
 
 	static public function print_sql_fail($sql_fail, $server_data='default')
 	{
@@ -121,7 +123,7 @@ class SQLClass {
 
 		Webmodel::$connection[$server_data]=mysqli_init();
 		
-		if ( !( mysqli_real_connect(Webmodel::$connection[$server_data], $host_db, $login_db, $contra_db ) ) )
+		if ( !( mysqli_real_connect(Webmodel::$connection[$server_data], SqlClass::$persistent.$host_db, $login_db, $contra_db ) ) )
 		{
 			
 			return false;
@@ -131,17 +133,6 @@ class SQLClass {
 		return true;
 		
 		//return Webmodel::$connection;
-	} 
-
-	static public function webtsys_pconnect( $host_db, $login_db, $contra_db, $server_data='default' )
-	{
-
-	if ( !( Webmodel::$connection[$server_data] = @mysql_pconnect( $host_db, $login_db, $contra_db ) ) )
-	{
-		return false;
-	} 
-
-	return Webmodel::$connection;
 	} 
 
 	static public function webtsys_select_db( $db , $server_data='default')

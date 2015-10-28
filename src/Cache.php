@@ -59,6 +59,52 @@ class Cache {
         }
     
     }
+    
+    static public function check_cache($md5_query, $model_name)
+    {
+        
+        if(!file_exists(Webmodel::$folder_cache.'/'.$md5_query.'_'.$model_name.'.php'))
+        {
+        
+            return false;
+        
+        }
+        
+        return true;
+    
+    }
+    
+    static public function save_cache($md5_query, $model_name, $query)
+    {
+    
+        $file="<?php\n\n";
+                
+        $file.="use PhangoApp\PhaModels\Webmodel;\n\n";
+        
+        while($row=Webmodel::$model[$model_name]->nocached_fetch_array($query))
+        {
+            
+            $file.="Webmodel::\$model['".$model_name."']->arr_cache_row[]=".var_export($row, true).";\n\n";
+        
+        }
+        
+        file_put_contents(Webmodel::$folder_cache.'/'.$md5_query.'_'.$model_name.'.php', $file);
+    
+    }
+    
+    static public function file_cache($md5_file, $model_name)
+    {
+        
+        include(Webmodel::$folder_cache.'/'.$md5_file.'_'.$model_name.'.php');
+    
+    }
+    
+    static public function refresh_cache($model_name, $new_id)
+    {
+    
+        array_map('unlink', glob(Webmodel::$folder_cache.'/'.'*_'.$model_name.'.php'));
+    
+    }
 
 }
 

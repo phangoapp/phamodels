@@ -260,6 +260,13 @@ class Webmodel {
     */
     
     public $count_cache_query=0;
+    
+    /**
+    * Property used for count the new queries saved
+    *
+    */
+    
+    public $last_query_md5='';
 	
 	/**
 	* Property that define if this model was cached before, if not, obtain the query from the sql db.
@@ -269,12 +276,40 @@ class Webmodel {
 	public $cached=0;
 	
 	/**
-	* Property that define the cache type, nosql, cached in memory with memcached or redis, etc.
+	* Property that define the cache method for save the rows in other source, how a file, redis, memcached...
 	*
 	*/
 	
 	static public $type_cache='PhangoApp\PhaModels\Cache::file_cache';
+	
+	/**
+    * Property that define the cache type, nosql, cached in memory with memcached or redis, etc.
+    *
+    */
+    
+    static public $save_cache='PhangoApp\PhaModels\Cache::save_cache';
+    
+    /**
+    * Property that define the method for check if the cached of this query exists
+    *
+    */
+    
+    static public $check_cache='PhangoApp\PhaModels\Cache::check_cache';
+    
+    /**
+    * Property that define the method for refresh the cache of this table.
+    *
+    */
+    
+    static public $refresh_cache='PhangoApp\PhaModels\Cache::refresh_cache';
 
+    /**
+    * Property that define the method for check if the cached of this query exists
+    *
+    */
+    
+    public $arr_cache_row=array();
+    
 	/**
 	* Property that define if id is modified.
 	*
@@ -357,6 +392,12 @@ class Webmodel {
 	*/
 	
 	public $update=0;
+	
+	/**
+    * Method for set the method used from cache or directly from the database.
+    */
+    
+    public $method_fetch_array='nocached_fetch_array';
 	
 	//Construct the model
 
@@ -836,6 +877,13 @@ class Webmodel {
 			}
 			else
 			{
+                if($this->cache==1)
+                {
+                
+                    call_user_func(Webmodel::$refresh_cache, $this->name, $this->insert_id());
+                
+                }
+			
 			
 				return 1;
 				
@@ -976,6 +1024,13 @@ class Webmodel {
 			else
 			{
                 
+                if($this->cache==1)
+                {
+                
+                    call_user_func(Webmodel::$refresh_cache, $this->name, $this->insert_id());
+                
+                }
+                
 				return 1;
 			
 			}
@@ -1011,8 +1066,6 @@ class Webmodel {
 	public function select($arr_select=array(), $raw_query=0, $cache_name='')
 	{
 		//Check conditions.., script must check, i can't make all things!, i am not a machine!
-
-		$this->set_phango_connection();
 		
 		if(!isset($this->arr_cache_query[$cache_name]) || $this->cache_query==0)
 		{
@@ -1129,22 +1182,6 @@ class Webmodel {
 
             //$conditions is a variable where store the result from $arr_select and $arr_extra_select
             
-            /*if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
-            {
-                
-                $conditions=str_replace('where', '', $conditions);
-                $conditions=str_replace('WHERE', '', $conditions);
-
-                $conditions='WHERE '.$where.' and '.$conditions;
-
-            }
-            else
-            {
-                
-                $conditions='WHERE '.$where.' '.$conditions;
-
-            }*/
-            
             if($where!='')
             {
             
@@ -1179,6 +1216,7 @@ class Webmodel {
 		
 		}
 		
+        //$this->last_query_md5=md5($sql_query);
 		
 		if($cache_name!='' && !isset($this->arr_cache_query[$cache_name]))
 		{
@@ -1190,13 +1228,44 @@ class Webmodel {
 		
 		if($this->cache==0)
 		{
+            
+            $this->method_fetch_array='nocached_fetch_array';
+            
+            $this->set_phango_connection();
 		
 			$query=SQLClass::webtsys_query($sql_query, $this->db_selected);
 		}
 		else
 		{
 		
+            $this->arr_cache_row=array();
 		
+            $md5_query=md5($sql_query);
+            //Check if this operation is cached, if not cached, send normal query and change type fetch_row and fetch_array.
+            
+            $this->method_fetch_array='cached_fetch_array';
+            
+            if(!call_user_func(Webmodel::$check_cache, $md5_query, $this->name))
+            {
+            
+                //Connect to db for make the caching
+            
+                $this->set_phango_connection();
+            
+                $query=SQLClass::webtsys_query($sql_query, $this->db_selected);
+                
+                //Save the cache
+                
+                call_user_func(Webmodel::$save_cache, $md5_query, $this->name, $query);
+                
+
+            }
+            
+            //Load the rows
+            
+            call_user_func(Webmodel::$type_cache, $md5_query, $this->name);
+            
+            return $md5_query;
 		
 		}
 		
@@ -1293,26 +1362,9 @@ class Webmodel {
         
         }
 		
-		/*
-		if(preg_match('/^where/', $conditions) || preg_match('/^WHERE/', $conditions))
-		{
-			
-			$conditions=str_replace('where', '', $conditions);
-			$conditions=str_replace('WHERE', '', $conditions);
-
-			$conditions='WHERE '.$where.' and '.$conditions;
-			
-		}
-		else
-		{
-			
-			$conditions='WHERE '.$where.' '.$conditions;
-
-		}*/
+		$query=$this->query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
 		
-		$query=SQLClass::webtsys_query('select count('.$this->name.'.`'.$field.'`) from '.implode(', ', $arr_model).' '.$conditions, $this->db_selected);
-		
-		list($count_field)= SQLClass::webtsys_fetch_row($query);
+		list($count_field)= $this->fetch_row($query);
 
 		return $count_field;
 
@@ -1394,11 +1446,16 @@ class Webmodel {
 	*/
 	
 	public function fetch_row($query)
-	{
+	{	
+		
+		if($this->cache==0)
+		{
+		
+            $this->set_phango_connection();
 	
-		$this->set_phango_connection();
-	
-		return SQLClass::webtsys_fetch_row($query);
+            return SQLClass::webtsys_fetch_row($query);
+            
+        }
 	
 	}
 	
@@ -1411,11 +1468,50 @@ class Webmodel {
 	public function fetch_array($query)
 	{
 	
-		$this->set_phango_connection();
+        $func=$this->method_fetch_array;
+    
+        return $this->$func($query);
 	
-		return SQLClass::webtsys_fetch_array($query);
 	
 	}
+	
+	/**
+    * A helper function for obtain an associative array from a result of $this->select
+    *
+    * @param mixed $query The result of an $this->select operation
+    */
+    
+    public function nocached_fetch_array($query)
+    {
+    
+        
+        $this->set_phango_connection();
+    
+        return SQLClass::webtsys_fetch_array($query);       
+    
+    
+    }
+	
+	/**
+    * A helper function for obtain an associative array from a result of $this->select from cache
+    *
+    * @param mixed $query The result of an $this->select operation
+    */
+    
+    public function cached_fetch_array($md5_query)
+    {
+    
+        /*
+        $this->set_phango_connection();
+    
+        return SQLClass::webtsys_fetch_array($query);*/
+        
+        list($key, $value)=each($this->arr_cache_row);
+        
+        return $value;
+    
+    
+    }
 	
 	/**
 	* A helper function for obtain the last insert id.
@@ -1566,6 +1662,8 @@ class Webmodel {
 	static public function drop_table($table)
 	{
 	
+        $this->set_phango_connection();
+	
 		return SQLClass::webtsys_query('drop table '.$table);
 	
 	}
@@ -1579,7 +1677,7 @@ class Webmodel {
 	static public function escape_string($value)
 	{
 		
-		return SQLClass::webtsys_escape_string($value);
+		return addslashes($value);
 	
 	}
 
