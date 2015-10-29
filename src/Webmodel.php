@@ -398,6 +398,12 @@ class Webmodel {
     */
     
     public $method_fetch_array='nocached_fetch_array';
+    
+    /**
+    * Method for set the method used from cache or directly from the database.
+    */
+    
+    public $method_fetch_row='nocached_fetch_row';
 	
 	//Construct the model
 
@@ -1231,6 +1237,8 @@ class Webmodel {
             
             $this->method_fetch_array='nocached_fetch_array';
             
+            $this->method_fetch_row='nocached_fetch_row';
+            
             $this->set_phango_connection();
 		
 			$query=SQLClass::webtsys_query($sql_query, $this->db_selected);
@@ -1244,6 +1252,7 @@ class Webmodel {
             //Check if this operation is cached, if not cached, send normal query and change type fetch_row and fetch_array.
             
             $this->method_fetch_array='cached_fetch_array';
+            $this->method_fetch_row='cached_fetch_row';
             
             if(!call_user_func(Webmodel::$check_cache, $md5_query, $this->name))
             {
@@ -1447,17 +1456,57 @@ class Webmodel {
 	
 	public function fetch_row($query)
 	{	
-		
-		if($this->cache==0)
-		{
-		
-            $this->set_phango_connection();
+            
+            $func=$this->method_fetch_row;
+    
+            return $this->$func($query);
+	}
 	
-            return SQLClass::webtsys_fetch_row($query);
+	/**
+    * A helper function for obtain an array from a result of $this->select
+    *
+    * @param mixed $query The result of an $this->select operation
+    */
+    
+    public function nocached_fetch_row($query)
+    {
+    
+        $this->set_phango_connection();
+    
+        return SQLClass::webtsys_fetch_row($query);
+    
+    }
+    
+    /**
+    * A helper function for obtain an array from a result of $this->select from cache
+    *
+    * @param mixed $query The result of an $this->select operation
+    */
+    
+    public function cached_fetch_row($md5_query)
+    {
+    
+        /*
+        $this->set_phango_connection();
+    
+        return SQLClass::webtsys_fetch_array($query);*/
+        
+        list($key, $value)=each($this->arr_cache_row);
+        
+        if($value!=NULL)
+        {
+            return array_values($value);
             
         }
-	
-	}
+        else
+        {
+        
+            return NULL;
+        
+        }
+    
+    
+    }
 	
 	/**
 	* A helper function for obtain an associative array from a result of $this->select
