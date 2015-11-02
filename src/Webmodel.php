@@ -1108,7 +1108,7 @@ class Webmodel {
                 //Check if a field link with other field from another table...
 
                 //list($arr_select, $arr_extra_select, $arr_model, $arr_where)=$this->recursive_fields_select($key, $this->name, $my_field, $raw_query, $arr_select, $arr_extra_select, $arr_model, $arr_where);
-                if(get_class($this->components[$my_field])=='ForeignKeyField')
+                if(get_class($this->components[$my_field])=='PhangoApp\PhaModels\CoreFields\ForeignKeyField')
                 {
                 
                     $arr_extra_model[$key]=$my_field; //$this->components[$my_field]->related_model;
