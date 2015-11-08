@@ -1711,7 +1711,7 @@ class Webmodel {
 	static public function drop_table($table)
 	{
 	
-        $this->set_phango_connection();
+        //$this->set_phango_connection();
 	
 		return SQLClass::webtsys_query('drop table '.$table);
 	
