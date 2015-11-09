@@ -672,11 +672,11 @@ class Webmodel {
 	* Method for add conditions to sql operations in this model
 	*
 	* @param array $conditions An array with two elements. The first element define the where statement where the values are marked with ? symbol. The real values are saved in second element of the array. The behaviour is similar to python sql statements or PDO.
-	* @example ['WHERE name=? and lastname=?', 'Anthony', 'Smith']
+	* @example ['WHERE name=? and lastname=?', ['Anthony', 'Smith']]
 	* @warning Use an string for conditions is deprecated, use the array type.
 	*/
 	
-	public function set_conditions($conditions, $order_by='', $limit='')
+	public function set_conditions($conditions)
 	{
 	
         $str_conditions=$this->conditions;
@@ -724,11 +724,11 @@ class Webmodel {
             
             }
         
-            $this->conditions=implode(' ', $arr_conditions);
+            $this->conditions=trim(implode(' ', $arr_conditions));
             
         }
         
-        $this->order_by=$order_by;
+        //$this->order_by=$order_by;
 	
 	}
 	
