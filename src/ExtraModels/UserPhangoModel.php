@@ -11,7 +11,7 @@
 
 namespace PhangoApp\PhaModels\ExtraModels;
 
-use PhangoApp\Phai18n\I18n;
+use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\Webmodel;
 use PhangoApp\PhaUtils\Utils;
 
