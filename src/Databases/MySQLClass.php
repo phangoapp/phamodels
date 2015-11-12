@@ -13,7 +13,8 @@ class SQLClass {
 
 	static public $debug=true;
 	
-	static public $persistent='p:';
+	//static public $persistent='p:';
+	static public $persistent='';
 
 	static public function print_sql_fail($sql_fail, $server_data='default')
 	{
