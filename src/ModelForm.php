@@ -317,7 +317,7 @@ class ModelForm {
 			{
 			
 				$form=$arr_form[$key_form];
-			
+                
 				$post[$key_form]=$form->field->check($post[$key_form]);
 				
 				if($post[$key_form]=='' && $form->required==1)

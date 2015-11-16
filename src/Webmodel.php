@@ -2030,6 +2030,7 @@ class Webmodel {
         $this->forms[$component_name]->default_value=$component->default_value;
         $this->forms[$component_name]->required=$component->required;
         $this->forms[$component_name]->label=$component->label;
+        $this->forms[$component_name]->field=&$this->components[$component_name];
         
         $this->check_enctype+=$this->forms[$component_name]->enctype;
         
