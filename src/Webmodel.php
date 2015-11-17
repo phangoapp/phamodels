@@ -2290,6 +2290,18 @@ class Webmodel {
 		
 		}
 	}
+	
+	public function set_field($field,array $parameters)
+    {
+    
+        foreach($parameters as $property => $value)
+        {
+        
+            $this->components[$field]->$property=$value;
+        
+        }
+    
+    }
 
 
 }
