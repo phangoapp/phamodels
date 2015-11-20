@@ -19,12 +19,16 @@ class BooleanField extends PhangoField {
 	public $quot_close='\'';
 	public $std_error='';
 	public $default_value=0;
+	public $text_yes='';
+	public $text_no='';
 
 	function __construct()
 	{
 
 		$this->size=1;
 		$this->form='PhangoApp\PhaModels\Forms\SelectForm';
+		$this->text_no=I18n::lang('common', 'no', 'No');
+		$this->text_yes=I18n::lang('common', 'yes', 'Yes');
 
 	}
 
@@ -65,13 +69,13 @@ class BooleanField extends PhangoField {
 		{
 			default:
 
-				return I18n::lang('common', 'no', 'No');
+				return $this->text_no;
 
 			break;
 
 			case 1:
 
-				return I18n::lang('common', 'yes', 'Yes');
+				return $this->text_yes;
 
 			break;
 
