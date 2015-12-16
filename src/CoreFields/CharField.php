@@ -48,6 +48,7 @@ class CharField extends PhangoField {
 	
 	/**
 	* This function is for check if the value for field is valid
+	* If required and empty check how false
 	*/
 
 	public function check($value)
@@ -55,6 +56,14 @@ class CharField extends PhangoField {
 
 		//Delete Javascript tags and simple quotes.
 		$this->value=Utils::form_text($value);
+		
+		if($value=='')
+		{
+		
+            $this->error=1;
+		
+		}
+		
 		return Utils::form_text($value);
 
 	}

@@ -320,6 +320,8 @@ class ModelForm {
                 
 				$post[$key_form]=$form->field->check($post[$key_form]);
 				
+				//If isset how false the error field..., then error.
+				
 				if($post[$key_form]=='' && $form->required==1)
 				{
 					

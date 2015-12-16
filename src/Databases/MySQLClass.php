@@ -2,7 +2,7 @@
 
 namespace PhangoApp\PhaModels;
 
-if(!function_exists('mysql_query'))
+if(!function_exists('mysqli_query'))
 {
 
 	throw new \Exception('Error: Mysql database don\'t supported by php');

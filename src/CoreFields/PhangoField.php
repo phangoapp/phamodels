@@ -120,6 +120,11 @@ class PhangoField {
 	
 	public $update=0;
 	
+	/**
+	* A property for set if error
+	*/
+	
+	public $error=0;
 	
 	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
@@ -177,6 +182,17 @@ class PhangoField {
 		return $this->check($value);
 	
 	}
+	
+	/**
+	* Basic check for sql things
+	*/
+	
+	public function check($value)
+    {
+    
+        return str_replace('"', '&quot;', $value);
+    
+    }
 	
 	/**
 	* Method for create a form, you only need subclass the field if you want another form different to default
