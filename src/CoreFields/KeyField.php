@@ -36,6 +36,7 @@ class KeyField extends PhangoField {
 		$this->value=Utils::form_text($value);
 
 		settype($value, "integer");
+		
 		return $value;
 
 	}

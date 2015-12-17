@@ -32,7 +32,17 @@ class TextField extends PhangoField {
 		
 		//Delete Javascript tags and simple quotes.
 		$this->value=$value;
-		return Utils::form_text($value, $this->br);
+		
+		$value=Utils::form_text($value, $this->br);
+		
+		if($value=='')
+		{
+		
+            $this->error=1;
+		
+		}
+		
+		return $value;
 
 	}
 

@@ -91,7 +91,7 @@ class ForeignKeyField extends IntegerField{
 		else
 		{
 		
-			
+			$this->error=1;
             return $this->default_id;
 			
 

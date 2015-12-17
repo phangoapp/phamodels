@@ -1844,9 +1844,9 @@ class Webmodel {
 
 				//If value isn't valid and is required set error for this component...
 
-				if($this->components[$key]->required==1 && $arr_components[$key]=="")
+				if($this->components[$key]->required==1 && $this->components[$key]->error==1)
 				{	
-
+				
 					//Set errors...
 
 					if($this->components[$key]->std_error=='')
@@ -1906,7 +1906,7 @@ class Webmodel {
 		}
 
 		//If not return values sanitized...
-
+		
 		return $arr_components;
 
 	}

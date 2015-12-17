@@ -31,6 +31,14 @@ class DoubleField extends PhangoField {
 
 		$this->value=Utils::form_text($value);
 		settype($value, "double");
+		
+		if($this->value==0 && $this->required==true)
+		{
+		
+            $this->error=1;
+		
+		}
+		
 		return $value;
 
 	}

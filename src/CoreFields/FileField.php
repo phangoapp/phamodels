@@ -75,6 +75,8 @@ class FileField extends PhangoField {
 
 					$this->std_error=I18n::lang('common', 'error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
 
+					$this->error=1;
+					
 					return '';
 
 				}
@@ -93,6 +95,8 @@ class FileField extends PhangoField {
 		{
 		
 			$this->std_error=I18n::lang('error_model', 'check_error_enctype_for_upload_file', 'Please, check enctype form of file form');
+		
+            $this->error=1;
 		
 			return '';
 		

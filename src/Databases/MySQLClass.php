@@ -62,8 +62,8 @@ class SQLClass {
 	static public function webtsys_fetch_array( $query ,$assoc_type=0)
 	{
 		
-		$arr_assoc[0]=MYSQL_ASSOC;
-		$arr_assoc[1]=MYSQL_NUM;
+		$arr_assoc[0]=MYSQLI_ASSOC;
+		$arr_assoc[1]=MYSQLI_NUM;
 		
 		$arr_final = mysqli_fetch_array( $query ,$arr_assoc[$assoc_type]);
 

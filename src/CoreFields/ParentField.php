@@ -38,7 +38,7 @@ class ParentField extends IntegerField{
 		}
 		else
 		{
-			
+			$this->error=1;
 			return 0;
 
 		}

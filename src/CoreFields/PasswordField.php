@@ -31,7 +31,8 @@ class PasswordField extends CharField {
 		
 		if($value=='')
 		{
-		
+            $this->error=1;
+            
 			return '';
 		
 		}
@@ -44,6 +45,8 @@ class PasswordField extends CharField {
 		
 		if(strlen($value)<$this->min_length)
 		{
+		
+            $this->error=1;
 		
             $this->std_error=I18n::lang('common', 'password_min_length', 'Minimal password length:').' '.$this->min_length;
             

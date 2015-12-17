@@ -53,6 +53,14 @@ class PrimaryField extends PhangoField {
 
 		$this->value=Utils::form_text($value);
 		settype($value, "integer");
+		
+		if($this->value==0)
+		{
+	
+            $this->error=1;
+	
+		}
+		
 		return $value;
 
 	}

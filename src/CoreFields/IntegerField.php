@@ -7,6 +7,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaI18n\I18n;
 
 class IntegerField extends PhangoField {
 
@@ -44,15 +45,21 @@ class IntegerField extends PhangoField {
 		}
 		
 		if($this->min_num<>0 && $value<$this->min_num)
-		{
-		
+		{   
+            $this->std_error=I18n::lang('common', 'no_value', 'The value is wrong. You need a value betwen '.$this->min_num.' and '.$this->max_num);
+            
+            $this->error=1;
+            
 			$value=$this->min_num;
 		
 		}
 		
 		if($this->max_num<>0 && $value>$this->max_num)
 		{
-		
+            $this->std_error=I18n::lang('common', 'no_value', 'The value is wrong. You need a value betwen '.$this->min_num.' and '.$this->max_num);
+            
+            $this->error=1;
+            
 			$value=$this->max_num;
 		
 		}

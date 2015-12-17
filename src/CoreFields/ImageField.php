@@ -98,6 +98,9 @@ class ImageField extends PhangoField {
 						
 							if(!@unlink($this->path.'/'.$prefix.'_'.$base_old_image))
 							{
+							
+                               // $this->error=true;
+							
 								$this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old thumb images, please, check permissions');
 							}
 						
@@ -147,6 +150,8 @@ class ImageField extends PhangoField {
 							if(!$image->fit($width)->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$base_name_image.'.jpg'))
 							{
 							
+                                $this->error=true;
+							
 								$this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images. Please, check permissions');
 							
 							}
@@ -169,6 +174,8 @@ class ImageField extends PhangoField {
 					if(!$image->save($this->path.'/'.$name_image))
 					{
 
+                        $this->error=1;
+					
 						$this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images, please, check permissions');
 						
 						return '';
@@ -183,6 +190,8 @@ class ImageField extends PhangoField {
                 
                     $this->std_error=I18n::lang('common', 'no_valid_image', 'This image is wrong');
                 
+                    $this->error=1;
+                
                     return '';
                 
                 }
@@ -195,6 +204,8 @@ class ImageField extends PhangoField {
             }
         
         }
+        
+        $this->error=true;
         
         $this->std_error=I18n::lang('common', 'no_image_found', 'No image uploaded, check enctype form');
         

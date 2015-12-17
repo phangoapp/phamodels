@@ -25,8 +25,20 @@ class DateTimeField extends DateField
 	
 		$timestamp=parent::check($value);
 		
-		return date('YmdHis', $timestamp);
-	
+		$date=@date('YmdHis', $timestamp);
+		
+		if($date!==false)
+		{
+            return date('YmdHis', $timestamp);
+        }
+        else
+        {
+        
+            $this->error=true;
+        
+            return date('YmdHis');
+        
+        }
 	}
 	
 	public function search_field($value)

@@ -43,6 +43,7 @@ class TextHTMLField extends PhangoField {
 		if($txt_without_tags=='')
 		{
 		
+            $this->error=true;
 			return '';
 		
 		}
@@ -60,7 +61,16 @@ class TextHTMLField extends PhangoField {
 
 		}
 		
-		return Utils::form_text_html($value, $this->allowedtags);
+		$value=Utils::form_text_html($value, $this->allowedtags);
+		
+		if($value=='')
+		{
+		
+            $this->error=1;
+		
+		}
+		
+		return $value;
 
 	}
 

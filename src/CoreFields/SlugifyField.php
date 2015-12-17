@@ -20,8 +20,17 @@ class SlugifyField extends PhangoField {
 
     static function check($value)
     {
+    
+        $value=slugify($value);
         
-        return slugify($value);
+        if($value=='')
+        {
+        
+            $this->error=1;
+        
+        }
+        
+        return $value;
     }
 
     function get_type_sql()

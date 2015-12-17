@@ -18,8 +18,16 @@ class NormalizeField extends TextField {
 	public function check($value)
 	{
 		
+		$value=$this->check_text($value);
 		
-		return $this->check_text($value);
+		if($value=='')
+		{
+		
+            $this->error=1;
+		
+		}
+		
+		return $value;
 		
 
 	}

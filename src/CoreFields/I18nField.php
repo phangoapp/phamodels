@@ -60,7 +60,7 @@ class I18nField extends PhangoField {
 		{
 
 			$this->std_error=I18n::lang('common', 'error_you_need_this_language_field', 'Error, you need this language field').' '.I18n::$language;
-
+            $this->error=1;
 			return '';
 
 		}

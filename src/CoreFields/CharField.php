@@ -64,7 +64,7 @@ class CharField extends PhangoField {
 		
 		}
 		
-		return Utils::form_text($value);
+		return $value;
 
 	}
 

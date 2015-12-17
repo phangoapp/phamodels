@@ -84,7 +84,7 @@ class ChoiceField extends PhangoField {
 		}
 		else
 		{
-
+            $this->error=1;
 			return $this->default_value;
 
 		}

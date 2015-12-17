@@ -18,6 +18,8 @@ class PercentField extends IntegerField{
             
             $this->std_error=i18n_lang('common', 'the_value_can_not_be_greater_than_100', 'The value cannot be greater than 100');
 
+            $this->error=1;
+            
             return 0;
 
         }

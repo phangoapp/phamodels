@@ -18,8 +18,10 @@ class IpField extends CharField {
         }
         else
         {
+            $this->std_error=I18n::lang('common', 'no_valid_ip', 'This ip is not valid');
+            $this->error=1;
         
-            return false;
+            return "";
         
         }
 

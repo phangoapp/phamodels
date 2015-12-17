@@ -19,7 +19,9 @@ class UrlField extends CharField {
         else
         {
         
-            return false;
+            $this->error=1;
+        
+            return '';
         
         }
 

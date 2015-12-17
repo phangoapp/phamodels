@@ -82,8 +82,8 @@ class DateField extends PhangoField {
 			
 			if($final_value===false)
 			{
-			
-				$final_value=mktime (0, 0, 0, $arr_time[1], $arr_time[2], $arr_time[0] );
+               $this->error=true;
+				$final_value=mktime(date('H'), date('i'), date('s'));
 			
 			}
 		
