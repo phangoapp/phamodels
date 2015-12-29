@@ -157,7 +157,7 @@ class PhangoField {
 	public function get_type_sql()
 	{
 
-		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT "0"';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 
 	}
 	

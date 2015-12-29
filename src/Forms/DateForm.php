@@ -3,6 +3,8 @@
 namespace PhangoApp\PhaModels\Forms;
 
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaTime;
 
 class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
 
@@ -14,9 +16,9 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
     
         $value=$this->default_value;
 
-        settype($value, 'integer');
+        settype($value, 'string');
         
-        if($value==0)
+        if($value=='')
         {
 
             $day='';
@@ -29,15 +31,9 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
         }
         else
         {
+                        
+            list($year, $month, $day, $hour, $minute, $second)=PhaTime\DateTime::format_timedata($value);
             
-            //$value+=$user_data['format_time'];
-            
-            $day=date('j', $value);
-            $month=date('n', $value);
-            $year=date('Y', $value);
-            $hour=date('G', $value);
-            $minute=date('i', $value);
-            $second=date('s', $value);
         }
         
         //return '<input type="'.$this->type.'" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'">';

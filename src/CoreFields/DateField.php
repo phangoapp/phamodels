@@ -2,6 +2,7 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaTime;
 
 /** 
 * Datefield is a field for save dates in timestamp, this value is a timestamp and you need use form_date or form_time for format DateField
@@ -19,10 +20,10 @@ class DateField extends PhangoField {
 	public $set_default_time=0;
 	public $std_error='';
 
-	function __construct($size=11)
+	function __construct()
 	{
 
-		$this->size=$size;
+		$this->size=14;
 		$this->form='PhangoApp\PhaModels\Forms\DateForm';
 
 	}
@@ -31,13 +32,13 @@ class DateField extends PhangoField {
 	
 	function check($value)
 	{
-
+        
 		$final_value=0;
 
 		if($this->set_default_time==0)
 		{
 
-			$final_value=mktime(date('H'), date('i'), date('s'));
+			$final_value=PhaTime\DateTime::local_to_gmt(date(PhaTime\DateTime::$sql_format_time));
 		
 		}
 		
@@ -53,20 +54,12 @@ class DateField extends PhangoField {
 			
 			if($value[0]>0 && $value[1]>0 && $value[2]>0)	
 			{
+			
+                $new_timestamp=date(PhaTime\DateTime::$sql_format_time, mktime($value[3], $value[4], $value[5], $value[1], $value[0], $value[2]));
 
-				/*$substr_time=$user_data['format_time']/3600;
-	
-				$value[3]-=$substr_time;*/
-
-				$final_value=mktime ($value[3], $value[4], $value[5], $value[1], $value[0], $value[2] );
-	
+				$final_value=PhaTime\DateTime::local_to_gmt( $new_timestamp );
+                
 			}
-			
-			/*echo date('H-i-s', $final_value);
-			
-			//echo $final_value;
-			
-			die;*/
 
 		}
 		else if(strpos($value, '-')!==false)
@@ -82,22 +75,19 @@ class DateField extends PhangoField {
 			
 			if($final_value===false)
 			{
-               $this->error=true;
-				$final_value=mktime(date('H'), date('i'), date('s'));
-			
+                $this->error=1;
+                $final_value=PhaTime\DateTime::local_to_gmt(date(PhaTime\DateTime::$sql_format_time));
 			}
 		
 		}
-		else
-		if(gettype($value)=='string' || gettype($value)=='integer')
-		{
-			
-			settype($value, 'integer');
-			$final_value=$value;
-
-		}
 		
-		$this->value=Utils::form_text($final_value);
+		if($final_value===false)
+		{
+		
+            $this->error=1;
+            $final_value=PhaTime\DateTime::local_to_gmt(date(PhaTime\DateTime::$sql_format_time));
+		
+		}
 
 		return $final_value;
 
@@ -106,7 +96,7 @@ class DateField extends PhangoField {
 	function get_type_sql()
 	{
 
-		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
+		return 'VARCHAR('.$this->size.') NOT NULL DEFAULT ""';
 		
 
 	}
@@ -118,23 +108,15 @@ class DateField extends PhangoField {
 	public function show_formatted($value)
 	{
 
-		return $this->format_date($value);
+		return PhaTime\DateTime::format_date($value);
 
 	}
 	
-	static public function format_date($value)
-	{
-
-		load_libraries(array('form_date'));
-		
-		return form_date( $value );
-	
-	}
 
 	function get_parameters_default()
 	{
 
-		return array($this->name_component, '', time());
+		return array($this->name_component, '', date(PhaTime\DateTime::$sql_format_time));
 
 	}
 	

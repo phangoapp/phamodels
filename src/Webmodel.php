@@ -394,16 +394,22 @@ class Webmodel {
 	public $update=0;
 	
 	/**
-    * Method for set the method used from cache or directly from the database.
+    * Property for set the method used from cache or directly from the database.
     */
     
     public $method_fetch_array='nocached_fetch_array';
     
     /**
-    * Method for set the method used from cache or directly from the database.
+    * Property for set the method used from cache or directly from the database.
     */
     
     public $method_fetch_row='nocached_fetch_row';
+    
+    /**
+    * Property that define the fields to update
+    */
+    
+    public $fields_to_update=array();
 	
 	//Construct the model
 
@@ -1834,7 +1840,7 @@ class Webmodel {
 			
 			//If is set the variable for this component make checking
 
-			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1))
+			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1) && in_array($key, $this->fields_to_update))
 			{
                 $this->components[$key]->update=$this->update;
 
@@ -2033,6 +2039,8 @@ class Webmodel {
         $this->forms[$component_name]->field=&$this->components[$component_name];
         
         $this->check_enctype+=$this->forms[$component_name]->enctype;
+        
+        $this->fields_to_update[]=$component_name;
         
         $this->components[$component_name]->form_loaded=&$this->forms[$component_name];
         
