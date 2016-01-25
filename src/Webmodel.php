@@ -410,6 +410,13 @@ class Webmodel {
     */
     
     public $fields_to_update=array();
+    
+     /**
+    * Property that save the post values used in update and insert
+    */
+    
+    public $post=array();
+    
 	
 	//Construct the model
 
@@ -856,6 +863,8 @@ class Webmodel {
 	public function insert($post, $safe_query=0, $cache_name='')
 	{
 	
+        $this->post=&$post;
+	
 		$this->set_phango_connection();
 		
 		//Make conversion from post
@@ -935,6 +944,7 @@ class Webmodel {
 	
 	public function update($post, $safe_query=0, $cache_name='')
 	{
+        $this->post=&$post;
 	
 		$this->set_phango_connection();
 		
@@ -2196,6 +2206,7 @@ class Webmodel {
 		//Set first label...
 		$this->components[$name]->label=Webmodel::set_name_default($name);
 		$this->components[$name]->name_model=$this->name;
+		$this->components[$name]->model_instance=&$this;
 		$this->components[$name]->name_component=$name;
 		$this->components[$name]->required=$required;
 		

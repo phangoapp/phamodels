@@ -6,22 +6,25 @@ namespace PhangoApp\PhaModels\CoreFields;
 *
 */
 
-class SlugifyField extends PhangoField {
+class SlugifyField extends CharField {
 
+    public $form='PhangoApp\PhaModels\Forms\HiddenForm';
+    public $field_related='';
 
-    public $value="";
-    public $label="";
-    public $required=0;
-    public $form="TextForm";
-    public $quot_open='\'';
-    public $quot_close='\'';
-    public $std_error='';
-    public $type='TEXT';
-
-    static function check($value)
+    public function check($value)
     {
     
-        $value=slugify($value);
+        if($this->field_related!='')
+        {
+            
+            if(isset($this->post[$this->field_related]))
+            {
+                
+                $value=slugify($this->post[$this->field_related]);
+                
+            }
+            
+        }
         
         if($value=='')
         {
@@ -31,14 +34,6 @@ class SlugifyField extends PhangoField {
         }
         
         return $value;
-    }
-
-    function get_type_sql()
-    {
-
-        return $this->type.' NOT NULL DEFAULT ""';
-        
-
     }
     
     static function add_slugify_i18n_fields($model_name, $field)

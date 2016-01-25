@@ -38,6 +38,12 @@ class PhangoField {
 	public $name_model='';
 	
 	/**
+    * The model where this component or field live
+    */
+    
+    public $model_instance=false;
+	
+	/**
 	* Name of the field or component.
 	*/
 	

@@ -14,17 +14,12 @@ use Intervention\Image\ImageManager;
 
 class ImageField extends PhangoField {
 
-	public $value="";
-	public $label="";
-	public $required=0;
 	public $form='PhangoApp\PhaModels\Forms\FileForm';
 	public $path="";
 	public $url_path="";
 	public $type='';
 	public $thumb=0;
 	public $img_width=array('mini' => 150);
-	public $quot_open='\'';
-	public $quot_close='\'';
 	public $std_error='';
 	public $quality_jpeg=85;
 	public $min_size=array(0, 0);
@@ -35,13 +30,12 @@ class ImageField extends PhangoField {
 	public $size=255;
 	public $driver='gd';
 
-	function __construct($path, $url_path, $type, $thumb=0, $img_width=array('mini' => 150), $quality_jpeg=85)
+	function __construct($path, $url_path, $thumb=0, $img_width=array('mini' => 150), $quality_jpeg=85)
 	{
 
 		#$this->name_file=$this->name_component;
 		$this->path=$path;
 		$this->url_path=$url_path;
-		$this->type=$type;
 		$this->thumb=$thumb;
 		$this->img_width=$img_width;
 		$this->quality_jpeg=$quality_jpeg;
