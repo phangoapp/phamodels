@@ -25,7 +25,7 @@ class BaseForm {
     
     public $enctype=0;
     
-    public function __construct($name, $value)
+    public function __construct($name, $value, $extra_parameters=array())
     {
         $this->label=$name;
         $this->name=$name;

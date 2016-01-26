@@ -13,13 +13,26 @@ class SelectModelForm extends SelectForm{
 
     public $model;
     
-    public $conditions='WHERE 1=1';
+    public $conditions=['WHERE 1=1', []];
     
     public $field_value='';
     
     public $field_name='';
     
     public $raw_query=0;
+    
+    public function __construct($name, $value, $model, $field_name, $field_value)
+    {
+    
+        parent::__construct($name, $value);
+        
+        $this->model=&$model;
+        
+        $this->field_name=$field_name;
+        
+        $this->field_value=$field_value;
+    
+    }
         
     public function form()
     {
@@ -32,7 +45,7 @@ class SelectModelForm extends SelectForm{
         }
     
         
-        $this->model->set_conditions($this->conditions);
+        $this->model->set_conditions($this->conditions[0], $this->conditions[1]);
         
         $query=$this->model->select(array($this->field_name, $this->field_value), $this->raw_query);
         

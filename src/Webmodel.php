@@ -2032,7 +2032,12 @@ class Webmodel {
         
         $form_class=$component->form;
         
-        $this->forms[$component_name]=new $form_class($component_name, $component->value);
+        //$this->forms[$component_name]=new $form_class($component_name, $component->value, $component->parameters);
+        $rc=new \ReflectionClass($form_class);
+        
+        array_unshift($component->parameters, $component_name, $component->value);
+        
+        $this->forms[$component_name]=$rc->newInstanceArgs($component->parameters);
         
         $type_class=get_class($this->forms[$component_name]);
         

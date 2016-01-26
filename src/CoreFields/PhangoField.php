@@ -103,7 +103,7 @@ class PhangoField {
 	public $form_loaded;
 	
 	/**
-	* Array for create initial parameters for form..
+	* Array for create initial extra parameters for form.
 	*/
 	
 	public $parameters=array();
