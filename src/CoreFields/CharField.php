@@ -17,7 +17,7 @@ class CharField extends PhangoField {
 	* Size of field in database
 	*/
 	public $size=20;
-	
+	public $form='PhangoApp\PhaModels\Forms\BaseForm';
 
 	/**
 	* Construct field with basic data...
@@ -31,7 +31,6 @@ class CharField extends PhangoField {
 	{
 
 		$this->size=$size;
-		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
 
 	}
 	

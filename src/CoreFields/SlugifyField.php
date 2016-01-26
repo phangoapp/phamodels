@@ -13,14 +13,14 @@ class SlugifyField extends CharField {
 
     public function check($value)
     {
-    
-        if($this->field_related!='')
+        
+        if($this->model_instance->post!='')
         {
             
-            if(isset($this->post[$this->field_related]))
+            if(isset($this->model_instance->post[$this->field_related]))
             {
                 
-                $value=slugify($this->post[$this->field_related]);
+                $value=\PhangoApp\PhaUtils\Utils::slugify($this->model_instance->post[$this->field_related]);
                 
             }
             
