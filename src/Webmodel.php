@@ -921,7 +921,7 @@ class Webmodel {
 			}
 			
 			ModelForm::pass_errors_to_form($this);
-			$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
+			$this->std_error.=I18n::lang('error_model', 'cant_insert', "Can't insert").' ';
 
 			return 0;
 
@@ -1845,72 +1845,83 @@ class Webmodel {
 		
 		$z=0;
 		
-		foreach($this->components as $key => $field)
-		{
-			
-			//If is set the variable for this component make checking
+        if(count($this->fields_to_update)>0)
+        {
+        
+            foreach($this->components as $key => $field)
+            {
+                
+                //If is set the variable for this component make checking
 
-			if(isset($post[$key]) && ($field->protected==0 || $safe_query==1) && in_array($key, $this->fields_to_update))
-			{
-                $this->components[$key]->update=$this->update;
+                if(isset($post[$key]) && ($field->protected==0 || $safe_query==1) && in_array($key, $this->fields_to_update))
+                {
+                    $this->components[$key]->update=$this->update;
 
-				//Check if the value is valid..
+                    //Check if the value is valid..
 
-				$arr_components[$key]=$this->$func_check($key, $post[$key]);
+                    $arr_components[$key]=$this->$func_check($key, $post[$key]);
 
-				//If value isn't valid and is required set error for this component...
+                    //If value isn't valid and is required set error for this component...
 
-				if($this->components[$key]->required==1 && $this->components[$key]->error==1)
-				{	
-				
-					//Set errors...
+                    if($this->components[$key]->required==1 && $this->components[$key]->error==1)
+                    {	
+                    
+                        //Set errors...
 
-					if($this->components[$key]->std_error=='')
-					{
+                        if($this->components[$key]->std_error=='')
+                        {
 
-						$this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
+                            $this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
 
-					}
+                        }
 
-					$arr_std_error[]=I18n::lang('error_model', 'check_error_field', 'Error in field').' '.$key.' -> '.$this->components[$key]->std_error. ' ';
-					$set_error++;
-	
-				}
-				
-				$z++;
-		
-			}
-			else if($this->components[$key]->required==1)
-			{
-	
-				//If isn't set the value and this value is required set std_error.
+                        $arr_std_error[]=I18n::lang('error_model', 'check_error_field', 'Error in field').' '.$key.' -> '.$this->components[$key]->std_error. ' ';
+                        $set_error++;
+        
+                    }
+                    
+                    $z++;
+            
+                }
+                else if($this->components[$key]->required==1)
+                {
+        
+                    //If isn't set the value and this value is required set std_error.
 
-				$arr_std_error[]=I18n::lang('error_model', 'check_error_field_required', 'Error: Field required').' '.$key.' ';
-	
-				if($this->components[$key]->std_error=='')
-				{
+                    $arr_std_error[]=I18n::lang('error_model', 'check_error_field_required', 'Error: Field required').' '.$key.' ';
+        
+                    if($this->components[$key]->std_error=='')
+                    {
 
-					$this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
+                        $this->components[$key]->std_error=I18n::lang('common', 'field_required', 'Field required');
 
-				}
-	
-				$set_error++;
+                    }
+        
+                    $set_error++;
 
-			}
+                }
 
-		}
-		
+            }
+
+        }
+        else
+        {
+            
+            $this->std_error.='Error: no fields selected to update or insert ';
+            
+        }
+
 		if($z==0)
 		{
 		
-            $this->std_error='Error: no fields to check';
+            $this->std_error.='Error: no fields to check ';
             $set_error++;
 		
 		}
 
 		//Set std_error for the model where is stored all errors in checking...
 
-		$this->std_error=implode(', ', $arr_std_error);
+		$this->std_error.=implode(', ', $arr_std_error).' ';
 
 		//If error return 0
 

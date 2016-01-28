@@ -34,13 +34,13 @@ class DateField extends PhangoField {
 	{
         
 		$final_value=0;
-
-		if($this->set_default_time==0)
+        
+		/*if($this->set_default_time==0)
 		{
 
 			$final_value=PhaTime\DateTime::local_to_gmt(date(PhaTime\DateTime::$sql_format_time));
 		
-		}
+		}*/
 		
 		if(gettype($value)=='array')
 		{
@@ -80,8 +80,14 @@ class DateField extends PhangoField {
 			}
 		
 		}
+        if(PhaTime\DateTime::obtain_timestamp($value))
+        {
+    
+            $final_value=PhaTime\DateTime::local_to_gmt($value); 
+            
+        }
 		
-		if($final_value===false)
+		if($final_value==0)
 		{
 		
             $this->error=1;

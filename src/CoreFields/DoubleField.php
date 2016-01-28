@@ -29,10 +29,10 @@ class DoubleField extends PhangoField {
 	function check($value)
 	{
 
-		$this->value=Utils::form_text($value);
+		//$this->value=Utils::form_text($value);
 		settype($value, "double");
 		
-		if($this->value==0 && $this->required==true)
+		if($value==0 && $this->required==true)
 		{
 		
             $this->error=1;

@@ -25,7 +25,7 @@ class ImageField extends PhangoField {
 	public $min_size=array(0, 0);
 	public $prefix_id=1;
 	public $img_minimal_height=array();
-	public $func_token='Utils::get_token';
+	public $func_token='PhangoApp\PhaUtils\Utils::get_token';
 	public $move_file_func='move_uploaded_file';
 	public $size=255;
 	public $driver='gd';
@@ -71,6 +71,13 @@ class ImageField extends PhangoField {
 
 		
 				$name_image=$_FILES[$file_name]['name'];
+                
+                if($this->prefix_id)
+                {
+                    
+                    $name_image=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_image;
+                    
+                }
 			
 				$manager = new ImageManager(array('driver' => $this->driver));
 				

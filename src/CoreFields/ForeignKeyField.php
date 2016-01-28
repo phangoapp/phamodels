@@ -114,7 +114,7 @@ class ForeignKeyField extends IntegerField{
 	function get_type_sql()
 	{
 
-		return 'INT('.$this->size.') NOT NULL DEFAULT "0"';
+		return 'INT('.$this->size.') NULL';
 
 	}
 
