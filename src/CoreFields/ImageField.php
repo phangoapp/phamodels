@@ -42,7 +42,11 @@ class ImageField extends PhangoField {
 
 	}
 
-	//Check if the image is correct..
+	/**
+    * Check if the image is correct.
+    * 
+    * This method check the image and save in a selected folder
+    */
 	
 	function check($fake_image)
 	{	
@@ -59,7 +63,10 @@ class ImageField extends PhangoField {
         
             //Check the image for delete.
             //This field is used only for a row
+            old_reset=Webmodel::$model[$this->name_model]->reset_conditions;
+            Webmodel::$model[$this->name_model]->reset_conditions=0;
             $old_image=Webmodel::$model[$this->name_model]->select_a_row_where(array($this->name_component), 1)[$this->name_component];
+            Webmodel::$model[$this->name_model]->reset_conditions=old_reset;
             
         }
 		
@@ -318,12 +325,25 @@ class ImageField extends PhangoField {
 	
 	}
 	
-	function get_parameters_default()
+	public function get_parameters_default()
     {
         
         $this->form_loaded->file_url=$this->url_path;
 
 
+    }
+    
+    /**
+    * Method for delete all orphan images. You can call this method in a script
+    */
+    
+    public function clean_orphan_images()
+    {
+        
+
+        
+        
+        
     }
 
 }
