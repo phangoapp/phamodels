@@ -63,10 +63,10 @@ class ImageField extends PhangoField {
         
             //Check the image for delete.
             //This field is used only for a row
-            old_reset=Webmodel::$model[$this->name_model]->reset_conditions;
+            $old_reset=Webmodel::$model[$this->name_model]->reset_conditions;
             Webmodel::$model[$this->name_model]->reset_conditions=0;
             $old_image=Webmodel::$model[$this->name_model]->select_a_row_where(array($this->name_component), 1)[$this->name_component];
-            Webmodel::$model[$this->name_model]->reset_conditions=old_reset;
+            Webmodel::$model[$this->name_model]->reset_conditions=$old_reset;
             
         }
 		
