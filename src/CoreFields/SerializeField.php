@@ -18,6 +18,7 @@ class SerializeField extends PhangoField {
 	public $quot_close='\'';
 	public $std_error='';
 	public $related_type='';
+	public $callback_values='PhangoApp\PhaModels\CoreFields\SerializeField::set_format';
 	
 	//type_data can be any field type that is loaded IntegerField, etc..
 	
@@ -90,12 +91,24 @@ class SerializeField extends PhangoField {
 
 	public function show_formatted($value)
 	{
-
-		$real_value=unserialize($value);
 		
-		return implode(', ', $return_value);
+		return $this->callback_values($value);
 
 	}
+	
+	/**
+	* Method for choose the callback method for format the value
+    */
+    
+    static public function set_format($serialize_value)
+    {
+    
+        $real_value=unserialize($value);
+        
+        return implode(', ', $return_value);
+    
+    }
+    
 	
 	static function unserialize($value)
 	{

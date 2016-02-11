@@ -11,10 +11,10 @@ class MultiLangForm extends BaseForm{
 
     public $type_form;
 
-    public function __construct($name, $value)
+    public function __construct($name, $value, $type_form='PhangoApp\PhaModels\Forms\BaseForm')
     {
     
-        $this->type_form=new BaseForm($name, $value);
+        $this->type_form=new $type_form($name, $value);
     
         parent::__construct($name, $value);
     
