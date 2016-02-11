@@ -241,8 +241,14 @@ function update_table()
 					
 					unset($allfields[$field]);
 					
-					if(Webmodel::$model[$key]->components[$field]->get_type_sql()!=($type.' '.$null_set[$field].' DEFAULT "'.$defaults[$field].'"'))
+					//Delete default
+					
+					$type_sql=preg_replace('/^(.*) DEFAULT.*$/', '$1', Webmodel::$model[$key]->components[$field]->get_type_sql());
+					
+					if($type_sql!=($type.' '.$null_set[$field]))
 					{
+					
+                        //echo $type_sql.'='.($type.' '.$null_set[$field])."\n";
 						
 						$query=SQLClass::webtsys_query('alter table `'.$key.'` modify `'.$field.'` '.Webmodel::$model[$key]->components[$field]->get_type_sql());
 						
