@@ -13,6 +13,7 @@ namespace PhangoApp\PhaModels\CoreFields;
 
 use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\Forms\MultiLangForm;
+use PhangoApp\PhaModels\Forms\TextForm;
 use PhangoApp\PhaModels\CoreFields\SlugifyField;
 
 /**
@@ -39,6 +40,7 @@ class I18nField extends PhangoField {
 	{
 
 		$this->type_field=&$type_field;
+		$this->parameters=[];
 
 	}
 

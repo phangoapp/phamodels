@@ -63,20 +63,22 @@ class ImageField extends PhangoField {
         
             //Check the image for delete.
             //This field is used only for a row
+            //echo $this->model_instance->conditions; die;
             $old_reset=Webmodel::$model[$this->name_model]->reset_conditions;
             Webmodel::$model[$this->name_model]->reset_conditions=0;
             $old_image=Webmodel::$model[$this->name_model]->select_a_row_where(array($this->name_component), 1)[$this->name_component];
             Webmodel::$model[$this->name_model]->reset_conditions=$old_reset;
             
+            
+            
         }
 		
 		if(isset($_FILES[$file_name]['tmp_name']))
 		{
-        
+            
 			if(trim($_FILES[$file_name]['tmp_name'])!=='')
 			{
 
-		
 				$name_image=$_FILES[$file_name]['name'];
                 
                 if($this->prefix_id)

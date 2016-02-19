@@ -950,13 +950,6 @@ class Webmodel {
 		
 		$conditions=trim($this->conditions.' '.$this->order_by.' '.$this->limit);
 		
-		if($this->reset_conditions==1)
-		{
-		
-            $this->reset_conditions();
-        
-        }
-		
 		//Make conversion from post
 
 		//Check if minimal fields are fill and if fields exists in components.
@@ -1032,6 +1025,13 @@ class Webmodel {
 				}
 			
 			}
+			
+			if($this->reset_conditions==1)
+            {
+            
+                $this->reset_conditions();
+            
+            }
 
 			//Create the query..
 		
@@ -2046,9 +2046,11 @@ class Webmodel {
         //$this->forms[$component_name]=new $form_class($component_name, $component->value, $component->parameters);
         $rc=new \ReflectionClass($form_class);
         
-        array_unshift($component->parameters, $component_name, $component->value);
+        $parameters=$component->parameters;
         
-        $this->forms[$component_name]=$rc->newInstanceArgs($component->parameters);
+        array_unshift($parameters, $component_name, $component->value);
+        
+        $this->forms[$component_name]=$rc->newInstanceArgs($parameters);
         
         $type_class=get_class($this->forms[$component_name]);
         

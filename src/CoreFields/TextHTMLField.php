@@ -12,7 +12,6 @@ class TextHTMLField extends PhangoField {
 	public $value="";
 	public $label="";
 	public $required=0;
-	public $form="TextAreaForm";
 	public $quot_open='\'';
 	public $quot_close='\'';
 	public $std_error='';
@@ -25,7 +24,7 @@ class TextHTMLField extends PhangoField {
 	function __construct($multilang=0)
 	{
 
-		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
+		$this->form='PhangoApp\PhaModels\Forms\TextAreaEditor';
 		
 		$this->set_safe_html_tags();
 
