@@ -52,7 +52,7 @@ class SelectModelForm extends SelectForm{
         while($row=$this->model->fetch_array($query))
         {
             
-            $this->arr_select[$row[$this->field_value]]=$row[$this->field_name];
+            $this->arr_select[$row[$this->field_value]]=$this->model->components[$this->field_name]->show_formatted($row[$this->field_name]);
             
         
         }
