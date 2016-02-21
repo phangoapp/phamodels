@@ -12,12 +12,13 @@ class ParentField extends IntegerField{
 	//field related in the model...
 	public $parent_model='';
 
-	function __construct($parent_model, $size=11)
+	function __construct($size=11, $parent_model, $name_field='', $name_value='')
 	{
 
-		$this->parent_model=&$parent_model;
+		$this->parent_model=$parent_model;
 		$this->size=$size;
-		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
+		$this->form='PhangoApp\PhaModels\Forms\SelectModelForm';
+		$this->parameters=array($this->parent_model, $name_field, $name_value);
 
 	}
 
@@ -28,7 +29,13 @@ class ParentField extends IntegerField{
 
 		//Check model
 		
-		$num_rows=$this->parent_model->select_count('where '.$this->parent_model->idmodel.'='.$value, $this->parent_model->idmodel);
+		//$old_conditions=$this->parent_model->conditions;
+		
+		$this->parent_model->conditions='where '.$this->parent_model->idmodel.'='.$value;
+		
+		$num_rows=$this->parent_model->select_count();
+		
+		//$this->parent_model->conditions=$old_conditions;
 		
 		if($num_rows>0)
 		{

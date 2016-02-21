@@ -30,7 +30,7 @@ class ForeignKeyField extends IntegerField{
 
 		$this->size=$size;
 		$this->form='PhangoApp\PhaModels\Forms\SelectModelForm';
-		$this->related_model=&$related_model;
+		$this->related_model=$related_model;
 		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...
 		$this->fields_related_model=array();
@@ -40,7 +40,7 @@ class ForeignKeyField extends IntegerField{
 		$this->quot_open='';
 		$this->quot_close='';
 		$this->protected=0;
-		$this->parameters=array(&$this->related_model, $name_field, $name_value);
+		$this->parameters=array($this->related_model, $name_field, $name_value);
 
 	}
 	

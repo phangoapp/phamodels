@@ -6,7 +6,7 @@ use PhangoApp\PhaModels\Forms\SelectForm;
 use PhangoApp\PhaModels\Webmodel;
 
 /**
-* Basic class for create forms
+* Basic class for create forms from a model
 */
 
 class SelectModelForm extends SelectForm{
@@ -26,7 +26,7 @@ class SelectModelForm extends SelectForm{
     
         parent::__construct($name, $value);
         
-        $this->model=&$model;
+        $this->model=$model;
         
         $this->field_name=$field_name;
         

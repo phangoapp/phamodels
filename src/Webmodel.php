@@ -2219,7 +2219,7 @@ class Webmodel {
 		/*$rc=new \ReflectionClass($type);
 		$this->components[$name]=$rc->newInstanceArgs($arguments);*/
 		
-		$this->components[$name]=&$type_class;
+		$this->components[$name]=$type_class;
 		
 		//Set first label...
 		$this->components[$name]->label=Webmodel::set_name_default($name);
