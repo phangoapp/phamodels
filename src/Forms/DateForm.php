@@ -31,6 +31,8 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
         }
         else
         {
+        
+            $value=PhaTime\DateTime::gmt_to_local($value);
                         
             list($year, $month, $day, $hour, $minute, $second)=PhaTime\DateTime::format_timedata($value);
             

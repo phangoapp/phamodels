@@ -40,7 +40,7 @@ class BaseForm {
     public function form()
     {
         
-        return '<input type="'.$this->type.'" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'">';
+        return '<input type="'.$this->type.'" id="'.$this->name.'_field_form" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'">';
     
     }
     

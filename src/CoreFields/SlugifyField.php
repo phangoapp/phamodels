@@ -16,16 +16,21 @@ class SlugifyField extends CharField {
     public function check($value)
     {
         
-        if($this->model_instance->post!='')
+        if($this->model_instance)
         {
-            
-            if(isset($this->model_instance->post[$this->field_related]))
+        
+            if($this->model_instance->post!='')
             {
                 
-                $value=\PhangoApp\PhaUtils\Utils::slugify($this->model_instance->post[$this->field_related]);
+                if(isset($this->model_instance->post[$this->field_related]))
+                {
+                    
+                    $value=\PhangoApp\PhaUtils\Utils::slugify($this->model_instance->post[$this->field_related]);
+                    
+                }
                 
             }
-            
+        
         }
         
         if($value=='')
@@ -38,15 +43,19 @@ class SlugifyField extends CharField {
         return $value;
     }
     
-    static function add_slugify_i18n_fields($model_name, $field)
+    static function add_slugify_i18n_fields($model, $field)
     {
-    
+        
         foreach(I18n::$arr_i18n as $lang_field)
         {
-
-            Webmodel::$model[$model_name]->components[$field.'_'.$lang_field]=new SlugifyField();
+            
+            $model->register($field.'_'.$lang_field, new SlugifyField());
+            
+            //$model->register($field.'_'.$lang_field, new SlugifyField());
             
         }
+        
+        return $model;
     
     }
     

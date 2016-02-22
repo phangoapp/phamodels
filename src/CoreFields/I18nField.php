@@ -126,11 +126,12 @@ class I18nField extends PhangoField {
 	function add_slugify_i18n_post($field, $post)
 	{
 	
+        $slugfield=new SlugifyField();
 	
-		foreach(PhangoVar::$arr_i18n as $lang_field)
+		foreach(I18n::$arr_i18n as $lang_field)
 		{
 		
-			$post[$field.'_'.$lang_field]=SlugifyField::check($post[$field][$lang_field]);
+			$post[$field.'_'.$lang_field]=$slugfield->check($post[$field][$lang_field]);
 		
 		}
 		

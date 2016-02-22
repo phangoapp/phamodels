@@ -18,6 +18,7 @@ use PhangoApp\PhaUtils\Utils;
 use League\CLImate\CLImate;
 
 Utils::load_config('config');
+Utils::load_config('config_i18n');
 
 $options=getopt('', array('model:'));
 

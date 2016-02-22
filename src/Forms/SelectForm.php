@@ -21,7 +21,7 @@ class SelectForm extends BaseForm{
         ob_start();
         
         ?>
-        <select name="<?php echo $this->name; ?>">
+        <select name="<?php echo $this->name; ?>" id="<?php echo $this->name; ?>_field_form">
             <?php
             
             foreach($this->arr_select as $value => $select)

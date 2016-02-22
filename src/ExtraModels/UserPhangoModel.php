@@ -66,19 +66,19 @@ class UserPhangoModel extends Webmodel {
 		if(isset($post[$this->username]) && $post[$this->email])
 		{
 	
-            if(!isset($post['IdUser_admin']))
+            if(!isset($post[$this->idmodel]))
             {
             
-                settype($_GET['IdUser_admin'], 'integer');
+                settype($_GET[$this->idmodel], 'integer');
             
-                $post['IdUser_admin']=$_GET['IdUser_admin'];
+                $post[$this->idmodel]=$_GET[$this->idmodel];
             
             }
 	
-			if($this->check_user_exists($post[$this->username], $post[$this->email], $post['IdUser_admin']))
+			if($this->check_user_exists($post[$this->username], $post[$this->email], $post[$this->idmodel]))
 			{
 			
-				if(!$this->check_password($post['password'], $post['repeat_password']))
+				if(!$this->check_password($post[$this->password], $post[$this->repeat_password]))
 				{
 				
 					//$this->components['password']->required=0;
@@ -149,7 +149,7 @@ class UserPhangoModel extends Webmodel {
 		if($iduser>0)
 		{
 		
-			$where_sql.=' and IdUser_admin!='.$iduser;
+			$where_sql.=' and '.$this->idmodel.'!='.$iduser;
 		
 		}
 		
