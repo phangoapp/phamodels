@@ -80,6 +80,14 @@ class ImageField extends PhangoField {
 			{
 
 				$name_image=$_FILES[$file_name]['name'];
+				
+				$base_name_image=basename($name_image);
+                        
+                $file_extension=pathinfo($base_name_image, PATHINFO_EXTENSION);
+                
+                $base_name_image=str_replace('.'.$file_extension, '', $base_name_image);
+                
+                $name_image=$base_name_image.'.jpg';
                 
                 if($this->prefix_id)
                 {
@@ -144,12 +152,6 @@ class ImageField extends PhangoField {
 					if($this->thumb)
 					{
 					
-						$base_name_image=basename($name_image);
-						
-						$file_extension=pathinfo($base_name_image, PATHINFO_EXTENSION);
-						
-						$base_name_image=str_replace('.'.$file_extension, '', $base_name_image);
-					
 						foreach($this->img_width as $prefix => $width)
 						{
 						
@@ -157,7 +159,7 @@ class ImageField extends PhangoField {
 						
 							//In nexts versions, save in tmp and move with ftp copy.
 						
-							if(!$image->fit($width)->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$base_name_image.'.jpg'))
+							if(!$image->resize($width, null, function ($constraint) {$constraint->aspectRatio();})->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$name_image))
 							{
 							
                                 $this->error=true;
@@ -181,7 +183,7 @@ class ImageField extends PhangoField {
 					
 					}
 					
-					if(!$image->save($this->path.'/'.$name_image))
+					if(!$image->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$name_image))
 					{
 
                         $this->error=1;
