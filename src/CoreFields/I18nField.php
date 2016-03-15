@@ -15,7 +15,6 @@ use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\Forms\MultiLangForm;
 use PhangoApp\PhaModels\Forms\TextForm;
 use PhangoApp\PhaModels\CoreFields\SlugifyField;
-use PhangoApp\PhaModels\CoreFields\TextField;
 
 /**
 * Multilanguage fields. 
@@ -37,10 +36,10 @@ class I18nField extends PhangoField {
 
 	//This method is used for check all members from serialize
 
-	function __construct()
+	function __construct($type_field)
 	{
 
-		$this->type_field=new TextField();
+		$this->type_field=&$type_field;
 		$this->parameters=[];
 
 	}
