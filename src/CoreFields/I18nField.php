@@ -15,6 +15,7 @@ use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaModels\Forms\MultiLangForm;
 use PhangoApp\PhaModels\Forms\TextForm;
 use PhangoApp\PhaModels\CoreFields\SlugifyField;
+use PhangoApp\PhaModels\CoreFields\TextField;
 
 /**
 * Multilanguage fields. 
@@ -36,10 +37,10 @@ class I18nField extends PhangoField {
 
 	//This method is used for check all members from serialize
 
-	function __construct($type_field)
+	function __construct()
 	{
 
-		$this->type_field=&$type_field;
+		$this->type_field=new TextField();
 		$this->parameters=[];
 
 	}
@@ -67,7 +68,7 @@ class I18nField extends PhangoField {
 
 		}
 		
-		$ser_value=addslashes(serialize($value));
+		$ser_value=addslashes(json_encode($value));
 
 		return $ser_value;
 
@@ -85,7 +86,7 @@ class I18nField extends PhangoField {
 	static function show_formatted($value)
 	{
 
-		$arr_lang=@unserialize($value);
+		$arr_lang=json_decode($value, true);
 
 		settype($arr_lang, 'array');
 		
