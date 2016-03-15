@@ -4,7 +4,7 @@
 *
 * @author  Antonio de la Rosa <webmaster@web-t-sys.com>
 * @file i18n_fields.php
-* @package ExtraFields\I18nFields
+* @package CoreFields\I18nFields
 *
 *
 */

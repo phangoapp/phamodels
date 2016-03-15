@@ -23,7 +23,7 @@ class PasswordForm extends BaseForm{
     public function form()
     {
         
-        return '<input type="password" class="'.$this->css.'" name="'.$this->name.'" value="">';
+        return '<input type="password" class="'.$this->css.'" name="'.$this->name.'" id="'.$this->name.'_field_form" value="">';
     
     }
     

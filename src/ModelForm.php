@@ -303,7 +303,7 @@ class ModelForm {
 
 	static public function check_form($arr_form, $post)
 	{
-
+        
 		$error=0;
 		
 		$num_form=0;
@@ -460,6 +460,22 @@ class ModelForm {
         }
 	
 	}
+    
+    static public function pass_errors_to_array($model)
+    {
+        
+        $error=[];
+        
+        foreach($model->components as $component)
+        {
+            
+            $error[$component->name_component]=$component->std_error;
+            
+        }
+        
+        return $error;
+        
+    }
 		
 }
 
