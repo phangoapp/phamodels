@@ -211,7 +211,7 @@ class MultiLangForm extends BaseForm{
         if(gettype($this->default_value)!='array')
         {
         
-            $arr_values=unserialize($this->default_value);
+            $arr_values=json_decode($this->default_value, true);
             
         }
         else
