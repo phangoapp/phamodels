@@ -45,6 +45,13 @@ class UserPhangoModel extends Webmodel {
 				return false;
 			
 			}
+            
+            if(trim($post['password'])!='')
+            {
+                
+                $this->components[$this->password]->protected=false;
+                
+            }
 		
 			return parent::insert($post, $safe_query, $cache_name);
 		
@@ -96,6 +103,14 @@ class UserPhangoModel extends Webmodel {
 					unset($post[$this->password]);
 				
 				}
+                else
+                {
+                    
+                
+                    $this->components[$this->password]->protected=false;
+                
+                    
+                }
                 
 				return parent::update($post, $safe_query, $cache_name);
 			
@@ -153,9 +168,13 @@ class UserPhangoModel extends Webmodel {
 		
 		}
 		
+        $old_conditions=$this->conditions;
+        
 		$this->set_conditions($where_sql);
 		
 		$c=$this->select_count();
+        
+        $this->conditions=$old_conditions;
 		
 		if($c==0)
 		{
