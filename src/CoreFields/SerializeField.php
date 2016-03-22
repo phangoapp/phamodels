@@ -25,7 +25,7 @@ class SerializeField extends PhangoField {
 	function __construct($related_type)
 	{
 		
-		$this->related_type=&$related_type;
+		$this->related_type=$related_type;
 		
 	}
 	
@@ -73,7 +73,7 @@ class SerializeField extends PhangoField {
 
 		$this->value=$value;
 		
-		return Webmodel::escape_string(serialize($value));
+		return Webmodel::escape_string(json_encode($value));
 
 	}
 
@@ -103,7 +103,7 @@ class SerializeField extends PhangoField {
     static public function set_format($serialize_value)
     {
     
-        $real_value=unserialize($value);
+        $real_value=json_decode($value);
         
         return implode(', ', $return_value);
     
@@ -113,7 +113,7 @@ class SerializeField extends PhangoField {
 	static function unserialize($value)
 	{
 
-		$real_value=@unserialize($value);
+		$real_value=json_decode($value, true);
 		
 		if($real_value!==false)
 		{
