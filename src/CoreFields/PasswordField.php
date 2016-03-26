@@ -54,6 +54,20 @@ class PasswordField extends CharField {
             return '';
 		
 		}
+        
+        //Fix for check bug with null password
+        
+        //$value=str_replace("\x00", "\\x00", $value);
+        if(strpos($value, "\x00")!==false)
+        {
+            
+            $this->error=1;
+		
+            $this->std_error=I18n::lang('common', 'error_null_password', 'Bcrypt have problems using null characters...');
+            
+            return '';
+            
+        }
 		
 		$hash_password=password_hash($value, PASSWORD_DEFAULT);
 		
