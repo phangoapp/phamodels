@@ -77,7 +77,9 @@ class ParentField extends IntegerField{
 	public function process_update_field($class, $name_field, $conditions, $value)
 	{
 	
-		$num_rows=$class->select_count($conditions.' and '.$class->idmodel.'='.$value);
+        $class->conditions=$conditions.' and '.$class->idmodel.'='.$value;
+    
+		$num_rows=$class->select_count();
 		
 		if($num_rows==0)
 		{
@@ -100,7 +102,9 @@ class ParentField extends IntegerField{
 		$arr_parent=array();
 		$arr_link_parent=array();
 		
-		$query=$this->parent_model->select('', array( $this->parent_model->idmodel, $this->name_component, $field_ident) );
+        $this->parent_model->conditions='';
+        
+		$query=$this->parent_model->select(array( $this->parent_model->idmodel, $this->name_component, $field_ident) );
 		
 		while(list($id_block, $parent, $name)=webtsys_fetch_row($query))
 		{

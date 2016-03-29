@@ -49,6 +49,8 @@ class SelectModelForm extends SelectForm{
         
         $query=$this->model->select(array($this->field_name, $this->field_value), $this->raw_query);
         
+        $this->arr_select['']='';
+        
         while($row=$this->model->fetch_array($query))
         {
             
