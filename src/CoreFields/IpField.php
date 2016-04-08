@@ -4,6 +4,7 @@ namespace PhangoApp\PhaModels\CoreFields;
 
 use PhangoApp\PhaModels\CoreFields\CharField;
 use PhangoApp\PhaUtils\Utils;
+use PhangoApp\PhaI18n\I18n;
 
 class IpField extends CharField {
 

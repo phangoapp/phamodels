@@ -521,7 +521,7 @@ class Webmodel {
 	public function connect_to_db()
 	{
 		
-		include(__DIR__.'/Databases/'.Webmodel::$type_db.'.php');
+		include_once(__DIR__.'/Databases/'.Webmodel::$type_db.'.php');
 	
 		if(!SQLClass::webtsys_connect( Webmodel::$host_db[$this->db_selected], Webmodel::$login_db[$this->db_selected], Webmodel::$pass_db[$this->db_selected] , $this->db_selected))
 		{
@@ -863,7 +863,7 @@ class Webmodel {
 	public function insert($post, $safe_query=0, $cache_name='')
 	{
 	
-        $this->post=&$post;
+        //$this->post=$post;
 	
 		$this->set_phango_connection();
 		
@@ -887,7 +887,7 @@ class Webmodel {
 		
 		if( $fields=$this->check_all($post, $safe_query) )
 		{	
-		
+            
 			if( !( $query=SQLClass::webtsys_query($this->prepare_insert_sql($fields), $this->db_selected) ) )
 			{
                 
@@ -944,7 +944,7 @@ class Webmodel {
 	
 	public function update($post, $safe_query=0, $cache_name='')
 	{
-        $this->post=&$post;
+        $this->post=$post;
 	
 		$this->set_phango_connection();
 		
@@ -955,6 +955,7 @@ class Webmodel {
 		//Check if minimal fields are fill and if fields exists in components.
 
 		$arr_fields=array();
+
 
 		//Unset the id field from the model for security
 		
@@ -1836,7 +1837,7 @@ class Webmodel {
 		}
 
 		$arr_components=array();
-
+    
 		$set_error=0;
 
 		$arr_std_error=array();
@@ -2340,6 +2341,20 @@ class Webmodel {
     
     }
 
+    /**
+    * Close connection, you need this if use ReactPHP or some
+    * 
+    */
+     
+
+    public function close()
+    {
+        
+        Webmodel::$connection_func[$this->db_selected]='connect_to_db';
+        
+        return SQLClass::webtsys_close(Webmodel::$connection[$this->db_selected]);
+        
+    }
 
 }
 

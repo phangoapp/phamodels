@@ -50,6 +50,13 @@ class SQLClass {
 
 		return $num_rows;
 	} 
+    
+    static public function free_result($result)
+    {
+        
+        
+        
+    }
 
 	static public function webtsys_close( $idconnection )
 	{
