@@ -10,7 +10,16 @@ use PhangoApp\PhaModels\Forms\BaseForm;
 
 class SelectForm extends BaseForm{
 
-    public $arr_select=array();
+    public $arr_select=[];
+    
+    public function __construct($name, $value, $arr_select=[])
+    {
+        
+        parent::__construct($name, $value);
+        
+        $this->arr_select=$arr_select;
+        
+    }
         
     public function form()
     {

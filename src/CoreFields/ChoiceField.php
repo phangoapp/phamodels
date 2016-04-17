@@ -34,13 +34,17 @@ class ChoiceField extends PhangoField {
 		$this->default_value=$default_value;
 		$this->arr_formatted['']=I18n::lang('common', 'none_selected', 'None selected');
 		
-		
+		$parameters=[];
+        
 		foreach($arr_values as $value)
 		{
 			
 			$this->arr_formatted[$value]=$value;
+            $parameters[$value]=$value;
 		
 		}
+        
+        $this->parameters=[$parameters];
 	
 	}
 	
