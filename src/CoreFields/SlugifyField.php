@@ -32,6 +32,12 @@ class SlugifyField extends CharField {
             }
         
         }
+        else
+        {
+            
+            $value=\PhangoApp\PhaUtils\Utils::slugify($value);
+            
+        }
         
         if($value=='')
         {

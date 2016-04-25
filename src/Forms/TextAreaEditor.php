@@ -10,10 +10,48 @@ use PhangoApp\PhaI18n\I18n;
 
 class TextAreaEditor extends BaseForm {
     
+    public $load_image_url='';
+    
+    public function __construct($name, $value, $load_image_url='')
+    {
+        
+        parent::__construct($name, $value);
+        $this->load_image_url=$load_image_url;
+        
+    }
+    
     public function form()
     {
     
         //PhangoVar::$arr_cache_jscript[]='tinymce_path.js';
+        
+        if(!isset(View::$header['ckeditor']))
+        {
+            
+            View::$js[]='jquery.min.js';
+            View::$js[]='ckeditor/ckeditor.js';
+            
+            ob_start();
+            
+            ?>
+            <script>
+            $(document).ready( function () {
+                
+                //CKEDITOR.replace('.tinymce_editor');
+                CKEDITOR.config.extraPlugins = 'justify';
+                CKEDITOR.config.extraPlugins = "imagebrowser",
+                CKEDITOR.config.imageBrowser_listUrl = "<?php echo $this->load_image_url; ?>"
+            });
+            </script>
+            <?php
+            
+            View::$header['ckeditor']=ob_get_contents();
+
+            ob_end_clean();
+            
+        }
+        
+        /*
         if(!isset(View::$header['tinymce']))
         {
             View::$js[]='jquery.min.js';
@@ -31,17 +69,23 @@ class TextAreaEditor extends BaseForm {
                 
                 tinymce.init({
                 selector: "textarea.tinymce_editor",
+
                 //theme: "modern",
                 height: 300,
                 plugins: [
                     "advlist autolink link image lists charmap print preview hr anchor pagebreak",
                     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                    "table contextmenu directionality emoticons template paste textcolor"
+                    "table contextmenu directionality emoticons template paste textcolor code"
                 ],
+                
+                relative_urls : false,
+/
+                image_list: "<?php echo $this->load_image_url; ?>"
+                /*
                 file_browser_callback: function(field_name, url, type, win){
-                            var filebrowser = "<?php echo Routes::make_module_url('gallery', 'index'); ?>";
+                            var filebrowser = "<?php echo $this->load_image_url; ?>";
                             tinymce.activeEditor.windowManager.open({
-                            title : "<?php echo I18n::lang('common', 'load_file', 'Load_image'); ?>",
+                            title : "<?php echo I18n::lang('common', 'load_file', 'Load image'); ?>",
                             width : 520,
                             height : 400,
                             url : filebrowser
@@ -50,9 +94,9 @@ class TextAreaEditor extends BaseForm {
                             input : field_name
                             });
                             return false;
-                            }
+                            }*/
 
-                });
+               /* });
                 
                 
 
@@ -67,9 +111,9 @@ class TextAreaEditor extends BaseForm {
             ob_end_clean();
         
         }
-        
+        */
         ?>
-        <p><textarea class="tinymce_editor" name="<?php echo $this->name; ?>"><?php echo $this->default_value; ?></textarea></p>
+        <p><textarea class="ckeditor" name="<?php echo $this->name; ?>"><?php echo $this->default_value; ?></textarea></p>
         <?php
     
     }

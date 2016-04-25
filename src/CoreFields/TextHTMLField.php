@@ -35,7 +35,7 @@ class TextHTMLField extends PhangoField {
 		
 		//Delete Javascript tags and simple quotes.
 		
-		$txt_without_tags=str_replace('&nbsp;', '', strip_tags($value, '<img>') );
+		/*$txt_without_tags=str_replace('&nbsp;', '', strip_tags($value, '<img>') );
 		
 		$txt_without_tags=trim(str_replace(' ', '', $txt_without_tags));
 		
@@ -50,15 +50,15 @@ class TextHTMLField extends PhangoField {
 		if(Utils::$textbb_type=='')
 		{
 			
-			$this->value=Utils::unform_text($value);
+			$value=Utils::unform_text($value);
 
-		}
-		else
+		}*/
+		/*else
 		{
 			
 			$this->value=$value;
 
-		}
+		}*/
 		
 		$value=Utils::form_text_html($value, $this->allowedtags);
 		
