@@ -14,8 +14,8 @@ class DoubleField extends PhangoField {
 	public $label="";
 	public $required=0;
 	public $form="";
-	public $quot_open='\'';
-	public $quot_close='\'';
+	public $quot_open='';
+	public $quot_close='';
 	public $std_error='';
 
 	function __construct($size=11)

@@ -27,6 +27,8 @@ class IntegerField extends PhangoField {
 		$this->only_positive=$only_positive;
 		$this->min_num=$min_num;
 		$this->max_num=$max_num;
+        $this->quot_open='';
+        $this->quot_close='';
 
 	}
 

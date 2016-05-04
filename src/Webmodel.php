@@ -732,8 +732,16 @@ class Webmodel {
             
             foreach($args as $key => $arg)
             {
+                $quot='"';
                 
-                $arr_conditions[$key]=$arr_conditions[$key].'"'.$this->escape_string($arg).'"';
+                if(gettype($arg)==='integer' || gettype($arg)==='float')
+                {
+                
+                    $quot='';
+                    
+                }
+                
+                $arr_conditions[$key]=trim($arr_conditions[$key].$quot.$this->escape_string($arg).$quot);
             
             }
         
@@ -893,7 +901,7 @@ class Webmodel {
                 
 				$this->std_error.=I18n::lang('error_model', 'cant_insert', 'Can\'t insert').' ';
 				ModelForm::pass_errors_to_form($this);
-				return 0;
+				return false;
 			
 			}
 			else
@@ -906,7 +914,7 @@ class Webmodel {
                 }
 			
 			
-				return 1;
+				return true;
 				
 			}
 		}
@@ -923,7 +931,7 @@ class Webmodel {
 			ModelForm::pass_errors_to_form($this);
 			$this->std_error.=I18n::lang('error_model', 'cant_insert', "Can't insert").' ';
 
-			return 0;
+			return false;
 
 		}
 		
