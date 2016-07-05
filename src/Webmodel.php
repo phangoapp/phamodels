@@ -703,6 +703,13 @@ class Webmodel {
             
             $args=$conditions[1];
             
+            if(gettype($args)!=='array')
+            {
+                
+                throw new \Exception('Error: you need an array how second parameter');
+                
+            }
+            
         }
         else
         {
@@ -1486,6 +1493,18 @@ class Webmodel {
     
             return $this->$func($query);
 	}
+    
+    /**
+    * A helper method used for get number of affected rows of a last sql operation
+    * 
+    */
+    
+    public function affected_rows()
+    {
+        
+        return SQLClass::webtsys_affected_rows($this->db_selected);
+        
+    }
 	
 	/**
     * A helper function for obtain an array from a result of $this->select

@@ -43,10 +43,10 @@ class SQLClass {
 		return $query;
 	} 
 
-	static public function webtsys_affected_rows( $idconnection , $server_data='default')
+	static public function webtsys_affected_rows( $server_data='default' )
 	{
 
-		$num_rows = mysqli_affected_rows(Webmodel::$connection[$server_data], $idconnection );
+		$num_rows = mysqli_affected_rows(Webmodel::$connection[$server_data]);
 
 		return $num_rows;
 	} 

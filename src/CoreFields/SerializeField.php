@@ -61,6 +61,10 @@ class SerializeField extends PhangoField {
 			}
 
 		}
+        else
+        {
+            $value=[];
+        }
 
 		return $value;
 

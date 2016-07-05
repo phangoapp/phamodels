@@ -15,8 +15,8 @@ class BooleanField extends PhangoField {
 	public $label="";
 	public $required=0;
 	public $form="";
-	public $quot_open='\'';
-	public $quot_close='\'';
+	public $quot_open='';
+	public $quot_close='';
 	public $std_error='';
 	public $default_value=0;
 	public $text_yes='';
@@ -37,7 +37,7 @@ class BooleanField extends PhangoField {
 
 		//$this->value=form_text($value);
 		settype($value, "integer");
-
+        
 		if($value!=0 && $value!=1)
 		{
 
