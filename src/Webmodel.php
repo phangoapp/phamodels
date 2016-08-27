@@ -816,6 +816,7 @@ class Webmodel {
             if($c==2)
             {
             
+                settype($limit[1], 'integer');
                 
                 $this->limit.=', '.$limit[1];
                 
