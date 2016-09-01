@@ -4,6 +4,7 @@ namespace PhangoApp\PhaModels;
 use PhangoApp\PhaUtils\Utils;
 use PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaI18n\I18n;
+use PhangoApp\PhaView\View;
 
 //Class ModelForm is the base class for create forms...
 
@@ -474,6 +475,20 @@ class ModelForm {
         }
         
         return $error;
+        
+    }
+    
+    static public function show_form($arr_form, $post, $pass_values=false)
+    {
+        
+        if($pass_values)
+        {
+            
+            $post=check_form($arr_form, $post);
+            
+        }
+        
+        return View::load_view([$arr_form, array_keys($arr_form)], 'forms/modelform');
         
     }
 		
