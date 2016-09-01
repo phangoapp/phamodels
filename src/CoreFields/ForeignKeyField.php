@@ -25,7 +25,7 @@ class ForeignKeyField extends IntegerField{
 	public $fields_related_model;
 	public $name_field_to_field;
 	
-	function __construct($related_model, $size=11, $default_id=0, $name_field='', $name_value='')
+	function __construct($related_model, $size=11, $default_id=0, $name_field='', $select_fields=[])
 	{
 
 		$this->size=$size;
@@ -33,14 +33,14 @@ class ForeignKeyField extends IntegerField{
 		$this->related_model=$related_model;
 		$this->container_model=$this->related_model->name;
 		//Fields obtained from related_model if you make a query...
-		$this->fields_related_model=array();
+		$this->fields_related_model=$select_fields;
 		//Representative field for related model...
 		$this->name_field_to_field=$name_field;
 		$this->default_id=$default_id;
 		$this->quot_open='';
 		$this->quot_close='';
 		$this->protected=0;
-		$this->parameters=array($this->related_model, $name_field, $name_value);
+		$this->parameters=array($this->related_model, $name_field);
 
 	}
 	

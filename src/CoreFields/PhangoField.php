@@ -155,6 +155,19 @@ class PhangoField {
 		
 	
 	}
+    
+    /**
+	* Method used for make things after of register in the model
+	*
+	* 
+	*/
+	
+	function after_register()
+	{
+	
+		
+	
+	}
 
 	/** 
 	* This method is used for describe the new field in a sql language format.

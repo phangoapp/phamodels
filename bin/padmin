@@ -64,6 +64,23 @@ function padminConsole($options)
 
 
 	WebModel::load_model($options['model']);
+    
+    //Load classes not defined in Webmodel::$model
+    
+    $arr_classes=get_declared_classes();
+    
+    foreach($arr_classes as $class)
+    {
+        
+        if(get_parent_class($class)==='PhangoApp\PhaModels\Webmodel')
+        {
+            
+            Webmodel::$model[strtolower($class)]=new $class();
+            
+        }
+        
+    }
+    
 
 	try {
 
@@ -290,7 +307,7 @@ function update_table()
 						
 						$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$field], Webmodel::$model);
 						
-						Webmodel::$arr_sql_set_index[$key][$field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$field.'_'.$key.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
+						Webmodel::$arr_sql_set_index[$key][$field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$field.'_'.$key.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE CASCADE ON UPDATE CASCADE;';
 						
 
 					}
@@ -364,7 +381,7 @@ function update_table()
 					
 					$id_table_related=Webmodel::load_id_model_related(Webmodel::$model[$key]->components[$new_field], Webmodel::$model);
 					
-					Webmodel::$arr_sql_set_index[$key][$new_field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$new_field.'_'.$key.'IDX` FOREIGN KEY ( `'.$new_field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
+					Webmodel::$arr_sql_set_index[$key][$new_field]='ALTER TABLE `'.$key.'` ADD CONSTRAINT `'.$new_field.'_'.$key.'IDX` FOREIGN KEY ( `'.$new_field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE CASCADE ON UPDATE CASCADE;';
 
 				}
 		

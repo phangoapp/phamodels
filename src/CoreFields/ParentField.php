@@ -12,15 +12,28 @@ class ParentField extends IntegerField{
 	//field related in the model...
 	public $parent_model='';
 
-	function __construct($size=11, $parent_model, $name_field='', $name_value='')
+	function __construct($size=11, $name_field='', $name_value='')
 	{
 
-		$this->parent_model=$parent_model;
+        //You need define directly if you dont declare an instance class in a model
+		//$this->parent_model=$parent_model;
+        
 		$this->size=$size;
-		$this->form='PhangoApp\PhaModels\Forms\SelectModelForm';
-		$this->parameters=array($this->parent_model, $name_field, $name_value);
+        $this->name_field=$name_field;
+        $this->name_value=$name_value;	
+		
 
 	}
+	
+	function after_register()
+	{
+        
+		$this->parent_model=$this->model_instance;
+        $this->form='PhangoApp\PhaModels\Forms\SelectModelForm';
+        $this->parameters=array($this->parent_model, $this->name_field, $this->name_value);
+	
+	}
+    
 
 	function check($value)
 	{

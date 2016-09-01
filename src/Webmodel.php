@@ -430,10 +430,17 @@ class Webmodel {
 	* 
 	*/
 	
-	public function __construct($name_model, $cache=0, $type_cache='PhangoApp\PhaModels\Cache::file_cache')
+	public function __construct($name_model='', $cache=0, $type_cache='PhangoApp\PhaModels\Cache::file_cache')
 	{
 	
 		//Webmodel::$root_model='app/'.$name_model.'/'.Webmodel::$model_path;
+
+        if($name_model=='')
+        {
+            
+            $name_model=strtolower(get_class($this));
+            
+        }
 
 		$this->name=$name_model;
 		$this->idmodel='Id'.ucfirst($this->name);
@@ -457,13 +464,22 @@ class Webmodel {
 		Webmodel::$model[$name_model]=&$this;
 		
 		Webmodel::$m->$name_model=&Webmodel::$model[$name_model];
+        
+        $this->load_components();
 		
 	}
 	
 	/**
-	* 
+	*  Method for load fields from a method called load_components
 	*
 	*/
+    
+    public function load_components()
+    {
+        
+        
+        
+    }
 	
 	/**
 	* Method for load models from a project.
@@ -1670,7 +1686,7 @@ class Webmodel {
 
 				//'Id'.ucfirst($this->components[$field]->related_model);				
 				
-				Webmodel::$arr_sql_set_index[$this->name][$field]='ALTER TABLE `'.$this->name.'` ADD CONSTRAINT `'.$field.'_'.$this->name.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE RESTRICT ON UPDATE RESTRICT;';
+				Webmodel::$arr_sql_set_index[$this->name][$field]='ALTER TABLE `'.$this->name.'` ADD CONSTRAINT `'.$field.'_'.$this->name.'IDX` FOREIGN KEY ( `'.$field.'` ) REFERENCES `'.$table_related.'` (`'.$id_table_related.'`) ON DELETE CASCADE ON UPDATE CASCADE;';
 
 			}
 		}
@@ -2258,6 +2274,7 @@ class Webmodel {
 		$this->components[$name]->required=$required;
 		
 		$this->components[$name]->set_relationships();
+        $this->components[$name]->after_register();
 	
 	}
 	
