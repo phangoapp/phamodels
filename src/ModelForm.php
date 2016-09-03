@@ -359,11 +359,11 @@ class ModelForm {
 		if($error==0 && $num_form>0)
 		{
 
-			return $post;
+			return [$post, $arr_form];
 
 		}
 		
-		return 0;
+		return [$arr_form, false];
 
 	}
 	
@@ -442,6 +442,8 @@ class ModelForm {
 			}
 
 		}
+        
+        return $arr_form;
 	}
 	
 	static public function pass_errors_to_form($model)
@@ -484,7 +486,7 @@ class ModelForm {
         if($pass_values)
         {
             
-            ModelForm::set_values_form($arr_form, $post, $show_error=1);
+            $arr_form=ModelForm::set_values_form($arr_form, $post, $show_error=1);
             
         }
         
