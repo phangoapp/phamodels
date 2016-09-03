@@ -484,7 +484,7 @@ class ModelForm {
         if($pass_values)
         {
             
-            $post=check_form($arr_form, $post);
+            ModelForm::set_values_form($arr_form, $post, $show_error=1);
             
         }
         
