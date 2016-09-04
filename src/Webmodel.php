@@ -711,6 +711,8 @@ class Webmodel {
         $str_conditions=$this->conditions;
             
         $args=$this->args;
+        
+        $raw_query=0;
 	
         if(gettype($conditions)=='array')
         {
@@ -729,6 +731,7 @@ class Webmodel {
         }
         else
         {
+            $raw_query=1;
         
             $str_conditions=$conditions;
         
@@ -749,26 +752,39 @@ class Webmodel {
         
             //Check execution
             
-            $z=0;
-            
-            $arr_conditions=explode('?', $str_conditions);
-            
-            foreach($args as $key => $arg)
+            if($raw_query==0)
             {
-                $quot='"';
-                
-                if(gettype($arg)==='integer' || gettype($arg)==='float')
+            
+                if(preg_match('/".*"/', $str_conditions) || preg_match('/\'.*\'/', $str_conditions))
                 {
-                
-                    $quot='';
+                    
+                    throw new \Exception('Sorry, i cannot load raw data betwen quotes');
                     
                 }
                 
-                $arr_conditions[$key]=trim($arr_conditions[$key].$quot.$this->escape_string($arg).$quot);
+                $z=0;
+                
+                $arr_conditions=explode('?', $str_conditions);
+                
+                foreach($args as $key => $arg)
+                {
+                    $quot='"';
+                    
+                    if(gettype($arg)==='integer' || gettype($arg)==='float')
+                    {
+                    
+                        $quot='';
+                        
+                    }
+                    
+                    $arr_conditions[$key]=trim($arr_conditions[$key].$quot.$this->escape_string($arg).$quot);
+                
+                }
+            
+                $this->conditions=trim(implode(' ', $arr_conditions));
+                
             
             }
-        
-            $this->conditions=trim(implode(' ', $arr_conditions));
             
         }
         
@@ -787,10 +803,11 @@ class Webmodel {
         {
         
             $arr_order=[];
+            $yes_order=0;
         
             foreach($order_by as $key => $order)
             {
-            
+                
                 settype($order, 'integer');
                 
                 $arr_set_order[$order]='ASC';
@@ -801,12 +818,17 @@ class Webmodel {
                 {
                     
                     $arr_order[]=$key.' '.$arr_set_order[$order];
-                
+                    $yes_order++;
+                    
                 }
             
             }
             
-            $this->order_by='order by '.implode(',', $arr_order);
+            if($yes_order>0)
+            {
+            
+                $this->order_by='order by '.implode(',', $arr_order);
+            }
         
         }
         else
@@ -1345,9 +1367,9 @@ class Webmodel {
 	* @param string $fields_for_count Array for fields used for simple counts based on foreignkeyfields.
 	*/
 
-	public function select_count($field='', $fields_for_count=array())
+	public function select_count($field='', $fields_for_count=array(), $raw_query=true)
 	{
-	
+        
 		$this->set_phango_connection();
 		
 		if($field=='')
@@ -1361,46 +1383,51 @@ class Webmodel {
 		$arr_where=array('1=1');
 		
 		$arr_check_count=array();
-		
-		foreach($fields_for_count as $key_component)
-		{
-		
-			if(isset($this->components[$key_component]))
-			{
-		
-				$component=$this->components[$key_component];
-			
-				if(get_class($component)=='ForeignKeyField')
-				{
-				
-					$table_name=$component->related_model;
-				
-					if(isset($arr_check_count[$table_name]))
-					{
-				
-						$table_name.='_'.uniqid();
-						
-					}
-				
-					$arr_model[]=$component->related_model.' as '.$table_name;
-			
-					$arr_where[]=$this->name.'.`'.$key_component.'`='.$table_name.'.`'.Webmodel::$model[$component->related_model]->idmodel.'`';
-					
-					$arr_check_count[$table_name]=1;
-				
-				}
-				
-			}
-		}
-		
-		foreach($this->related_models as $model_name_related => $fields_related)
-		{
-			
-			$arr_model[]=$model_name_related;
-			
-			$arr_where[]=$this->name.'.`'.$this->idmodel.'`='.$model_name_related.'.`'.$fields_related[0].'`';
-		
-		}
+        
+        if($raw_query==false)
+        {
+            
+            foreach($fields_for_count as $key_component)
+            {
+            
+                if(isset($this->components[$key_component]))
+                {
+            
+                    $component=$this->components[$key_component];
+                
+                    if(get_class($component)=='ForeignKeyField')
+                    {
+                    
+                        $table_name=$component->related_model;
+                    
+                        if(isset($arr_check_count[$table_name]))
+                        {
+                    
+                            $table_name.='_'.uniqid();
+                            
+                        }
+                    
+                        $arr_model[]=$component->related_model.' as '.$table_name;
+                
+                        $arr_where[]=$this->name.'.`'.$key_component.'`='.$table_name.'.`'.Webmodel::$model[$component->related_model]->idmodel.'`';
+                        
+                        $arr_check_count[$table_name]=1;
+                    
+                    }
+                    
+                }
+            }
+            
+            foreach($this->related_models as $model_name_related => $fields_related)
+            {
+                
+                $arr_model[]=$model_name_related;
+                
+                $arr_where[]=$this->name.'.`'.$this->idmodel.'`='.$model_name_related.'.`'.$fields_related[0].'`';
+            
+            }
+            
+        }
 		
 		$where=implode(" and ", $arr_where);
 		
@@ -1411,7 +1438,7 @@ class Webmodel {
         
         }
         
-        $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+        $conditions=trim($this->conditions.$where);
         
         if($this->reset_conditions==1)
         {
@@ -2213,7 +2240,7 @@ class Webmodel {
 	
 	public function __call($name_method, $arguments)
 	{
-	
+        
 		if(!isset(Webmodel::$cache_extension[$name_method]))
 		{
 	

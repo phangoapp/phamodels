@@ -359,7 +359,7 @@ class ModelForm {
 		if($error==0 && $num_form>0)
 		{
 
-			return [$post, $arr_form];
+			return [$arr_form, $post];
 
 		}
 		
@@ -461,6 +461,8 @@ class ModelForm {
             }
         
         }
+        
+        return $model;
 	
 	}
     
@@ -480,7 +482,7 @@ class ModelForm {
         
     }
     
-    static public function show_form($arr_form, $post, $pass_values=false)
+    static public function show_form($arr_form, $post, $pass_values=false, $check_values=false)
     {
         
         if($pass_values)
