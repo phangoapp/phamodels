@@ -41,7 +41,7 @@ class ForeignKeyField extends IntegerField{
 		$this->quot_close='';
 		$this->protected=0;
         //($name, $value, $model, $field_name, $field_value)
-		$this->parameters=array($this->related_model, $name_field, $name_field);
+		$this->parameters=array($this->related_model, $name_field, $this->related_model->idmodel);
 
 	}
 	
