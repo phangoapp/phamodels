@@ -713,10 +713,10 @@ class Webmodel {
         $args=$this->args;
         
         $raw_query=0;
-	
+        
         if(gettype($conditions)=='array')
         {
-        
+            
             $str_conditions=$conditions[0];
             
             $args=$conditions[1];
@@ -738,9 +738,9 @@ class Webmodel {
             $args=[];
         
         }
-	
+        
         $str_conditions=trim($str_conditions);
-	
+        
         if($str_conditions=='')
         {
         
@@ -749,12 +749,12 @@ class Webmodel {
         }
         else
         {
-        
+            
             //Check execution
             
             if($raw_query==0)
             {
-            
+                
                 if(preg_match('/".*"/', $str_conditions) || preg_match('/\'.*\'/', $str_conditions))
                 {
                     
@@ -784,6 +784,12 @@ class Webmodel {
                 $this->conditions=trim(implode(' ', $arr_conditions));
                 
             
+            }
+            else
+            {
+                
+                $this->conditions=trim($str_conditions);
+                
             }
             
         }

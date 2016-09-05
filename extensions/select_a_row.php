@@ -27,7 +27,7 @@ function select_a_row_method_class($class, $idrow, $arr_select=array(), $raw_que
 
 	settype($idrow, 'integer');
 	
-	$class->set_conditions('where '.$class->name.'.`'.$class->idmodel.'`=\''.$idrow.'\'');
+	$class->set_conditions(['where '.$class->name.'.`'.$class->idmodel.'`=?', [$idrow]]);
 	
 	$class->set_limit('limit 1');
 	
