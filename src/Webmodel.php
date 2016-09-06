@@ -1602,6 +1602,15 @@ class Webmodel {
     
     }
 	
+    public function where($where_sql)
+    {
+        
+        $this->set_conditions($where_sql);
+        
+        return $this;
+        
+    }
+    
 	/**
 	* A helper function for obtain an associative array from a result of $this->select
 	*
