@@ -776,8 +776,43 @@ class Webmodel {
                         $quot='';
                         
                     }
+                    else
+                    if(gettype($arg)==='array')
+                    {
+                        
+                        array_walk($arg, function(&$item, $key) {
+                            
+                            $quot_array='"';
+                            
+                            if(gettype($item)==='integer' || gettype($item)==='float')
+                            {
+                                
+                                $quot_array='';
+                                
+                            }
+                            else
+                            {
+                                $item=$this->escape_string($item);
+                                
+                            }
+                            
+                            $item=$quot_array.$item.$quot_array;
+                            
+                        });
+                        
+                        $arg='('.implode(', ', $arg).')';
+                        
+                        $quot='';
+                        
+                    }
+                    else
+                    {
+                        
+                        $arg=$this->escape_string($arg);
+                        
+                    }
                     
-                    $arr_conditions[$key]=trim($arr_conditions[$key].$quot.$this->escape_string($arg).$quot);
+                    $arr_conditions[$key]=trim($arr_conditions[$key].$quot.$arg.$quot);
                 
                 }
             
