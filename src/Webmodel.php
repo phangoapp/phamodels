@@ -876,6 +876,8 @@ class Webmodel {
         {
             $this->order_by=$order_by;
         }
+        
+        return $this;
 	
 	
 	}
@@ -908,6 +910,9 @@ class Webmodel {
         
             $this->limit=$limit;
         }
+        
+        return $this;
+        
     }
     
     /**
@@ -1239,12 +1244,14 @@ class Webmodel {
                     
                     $model_name_related=$this->components[$my_field]->related_model->name;
                     
+                    $alias_model_related=$my_field;
+                    
                     //Set the value for the component foreignkeyfield if name_field_to_field is set.
                 
                     if($this->components[$my_field]->name_field_to_field!='')
                     {
                     
-                        $arr_select[$key]=$model_name_related.'.`'.$this->components[$my_field]->name_field_to_field.'` as `'.$my_field.'`';
+                        $arr_select[$key]=$alias_model_related.'.`'.$this->components[$my_field]->name_field_to_field.'` as `'.$my_field.'`';
                         
                     }
                     
@@ -1253,15 +1260,15 @@ class Webmodel {
                     foreach($this->components[$my_field]->fields_related_model as $fields_related)
                     {
                     
-                        $arr_select[]=$model_name_related.'.`'.$fields_related.'` as `'.$model_name_related.'_'.$fields_related.'`';
+                        $arr_select[]=$alias_model_related.'.`'.$fields_related.'` as `'.$alias_model_related.'_'.$fields_related.'`';
                     
                     }
                     
-                    $arr_model[]=$model_name_related;
+                    $arr_model[]=$model_name_related.' as '.$alias_model_related;
                     
                     //Set the where connection
                     
-                    $arr_where[]=$this->name.'.`'.$my_field.'`='.$model_name_related.'.`'.Webmodel::$model[$model_name_related]->idmodel.'`';
+                    $arr_where[]=$this->name.'.`'.$my_field.'`='.$alias_model_related.'.`'.Webmodel::$model[$model_name_related]->idmodel.'`';
                 
                 }
                 
