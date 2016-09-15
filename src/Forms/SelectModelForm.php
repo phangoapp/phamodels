@@ -21,6 +21,8 @@ class SelectModelForm extends SelectForm{
     
     public $raw_query=0;
     
+    public $empty_value=true;
+    
     public function __construct($name, $value, $model, $field_name, $field_value)
     {
     
@@ -49,7 +51,12 @@ class SelectModelForm extends SelectForm{
         
         $query=$this->model->select(array($this->field_name, $this->field_value), $this->raw_query);
         
-        $this->arr_select['']='';
+        if($this->empty_value)
+        {
+        
+            $this->arr_select['']='';
+            
+        }
         
         while($row=$this->model->fetch_array($query))
         {
