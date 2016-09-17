@@ -75,7 +75,12 @@ function padminConsole($options)
         if(get_parent_class($class)==='PhangoApp\PhaModels\Webmodel')
         {
             
-            Webmodel::$model[strtolower($class)]=new $class();
+            if(!isset(Webmodel::$model[strtolower($class)]))
+            {
+            
+                Webmodel::$model[strtolower($class)]=new $class();
+                
+            }
             
         }
         
