@@ -386,6 +386,12 @@ class Webmodel {
     */
 	
 	static public $form_type_checked=array();
+    
+    /**
+    *  A simple array for control if was loaded a model from a class for use in padmin.
+    */
+	
+	static public $model_type=array();
 	
 	/**
 	* A simple switch for know if updated or insert this model
@@ -464,6 +470,8 @@ class Webmodel {
 		Webmodel::$model[$name_model]=&$this;
 		
 		Webmodel::$m->$name_model=&Webmodel::$model[$name_model];
+        
+        Webmodel::$model_type[get_class($this)]=1;
         
         $this->load_components();
 		
