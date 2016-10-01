@@ -704,6 +704,21 @@ class Webmodel {
 		
 		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
 	}
+    
+    /**
+	* This method is used for make string queries with filter.
+	*
+	*/
+	
+	public function execute($sql_query, $values)
+	{
+	
+		$this->set_phango_connection();
+        
+        $sql_query=$this->filter_query([$sql_query, $values]);
+		
+		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
+	}
 	
 	/**
 	* Method for add conditions to sql operations in this model
@@ -717,8 +732,23 @@ class Webmodel {
 	{
 	
         $str_conditions=$this->conditions;
-            
-        $args=$this->args;
+        
+        $this->conditions=$this->filter_query($conditions);
+        
+        //$this->order_by=$order_by;
+	
+	}
+	
+    /**
+    * Method for filter a query or part
+    * 
+    * @param array $conditions An array with two elements. The first element define the where statement where the values are marked with ? symbol. The real values are saved in second element of the array. The behaviour is similar to python sql statements or PDO.
+	* @example ['WHERE name=? and lastname=?', ['Anthony', 'Smith']]
+	* @warning Use an string for conditions is deprecated, use the array type.
+    */
+    
+    public function filter_query($conditions)
+    {
         
         $raw_query=0;
         
@@ -824,23 +854,21 @@ class Webmodel {
                 
                 }
             
-                $this->conditions=trim(implode(' ', $arr_conditions));
+                return trim(implode(' ', $arr_conditions));
                 
             
             }
             else
             {
                 
-                $this->conditions=trim($str_conditions);
+                return trim($str_conditions);
                 
             }
             
         }
         
-        //$this->order_by=$order_by;
-	
-	}
-	
+    }
+    
 	/**
 	* Method for set the order in query
 	*/
@@ -1876,10 +1904,12 @@ class Webmodel {
 	* @param string $value The query string to escape.
 	*/
 	
-	static public function escape_string($value)
+	public function escape_string($value)
 	{
+        
+        $this->connect_to_db();
 		
-		return addslashes($value);
+		return SQLClass::webtsys_escape_string($value, $this->db_selected);
 	
 	}
 
