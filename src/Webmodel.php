@@ -782,7 +782,9 @@ class Webmodel {
         if($str_conditions=='')
         {
         
-            $this->conditions="WHERE 1=1";
+            $str_conditions="WHERE 1=1";
+            
+            return $str_conditions;
         
         }
         else
