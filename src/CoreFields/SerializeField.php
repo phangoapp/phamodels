@@ -77,7 +77,7 @@ class SerializeField extends PhangoField {
 
 		$this->value=$value;
 		
-		return Webmodel::escape_string(json_encode($value));
+		return json_encode($value);
 
 	}
 
