@@ -55,15 +55,15 @@ class DateField extends PhangoField {
 			if($value[0]>0 && $value[1]>0 && $value[2]>0)	
 			{
                 
-                $new_timestamp=date(PhaTime\DateTime::$sql_format_time, mktime($value[3], $value[4], $value[5], $value[1], $value[0], $value[2]));
-
-				$value=PhaTime\DateTime::local_to_gmt( $new_timestamp );
+                $value=date(PhaTime\DateTime::$sql_format_time, mktime($value[3], $value[4], $value[5], $value[1], $value[0], $value[2]));
+                
+				//$value=PhaTime\DateTime::format_timestamp($new_timestamp);
                 
 			}
             else
             {
                 
-                $value=PhaTime\DateTime::now();
+                $value=PhaTime\DateTime::now(true);
                 
             }
 
