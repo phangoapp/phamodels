@@ -60,6 +60,12 @@ class DateField extends PhangoField {
 				$value=PhaTime\DateTime::local_to_gmt( $new_timestamp );
                 
 			}
+            else
+            {
+                
+                $value=PhaTime\DateTime::now();
+                
+            }
 
 		}
 		else if(strpos($value, '-')!==false)

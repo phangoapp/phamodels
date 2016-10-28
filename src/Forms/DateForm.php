@@ -5,6 +5,7 @@ namespace PhangoApp\PhaModels\Forms;
 use PhangoApp\PhaI18n\I18n;
 use PhangoApp\PhaUtils\Utils;
 use PhangoApp\PhaTime;
+use PhangoApp\PhaModels\CoreFields\DateField;
 
 class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
 
@@ -15,6 +16,15 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
     {
     
         $value=$this->default_value;
+
+        if(gettype($value)=='array')
+        {
+            
+            $t=new DateField('');
+            
+            $value=$t->check($value);
+            
+        }
 
         settype($value, 'string');
         

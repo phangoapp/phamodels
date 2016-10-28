@@ -694,6 +694,8 @@ class Webmodel {
 	/**
 	* This method is used for make raw string queries.
 	*
+    * @warning: Don't use it, use better execute method
+    * 
 	* TODO: Add an sql builder cache?. I can create a file with all cache queries and load this when i connect to database.
 	*/
 	
