@@ -2061,6 +2061,8 @@ class Webmodel {
 
                     $arr_std_error[]=I18n::lang('error_model', 'check_error_field_required', 'Error: Field required').' '.$key.' ';
         
+                    $this->components[$key]->error=1;
+        
                     if($this->components[$key]->std_error=='')
                     {
 

@@ -193,6 +193,7 @@ class PhangoField {
 	
 	/**
 	* This method is used for simple checking, used for WhereSql.
+    * @warning DEPRECATED
 	*/
 	
 	public function simple_check($value)
