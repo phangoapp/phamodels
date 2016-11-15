@@ -482,7 +482,7 @@ class ModelForm {
         
     }
     
-    static public function show_form($arr_form, $post, $pass_values=false, $check_values=false)
+    static public function show_form($arr_form, $post, $pass_values=false, $check_values=false, $keys_form=[])
     {
         
         if($pass_values)
@@ -492,7 +492,14 @@ class ModelForm {
             
         }
         
-        return View::load_view([$arr_form, array_keys($arr_form)], 'forms/modelform');
+        if(count($keys_form)==0)
+        {
+            
+            $keys_form=array_keys($arr_form);
+            
+        }
+        
+        return View::load_view([$arr_form, $keys_form], 'forms/modelform');
         
     }
 		
