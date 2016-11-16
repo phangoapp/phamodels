@@ -8,7 +8,7 @@ use PhangoApp\PhaView\View;
 use PhangoApp\PhaRouter\Routes;
 use PhangoApp\PhaI18n\I18n;
 
-class TextAreaEditor extends BaseForm {
+class TextAreaEditorSimple extends BaseForm {
     
     public $load_image_url='';
     
@@ -37,10 +37,16 @@ class TextAreaEditor extends BaseForm {
             <script>
             $(document).ready( function () {
                 
-                //CKEDITOR.replace('.tinymce_editor');
-                CKEDITOR.config.extraPlugins = 'justify';
-                CKEDITOR.config.extraPlugins = "imagebrowser",
-                CKEDITOR.config.imageBrowser_listUrl = "<?php echo $this->load_image_url; ?>"
+               CKEDITOR.config.toolbar = [
+                        { name: 'document', items: [ 'Source', '-','Preview'] },
+                        { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                        { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+                    
+                        { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] },
+                        
+                        { name: 'about', items: [ 'About' ] }
+                    ];
+               
             });
             </script>
             <?php
