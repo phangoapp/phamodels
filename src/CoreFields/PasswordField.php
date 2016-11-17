@@ -63,11 +63,15 @@ class PasswordField extends CharField {
             
             $this->error=1;
 		
-            $this->std_error=I18n::lang('common', 'error_null_password', 'Bcrypt have problems using null characters...');
+            $this->std_error=I18n::lang('common', 'error_null_password', 'Password not valid');
             
             return '';
             
         }
+        
+        //Cut the password if is longer than 128 characters. If password_hash use a different password system to bcrypt (have a 72 character limit) is useful for stop ddos passwords attack. 
+        
+        $value=substr ($value, 0, 128);
 		
 		$hash_password=password_hash($value, PASSWORD_DEFAULT);
 		
