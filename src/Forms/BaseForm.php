@@ -36,12 +36,13 @@ class BaseForm {
         $this->field=new CharField();
         $this->comment_form='';
         $this->txt_error = I18n::lang('common', 'error_in_field', 'Error in field');
+        $this->extra_param='';
     }
         
     public function form()
     {
         
-        return '<input type="'.$this->type.'" id="'.$this->name.'_field_form" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'"> '.$this->comment_form;
+        return '<input type="'.$this->type.'" id="'.$this->name.'_field_form" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($this->default_value).'" '.$this->extra_param.'> '.$this->comment_form;
     
     }
     

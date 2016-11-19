@@ -14,7 +14,7 @@ class TextAreaForm extends BaseForm {
     {
     
         ?>
-        <p><textarea class="tinymce_editor" name="<?php echo $this->name; ?>"><?php echo $this->setform($this->default_value); ?></textarea></p>
+        <textarea id="<?php echo $this->name; ?>_field_form" name="<?php echo $this->name; ?>" class="<?php echo $this->css; ?>"><?php echo $this->setform($this->default_value); ?></textarea>
         <?php
     
     }

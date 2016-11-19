@@ -70,22 +70,25 @@ class DateField extends PhangoField {
 		}
 		else if(strpos($value, '-')!==false)
 		{
-		
+            
 			$arr_time=explode('-',trim($value));
 			
 			settype($arr_time[0], 'integer');
 			settype($arr_time[1], 'integer');
 			settype($arr_time[2], 'integer');
 			
-			$final_value=mktime (0, 0, 0, $arr_time[1], $arr_time[0], $arr_time[2] );
-			
+			//$final_value=PhaTime\DateTime::obtain_timestamp(mktime (0, 0, 0, $arr_time[1], $arr_time[0], $arr_time[2] ));
+            $value=date(PhaTime\DateTime::$sql_format_time, mktime(0, 0, 0, $arr_time[1], $arr_time[2], $arr_time[0]));
+            
+			/*
 			if($final_value===false)
 			{
                 $this->error=1;
                 $final_value=PhaTime\DateTime::local_to_gmt(date(PhaTime\DateTime::$sql_format_time));
-			}
+			}*/
 		
 		}
+        
         if(PhaTime\DateTime::obtain_timestamp($value))
         {
     

@@ -25,7 +25,7 @@ class FileForm extends BaseForm{
     public function form()
     {
         
-        return '<input type="'.$this->type.'" class="'.$this->css.'" name="'.$this->name.'_file" value=""> <a href="'.$this->file_url.'/'.$this->default_value.'">'.Utils::form_text($this->default_value).'</a><input type="hidden" name="'.$this->name.'" value="'.$this->setform($this->default_value).'" />';
+        return '<input type="'.$this->type.'" id="'.$this->name.'_field_form" class="'.$this->css.'" name="'.$this->name.'_file" value=""> <a href="'.$this->file_url.'/'.$this->default_value.'">'.Utils::form_text($this->default_value).'</a><input type="hidden" name="'.$this->name.'" value="'.$this->setform($this->default_value).'" />';
     
     }
     

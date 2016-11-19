@@ -2,6 +2,8 @@
 
 namespace PhangoApp\PhaModels\CoreFields;
 
+use PhangoApp\PhaI18n\I18n;
+
 class PercentField extends IntegerField{
 
 
@@ -16,7 +18,7 @@ class PercentField extends IntegerField{
         if($value>100 || $value<0)
         {
             
-            $this->std_error=i18n_lang('common', 'the_value_can_not_be_greater_than_100', 'The value cannot be greater than 100');
+            $this->std_error=I18n::lang('common', 'the_value_can_not_be_greater_than_100', 'The value cannot be greater or minor than 100');
 
             $this->error=1;
             
@@ -27,6 +29,13 @@ class PercentField extends IntegerField{
         return $value;
         
 
+    }
+    
+    public function show_formatted($value)
+    {
+        
+        return $value.' %';
+        
     }
 
 
