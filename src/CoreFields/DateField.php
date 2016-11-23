@@ -19,6 +19,7 @@ class DateField extends PhangoField {
 	public $quot_close='\'';
 	public $set_default_time=0;
 	public $std_error='';
+    public $to_utc=true;
 
 	function __construct()
 	{
@@ -91,8 +92,15 @@ class DateField extends PhangoField {
         
         if(PhaTime\DateTime::obtain_timestamp($value))
         {
+            
+            $final_value=$value;
     
-            $final_value=PhaTime\DateTime::local_to_gmt($value); 
+            if($this->to_utc)
+            {
+    
+                $final_value=PhaTime\DateTime::local_to_gmt($value); 
+                
+            }
             
         }
 		

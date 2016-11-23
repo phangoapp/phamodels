@@ -124,7 +124,7 @@ class ChoiceField extends PhangoField {
 	public function show_formatted($value)
 	{
 	
-        $this->restart_formatted();
+        //$this->restart_formatted();
 		
 		return $this->arr_formatted[$value];
 
