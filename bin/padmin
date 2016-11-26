@@ -182,6 +182,9 @@ function update_table()
 	
 	Webmodel::$arr_sql_unique=array();
 	Webmodel::$arr_sql_set_unique=array();
+    
+    Webmodel::$arr_sql_fulltext=array();
+	Webmodel::$arr_sql_set_fulltext=array();
 	
 	$arr_etable=array();
 	
@@ -291,6 +294,16 @@ function update_table()
 						Webmodel::$arr_sql_set_index[$key][$field]='';
 					
 					}
+                    
+                    //Check if fulltext for mysql
+				
+					if(Webmodel::$model[$key]->components[$field]->fulltext==true && $keys[$field]=='')
+					{
+					
+						Webmodel::$arr_sql_fulltext[$key][$field]=' ALTER TABLE `'.$key.'` ADD FULLTEXT (`'.$field.'`)';
+						Webmodel::$arr_sql_set_fulltext[$key][$field]='';
+					
+					}
 					
 					//Check if unique
 				
@@ -319,7 +332,7 @@ function update_table()
 
 					}
 					
-					if(!isset(Webmodel::$model[$key]->components[$field]->related_model) && $keys[$field]!='' && Webmodel::$model[$key]->components[$field]->indexed==false && Webmodel::$model[$key]->components[$field]->unique!=true)
+					if(!isset(Webmodel::$model[$key]->components[$field]->related_model) && $keys[$field]!='' && Webmodel::$model[$key]->components[$field]->indexed==false && Webmodel::$model[$key]->components[$field]->unique!=true && Webmodel::$model[$key]->components[$field]->fulltext!=true)
 					{
 						
 						echo "---Delete index for ".$field." from ".$key."\n";
@@ -454,6 +467,25 @@ function update_table()
 			if(Webmodel::$arr_sql_set_unique[$model_name][$key_data]!='')
 			{
 				$query=SQLClass::webtsys_query(Webmodel::$arr_sql_set_unique[$model_name][$key_data]);
+			}
+
+		}
+	}
+    
+    //Create Fulltext index...
+	
+	foreach(Webmodel::$arr_sql_fulltext as $model_name => $arr_index)
+	{
+		foreach(Webmodel::$arr_sql_fulltext[$model_name] as $key_data => $sql_index)
+		{
+
+			echo "---Creating fulltext for ".$key_data." on model ".$model_name."\n";
+
+			$query=SQLClass::webtsys_query($sql_index);
+			
+			if(Webmodel::$arr_sql_set_fulltext[$model_name][$key_data]!='')
+			{
+				$query=SQLClass::webtsys_query(Webmodel::$arr_sql_set_fulltext[$model_name][$key_data]);
 			}
 
 		}

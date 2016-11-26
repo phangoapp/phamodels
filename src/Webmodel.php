@@ -368,6 +368,9 @@ class Webmodel {
 	
 	static public $arr_sql_unique=array();
 	static public $arr_sql_set_unique=array();
+    
+    static public $arr_sql_fulltext=array();
+	static public $arr_sql_set_fulltext=array();
 	
 	/**
 	* Simple property for save models in object mode

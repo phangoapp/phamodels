@@ -179,7 +179,7 @@ class ImageField extends PhangoField {
 					if($max_size>0)
 					{
 					
-						$image->fit($max_size);
+						$image->resize( $max_size, null, function ($constraint) {$constraint->aspectRatio();});
 					
 					}
 					

@@ -30,6 +30,12 @@ class PhangoField {
 	*/
 
 	public $unique=0;
+    
+    /**
+	* Property used for set this field how fulltext value in the database table.
+	*/
+
+	public $fulltext=0;
 	
 	/**
 	* The name of the model where this component or field live

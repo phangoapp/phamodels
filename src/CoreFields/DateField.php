@@ -79,7 +79,18 @@ class DateField extends PhangoField {
 			settype($arr_time[2], 'integer');
 			
 			//$final_value=PhaTime\DateTime::obtain_timestamp(mktime (0, 0, 0, $arr_time[1], $arr_time[0], $arr_time[2] ));
-            $value=date(PhaTime\DateTime::$sql_format_time, mktime(0, 0, 0, $arr_time[1], $arr_time[2], $arr_time[0]));
+            
+            if(strlen($arr_time[2])==2)
+            {
+            
+                $value=date(PhaTime\DateTime::$sql_format_time, mktime(0, 0, 0, $arr_time[1], $arr_time[2], $arr_time[0]));
+            }
+            else
+            {
+                
+                $value=date(PhaTime\DateTime::$sql_format_time, mktime(0, 0, 0, $arr_time[1], $arr_time[0], $arr_time[2]));
+                
+            }
             
 			/*
 			if($final_value===false)
