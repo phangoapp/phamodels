@@ -898,13 +898,13 @@ class Webmodel {
                 
                 $arr_set_order=[0 => 'ASC', 1 => 'DESC'];
             
-                if(isset($this->components[$key]))
-                {
+                /*if(isset($this->components[$key]))
+                {*/
                     
-                    $arr_order[]=$key.' '.$arr_set_order[$order];
+                    $arr_order[]=$this->escape_string($key).' '.$arr_set_order[$order];
                     $yes_order++;
                     
-                }
+                //}
             
             }
             
