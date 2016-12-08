@@ -78,134 +78,147 @@ class ImageField extends PhangoField {
             
 			if(trim($_FILES[$file_name]['tmp_name'])!=='')
 			{
-
-				$name_image=$_FILES[$file_name]['name'];
-				
-				$base_name_image=basename($name_image);
-                        
-                $file_extension=pathinfo($base_name_image, PATHINFO_EXTENSION);
-                
-                $base_name_image=str_replace('.'.$file_extension, '', $base_name_image);
-                
-                $name_image=$base_name_image.'.jpg';
-                
-                if($this->prefix_id)
+                if(is_uploaded_file($_FILES[$file_name]['tmp_name']))
                 {
-                    
-                    $name_image=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_image;
-                    
-                }
-			
-				$manager = new ImageManager(array('driver' => $this->driver));
-				
-				if( ($image=$manager->make($_FILES[$file_name]['tmp_name']))!=false)
-				{
-					
-					if($old_image!='')
-					{
-					
-						if(!@unlink($this->path.'/'.$old_image))
-						{
-							$this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old images, please, check permissions');
-						}
-						
-						$base_old_image=basename($old_image);
-						
-						foreach($this->img_width as $prefix => $width)
-						{
-						
-							if(!@unlink($this->path.'/'.$prefix.'_'.$base_old_image))
-							{
-							
-                               // $this->error=true;
-							
-								$this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old thumb images, please, check permissions');
-							}
-						
-						}
-					}
-                    
-					$image->backup();
-					
-					//$with=
-					
-					//if(make('foo.jpg')->resize(300, 200)->save('bar.jpg');
-					
-					$real_size=$image->width();
-					
-					$max_size=0; 
-					
-					if(isset($this->img_width['']))
-					{
-					
-						if($this->img_width['']<$real_size)
-						{
-					
-							$max_size=$this->img_width[''];
-							
-							unset($this->img_width['']);
-					
-						}
-						
-					}
-					
-					if($this->thumb)
-					{
-					
-						foreach($this->img_width as $prefix => $width)
-						{
-						
-							$image->reset();
-						
-							//In nexts versions, save in tmp and move with ftp copy.
-						
-							if(!$image->resize($width, null, function ($constraint) {$constraint->aspectRatio();})->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$name_image))
-							{
-							
-                                $this->error=true;
-							
-								$this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images. Please, check permissions');
-							
-							}
-						
-						}
-					
-					}
-					
-					//Copy the image
-					
-					$image->reset();
-					
-					if($max_size>0)
-					{
-					
-						$image->resize( $max_size, null, function ($constraint) {$constraint->aspectRatio();});
-					
-					}
-					
-					if(!$image->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$name_image))
-					{
 
-                        $this->error=1;
-					
-						$this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images, please, check permissions');
-						
-						return '';
-						
-					}
-					
-					return $name_image;
+                    $name_image=$_FILES[$file_name]['name'];
                     
+                    $base_name_image=basename($name_image);
+                            
+                    $file_extension=pathinfo($base_name_image, PATHINFO_EXTENSION);
+                    
+                    $base_name_image=str_replace('.'.$file_extension, '', $base_name_image);
+                    
+                    $name_image=$base_name_image.'.jpg';
+                    
+                    if($this->prefix_id)
+                    {
+                        
+                        $name_image=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_image;
+                        
+                    }
+                
+                    $manager = new ImageManager(array('driver' => $this->driver));
+                    
+                    if( ($image=$manager->make($_FILES[$file_name]['tmp_name']))!=false)
+                    {
+                        
+                        if($old_image!='')
+                        {
+                        
+                            if(!@unlink($this->path.'/'.$old_image))
+                            {
+                                $this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old images, please, check permissions');
+                            }
+                            
+                            $base_old_image=basename($old_image);
+                            
+                            foreach($this->img_width as $prefix => $width)
+                            {
+                            
+                                if(!@unlink($this->path.'/'.$prefix.'_'.$base_old_image))
+                                {
+                                
+                                   // $this->error=true;
+                                
+                                    $this->std_error=I18n::lang('common', 'cannot_delete_old_image', 'Cannot delete old thumb images, please, check permissions');
+                                }
+                            
+                            }
+                        }
+                        
+                        $image->backup();
+                        
+                        //$with=
+                        
+                        //if(make('foo.jpg')->resize(300, 200)->save('bar.jpg');
+                        
+                        $real_size=$image->width();
+                        
+                        $max_size=0; 
+                        
+                        if(isset($this->img_width['']))
+                        {
+                        
+                            if($this->img_width['']<$real_size)
+                            {
+                        
+                                $max_size=$this->img_width[''];
+                                
+                                unset($this->img_width['']);
+                        
+                            }
+                            
+                        }
+                        
+                        if($this->thumb)
+                        {
+                        
+                            foreach($this->img_width as $prefix => $width)
+                            {
+                            
+                                $image->reset();
+                            
+                                //In nexts versions, save in tmp and move with ftp copy.
+                            
+                                if(!$image->resize($width, null, function ($constraint) {$constraint->aspectRatio();})->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$prefix.'_'.$name_image))
+                                {
+                                
+                                    $this->error=true;
+                                
+                                    $this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images. Please, check permissions');
+                                
+                                }
+                            
+                            }
+                        
+                        }
+                        
+                        //Copy the image
+                        
+                        $image->reset();
+                        
+                        if($max_size>0)
+                        {
+                        
+                            $image->resize( $max_size, null, function ($constraint) {$constraint->aspectRatio();});
+                        
+                        }
+                        
+                        if(!$image->encode('jpg', $this->quality_jpeg)->save($this->path.'/'.$name_image))
+                        {
+
+                            $this->error=1;
+                        
+                            $this->std_error=I18n::lang('common', 'cannot_save_images', 'Cannot save images, please, check permissions');
+                            
+                            return '';
+                            
+                        }
+                        
+                        return $name_image;
+                        
+                    }
+                    else
+                    {
+                    
+                        $this->std_error=I18n::lang('common', 'no_valid_image', 'This image is wrong');
+                    
+                        $this->error=1;
+                    
+                        return '';
+                    
+                    }
                 }
                 else
                 {
-                
-                    $this->std_error=I18n::lang('common', 'no_valid_image', 'This image is wrong');
-                
+                    
+                    $this->std_error=I18n::lang('common', 'no_valid_image', 'This image is not upload');
+                    
                     $this->error=1;
                 
                     return '';
-                
+                    
                 }
             }
             else

@@ -60,44 +60,58 @@ class FileField extends PhangoField {
 				
 			if($_FILES[$file_field]['tmp_name']!='')
 			{
-                
-                $name_file=basename($_FILES[$file_field]['tmp_name']);
-                
-                if($this->prefix_id)
+                if(is_uploaded_file($_FILES[$file_field]['tmp_name']))
                 {
+                
+                    $name_file=basename($_FILES[$file_field]['tmp_name']);
                     
-                    $name_file=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_file;
+                    if($this->prefix_id)
+                    {
+                        
+                        $name_file=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_file;
+                        
+                    }
+        
+                    if( move_uploaded_file ( $_FILES[$file_field]['tmp_name'] , $this->path.'/'.$name_file ) )
+                    {
+
+                        if($old_file!='')
+                        {
+                        
+                            if(!@unlink($this->path.'/'.$old_file))
+                            {
+                                $this->std_error=I18n::lang('common', 'cannot_delete_old_file', 'Cannot delete old files, please, check permissions');
+                            }
+                            
+                        }
+
+                        return $name_file;
+
+                        //return $this->path.'/'.$_FILES[$file]['name'];
+                        
+                    }
+                    else
+                    {
+
+                        $this->std_error=I18n::lang('common', 'error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
+
+                        $this->error=1;
+                        
+                        return '';
+
+                    }
                     
                 }
-	
-				if( move_uploaded_file ( $_FILES[$file_field]['tmp_name'] , $this->path.'/'.$name_file ) )
-				{
+                else
+                {
+                    
+                    $this->std_error=I18n::lang('common', 'error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
 
-                    if($old_file!='')
-					{
-					
-						if(!@unlink($this->path.'/'.$old_file))
-						{
-							$this->std_error=I18n::lang('common', 'cannot_delete_old_file', 'Cannot delete old files, please, check permissions');
-						}
-						
-					}
-
-					return $name_file;
-
-					//return $this->path.'/'.$_FILES[$file]['name'];
-					
-				}
-				else
-				{
-
-					$this->std_error=I18n::lang('common', 'error_cannot_upload_this_file_to_the_server', 'Error: Cannot upload this file to the server');
-
-					$this->error=1;
-					
-					return '';
-
-				}
+                    $this->error=1;
+                    
+                    return '';
+                    
+                }
 					
 
 			}
