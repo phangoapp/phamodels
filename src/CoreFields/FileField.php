@@ -4,7 +4,7 @@ namespace PhangoApp\PhaModels\CoreFields;
 use PhangoApp\PhaUtils\Utils;
 
 /**
-*
+* NEED TESTING, PROBABLY BROKEN
 */
 
 class FileField extends PhangoField {
@@ -20,6 +20,8 @@ class FileField extends PhangoField {
 	public $quot_open='\'';
 	public $quot_close='\'';
 	public $std_error='';
+    public $func_token='PhangoApp\PhaUtils\Utils::get_token';
+    public $prefix_id=1;
 
 	function __construct($name_file, $path, $url_path)
 	{
@@ -40,32 +42,48 @@ class FileField extends PhangoField {
 
 		settype($_POST['delete_'.$file_field], 'integer');
 		
-		if($_POST['delete_'.$file_field]==1)
-		{
-
-			$file_delete=Utils::form_text($_POST[$file_field]);
-
-			if($file_delete!='')
-			{
-
-				@unlink($this->path.'/'.$file_delete);
-
-				$file='';
-
-			}
-
-		}
+		if($this->update)
+        {
+        
+            //Check the image for delete.
+            //This field is used only for a row
+            //echo $this->model_instance->conditions; die;
+            $old_reset=Webmodel::$model[$this->name_model]->reset_conditions;
+            Webmodel::$model[$this->name_model]->reset_conditions=0;
+            $old_file=Webmodel::$model[$this->name_model]->select_a_row_where(array($this->name_component), 1)[$this->name_component];
+            Webmodel::$model[$this->name_model]->reset_conditions=$old_reset;
+            
+        }
 		
 		if(isset($_FILES[$file_field]['tmp_name']))
 		{
 				
 			if($_FILES[$file_field]['tmp_name']!='')
 			{
+                
+                $name_file=basename($_FILES[$file_field]['tmp_name']);
+                
+                if($this->prefix_id)
+                {
+                    
+                    $name_file=hash('sha256', (call_user_func_array($this->func_token, array(25)))).'_'.$name_file;
+                    
+                }
 	
-				if( move_uploaded_file ( $_FILES[$file_field]['tmp_name'] , $this->path.'/'.$_FILES[$file_field]['name'] ) )
+				if( move_uploaded_file ( $_FILES[$file_field]['tmp_name'] , $this->path.'/'.$name_file ) )
 				{
 
-					return $_FILES[$file_field]['name'];
+                    if($old_file!='')
+					{
+					
+						if(!@unlink($this->path.'/'.$old_file))
+						{
+							$this->std_error=I18n::lang('common', 'cannot_delete_old_file', 'Cannot delete old files, please, check permissions');
+						}
+						
+					}
+
+					return $name_file;
 
 					//return $this->path.'/'.$_FILES[$file]['name'];
 					
