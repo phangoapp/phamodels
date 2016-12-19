@@ -45,13 +45,13 @@ class SelectModelFormByOrder extends SelectForm {
         
         $arr_elements=array();
         
-        $query=$this->model->select([$this->model->idmodel, $this->identifier_field, $this->field_parent]);
+        $query=$this->model->where($this->where)->select([$this->model->idmodel, $this->identifier_field, $this->field_parent]);
         
         while($arr_field=$this->model->fetch_array($query))
         {
             
             $idparent=$arr_field[$this->field_parent];
-
+            
             $element_model=$this->model->components[$this->identifier_field]->show_formatted($arr_field[ $this->identifier_field ]);
 
             $arr_elements[$idparent][]=array($element_model, $arr_field[ $this->model->idmodel ]);
