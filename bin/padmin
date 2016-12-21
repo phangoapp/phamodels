@@ -72,9 +72,14 @@ function padminConsole($options)
     foreach($arr_classes as $class)
     {
         
-        $parent_class=get_parent_class($class);
+        //$parent_class=get_parent_class($class);
         
-        if($parent_class==='PhangoApp\PhaModels\Webmodel' && !isset(Webmodel::$model_type[$parent_class]))
+        $is_son_webmodel=is_subclass_of($class, 'PhangoApp\PhaModels\Webmodel');
+        
+        //echo $class."\n";
+        
+        //if($parent_class==='PhangoApp\PhaModels\Webmodel' && !isset(Webmodel::$model_type[$parent_class]))
+        if($is_son_webmodel)
         {
             
             if(!isset(Webmodel::$model[strtolower($class)]))
