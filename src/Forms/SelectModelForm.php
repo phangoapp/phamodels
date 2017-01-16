@@ -47,7 +47,7 @@ class SelectModelForm extends SelectForm{
         }
     
         
-        $this->model->set_conditions($this->conditions[0], $this->conditions[1]);
+        $this->model->set_conditions($this->conditions);
         
         $query=$this->model->select(array($this->field_name, $this->field_value), $this->raw_query);
         
