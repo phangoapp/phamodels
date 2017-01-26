@@ -344,6 +344,14 @@ class Webmodel {
     
     public $order_by='';
     
+    	/**
+    * A string where is set the groupement of query
+    *
+    */
+    
+    public $group_by='';
+    
+    
     /**
     * A string where is saved the limit of rows in query
     *
@@ -420,12 +428,18 @@ class Webmodel {
     
     public $fields_to_update=array();
     
-     /**
+    /**
     * Property that save the post values used in update and insert
     */
     
     public $post=array();
     
+    /**
+    * Property where a query result is saved
+    * 
+    */
+    
+    public $query=false;
 	
 	//Construct the model
 
@@ -721,9 +735,25 @@ class Webmodel {
 		$this->set_phango_connection();
         
         $sql_query=$this->filter_query([$sql_query, $values]);
+        
+        $this->query=SQLClass::webtsys_query($sql_query, $this->db_selected);
 		
-		return SQLClass::webtsys_query($sql_query, $this->db_selected);	
+		return $this->query;
 	}
+    
+    /**
+    * Method for use objects for get queries
+    * 
+    */
+    
+    public function executed($sql_query, $values)
+    {
+        
+        $this->execute($sql_query, $values);
+        
+        return $this;
+        
+    }
 	
 	/**
 	* Method for add conditions to sql operations in this model
@@ -880,12 +910,18 @@ class Webmodel {
 	* Method for set the order in query
 	*/
 	
-	public function set_order($order_by)
+	public function set_order($order_by, $grouping=0)
 	{
+        
+        $var_by[0]=&$this->order_by;
+        $var_by[1]=&$this->group_by;
 	
         if(gettype($order_by)=='array')
         {
         
+            $arr_word_order[0]='order by';
+            $arr_word_order[1]='group by';
+                            
             $arr_order=[];
             $yes_order=0;
         
@@ -911,19 +947,33 @@ class Webmodel {
             if($yes_order>0)
             {
             
-                $this->order_by='order by '.implode(',', $arr_order);
+                $var_by[$grouping]=$arr_word_order[$grouping].' '.implode(',', $arr_order);
             }
         
         }
         else
         {
-            $this->order_by=$order_by;
+            $var_by[$grouping]=$order_by;
         }
         
         return $this;
 	
-	
 	}
+    
+    /**
+	* Method for set the order in query
+	*/
+	
+	public function set_group($group_by)
+	{
+        
+        return $this->set_order($group_by, 1);
+        
+    }
+    
+    /**
+	* Method for set the limits in query
+	*/
 	
 	public function set_limit($limit)
     {
@@ -1264,6 +1314,15 @@ class Webmodel {
                 //Check if field is a key from a related_model
 
                 $arr_select[$key]=$this->name.'.`'.$my_field.'`';
+                
+                //If operation to apply to field
+                
+                if($this->components[$my_field]->operation!='')
+                {
+                    
+                    $arr_select[$key]=$this->components[$my_field]->operation.'('.$arr_select[$key].') as '.$my_field;
+                    
+                }
 
                 //Check if a field link with other field from another table...
 
@@ -1357,7 +1416,7 @@ class Webmodel {
             
             }
             
-            $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->limit);
+            $conditions=trim($this->conditions.$where.' '.$this->order_by.' '.$this->group_by.' '.$this->limit);
             
             if($this->reset_conditions==1)
             {
@@ -1621,8 +1680,15 @@ class Webmodel {
 	* @param mixed $query The result of an $this->select operation
 	*/
 	
-	public function fetch_row($query)
+	public function fetch_row($query='')
 	{	
+            
+            if($query=='')
+            {
+             
+                $query=$this->query;
+                
+            }
             
             $func=$this->method_fetch_row;
     

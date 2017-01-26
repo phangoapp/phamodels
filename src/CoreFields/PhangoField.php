@@ -138,6 +138,12 @@ class PhangoField {
 	
 	public $error=0;
 	
+    /**
+    * Property for define an operation in the field
+    */
+    
+    public $operation='';
+    
 	/**
 	* Method used for internal tasks related with searchs. You can overwrite this method in your PhangoField object if you need translate the value that the user want search to a real value into the database.
 	*/
