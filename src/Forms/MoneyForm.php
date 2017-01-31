@@ -20,10 +20,19 @@ class MoneyForm extends BaseForm{
         
     }
     
+    public function setform($value)
+    {
+    
+        settype($value, 'double');
+    
+        return number_format($value, 2, ',', '.');
+        
+    }
+    
     public function form()
     {
     
-        $value=$this->default_value/100;
+        $value=$this->default_value;
     
         return '<input type="'.$this->type.'" id="'.$this->name.'_field_form" class="'.$this->css.'" name="'.$this->name.'" value="'.$this->setform($value).'" '.$this->extra_param.'> '.$this->comment_form;
     

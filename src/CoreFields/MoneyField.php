@@ -19,10 +19,13 @@ class MoneyField extends DoubleField{
     
     function check($value)
     {
-        $value=$value*100;
         
-        return parent::check($value);
+        $value=str_replace('.', '', $value);
         
+        $value=str_replace(',', '.', $value);
+        
+        $value=parent::check($value);
+        return round($value, 2);        
     }
 
 
@@ -36,8 +39,6 @@ class MoneyField extends DoubleField{
     
     static function currency_format($value, $symbol_currency='&euro;')
     {
-
-        $value=$value/100;
 
         return number_format($value, 2, MoneyField::$dec_point, MoneyField::$thousands_sep).' '.$symbol_currency;
 
