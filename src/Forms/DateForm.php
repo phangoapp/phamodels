@@ -11,6 +11,7 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
 
     public $set_time=1;
     public $see_title=0;
+    public $utc=true;
 
     function form()
     {
@@ -42,7 +43,12 @@ class DateForm extends \PhangoApp\PhaModels\Forms\BaseForm {
         else
         {
         
-            $value=PhaTime\DateTime::gmt_to_local($value);
+            if($this->utc)
+            {
+        
+                $value=PhaTime\DateTime::gmt_to_local($value);
+                
+            }
                         
             list($year, $month, $day, $hour, $minute, $second)=PhaTime\DateTime::format_timedata($value);
             

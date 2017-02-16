@@ -20,9 +20,13 @@ class MoneyField extends DoubleField{
     function check($value)
     {
         
-        $value=str_replace('.', '', $value);
+        if(strpos($value, ','))
+        {
         
-        $value=str_replace(',', '.', $value);
+            $value=str_replace('.', '', $value);
+            
+            $value=str_replace(',', '.', $value);
+        }
         
         $value=parent::check($value);
         return round($value, 2);        
