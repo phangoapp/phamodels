@@ -134,7 +134,7 @@ class Webmodel {
 	*
 	*/
 	
-	public $forms;
+	public $forms=[];
 
 	//Components is a array for the fields forms of this model
 
