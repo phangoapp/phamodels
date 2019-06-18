@@ -14,6 +14,7 @@ class MoneyField extends DoubleField{
         
         parent::__construct(11, true, 0, 0); 
         $this->form='PhangoApp\PhaModels\Forms\MoneyForm';
+        $this->default_value=0;
         
     }
     

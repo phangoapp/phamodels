@@ -26,6 +26,7 @@ class SerializeField extends PhangoField {
 	{
 		
 		$this->related_type=$related_type;
+        $this->default_value='{}';
 		
 	}
 	

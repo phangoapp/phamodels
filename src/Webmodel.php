@@ -680,8 +680,12 @@ class Webmodel {
 	{
 	
 		//Foreach for create the query that comes from the $post array
-			
-		foreach($fields as $key => $field)
+        
+        $components=$this->components;
+        
+        unset($components[$this->idmodel]);
+        
+		foreach($components as $key => $field)
 		{
 		
 			$quot_open=$this->components[$key]->quot_open;
@@ -699,12 +703,23 @@ class Webmodel {
 					$fields[$key]='NULL';
 				}
 			}
-		
-			$arr_fields[]=$quot_open.$fields[$key].$quot_close;
+
+            if(!isset($fields[$key]))
+            {
+
+                $arr_fields[]=$quot_open.$this->components[$key]->default_value.$quot_close;
+                
+            }
+            else
+            {
+        
+                $arr_fields[]=$quot_open.$fields[$key].$quot_close;
+                
+            }
 		
 		}
 			
-		return 'insert into '.$this->name.' (`'.implode("`, `", array_keys($fields)).'`) VALUES ('.implode(", ",$arr_fields).') ';
+		return 'insert into '.$this->name.' (`'.implode("`, `", array_keys($components)).'`) VALUES ('.implode(", ",$arr_fields).') ';
 	
 	}
 	

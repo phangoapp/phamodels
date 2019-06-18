@@ -42,6 +42,7 @@ class ForeignKeyField extends IntegerField{
 		$this->protected=0;
         //($name, $value, $model, $field_name, $field_value)
 		$this->parameters=array($this->related_model, $name_field, $this->related_model->idmodel);
+        $this->default_value='NULL';
 
 	}
 	

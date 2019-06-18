@@ -29,6 +29,7 @@ class IntegerField extends PhangoField {
 		$this->max_num=$max_num;
         $this->quot_open='';
         $this->quot_close='';
+        $this->default_value=0;
 
 	}
 

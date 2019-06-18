@@ -23,6 +23,7 @@ class TextField extends PhangoField {
 
 		$this->form='PhangoApp\PhaModels\Forms\TextAreaForm';
 		$this->multilang=$multilang;
+        $this->default_value='';
 
 	}
 

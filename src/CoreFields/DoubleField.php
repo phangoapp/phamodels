@@ -23,6 +23,7 @@ class DoubleField extends PhangoField {
 
 		$this->size=$size;
 		$this->form='PhangoApp\PhaModels\Forms\BaseForm';
+        $this->value=0;
 
 	}
 
